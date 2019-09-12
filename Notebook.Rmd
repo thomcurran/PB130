@@ -1,5 +1,5 @@
 ---
-title: "Workshop 2: Basics of Data Manipulaiton"
+title: "MT3: Basics of Data Manipulaiton"
 output:
   html_document:
     df_print: paged
@@ -50,7 +50,7 @@ Download the file and save it in a logical place. I would recommend that you sav
 Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file.
 
 ```{r}
-WVS <- readRDS("C:/Users/currant/Dropbox/LSE/PB130/MT3/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/currant/Dropbox/LSE/PB130/MT3/Workshop/R Files/MT3/WV6_Data_R_v20180912.rds")
 ```
 
 This command instructs R to read the rds file and assign it (<-) to an object called WVS (hence readRDS()). Importantly, we are using a command from the tidyverse() package to do this. There is also a base R function called read.rds() but it is much slower than readRDS(). WVS is a data table that we shall use to practise some basic analysis.
@@ -187,7 +187,7 @@ Before we do much else, we want to think about how to write good code. One of do
 
 I like the to think of my programs that include the pipe as stories told by a 6-year-old:
 
-![alt text here](E:/Pictures/Piping.png)
+![alt text here](https://raw.githubusercontent.com/thomcurran/PB130/Images/Piping.png)
 
 That way, I don’t get confused about what it means because I always get the functions in the right sequence.
 
@@ -210,7 +210,7 @@ head(WVS_short) # inspect new dataframe
 
 We now have a more managable data frame WVS_short that contians only the variables of interest to our analyses.
 
-## Filtering and mutating
+## Filtering 
 
 Great, now remember that we know V10 and V11 contain redundant information in the range of values (i.e., values of -5 to -1 are no response or dont knows). Lets now filter those redundant values out of our WVS_short dataframe using the filter() function. 
 
@@ -234,9 +234,36 @@ So we have successfully removed the redundant information. Now lets hone in on t
 
 ```{r}
 Just_USA <- # into new dataframe
-ParticipationLevels %>% #use the object ParticipationLevels
-filter(date == "1948-01-01") #Filter on the date
-Jan1948 #check the new object
+WVS_short %>% # from WVS_short
+filter(V2 == "840") # Filter on the country code
+Just_USA # check the new dataframe
+```
+
+Let’s go through a step-by-step interpretation of this code:
+
+1.First, we tell R we want to assign the name Just_USA to our new variable.
+
+2. Second, we tell R to pipe in (to use) the Short_WVS data.
+
+3. Third, we then (%>%) tell R to use the filter command where it takes the variable date and only selects the case(s) for which date is equal to “840” (the use of two equals signs == is very important here becuase it is used to assign a specific value! You will get an error if you only use one equals sign)
+
+4. Fourth, we tell R to display our new dataframe Just_USA. (notice, there’s no pipe %>% at the end of the line before Just_USA)
+
+## Mutating
+
+We now have a data file that contains interpretable information on happiness (V10) and subjective health (V11) for Americans contained in the Just_USA dataframe. This is great but there is one more thing we need to do. Remeber that we considered wellbeing as variable that consists of both happiness and subjective health. Well, we need to create that welbeing variable in the Just_USA dataframe. To do that, we are going to use the mutate() fucntion to add happiness and wellbeing together and create a new variable called "wellbeing".
+
+```{r}
+Just_USA <- # into existing dataframe
+  Just_USA %>% # from existing dataframe
+  mutate(wellbeing = V10 + V11) # add up V10 and V10 and asign the sum to a new variable called wellbeing
+Just_USA # check dataframe
+```
+
+We could of course do the same for any other calculation. Try for instance using the mutate() fucntion to create a new variable called "product" that contains values of V10 multiplied by V11.
+
+```{r}
+
 ```
 
 
