@@ -84,4 +84,6 @@ Using the R Markdown quick reference (In R Studio navigate to Help -> Cheatsheet
 
 I’ll come around and check what people have done.
 
-Here is an example: 
+Here is an example: http://rpubs.com/thomcurran/CV
+
+We will be using notebooks to complete the weekly worksheets. GO away and have a play with this in your own time!
