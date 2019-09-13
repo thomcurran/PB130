@@ -1,6 +1,7 @@
 ---
-title: "TomÃ¡s Curzola, Columbian soccer ace"
+title: "TomÃƒÂ¡s Curzola, Columbian soccer ace"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---

@@ -78,5 +78,10 @@ Using the R Markdown quick reference (In R Studio navigate to Help -> Cheatsheet
 
 7. Add a block quote
 
-8. Having done this, go to the top of the page where it says ‘Preview’ on the arrow next to preview click on the arrow and select ‘Knit to HTML.’ It will then produce an html document you can compare with other people.
+8. Instert and run two peices of basic R chunk (e.g., sqrt(10))
+
+9. Having done this, go to the top of the page where it says ‘Preview’ on the arrow next to knit click on the arrow and select ‘Knit to HTML.’ It will then produce an html document you can compare with other people.
+
 I’ll come around and check what people have done.
+
+Here is an example: 
