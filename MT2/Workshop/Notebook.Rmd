@@ -21,7 +21,7 @@ The goal of this lab is to introduce you to R and RStudio. Let us clarify which 
 
 I *strongly* encourage you to explore beyond what the workshops cover. A willingness to experiment will make you a much better programmer. Before we get to that stage, however, you need to build some basic fluency in R. Today we begin with the fundamental building blocks of R and RStudio: the interface, R markdown, and basic commands.
 
-![alt text here](https://github.com/thomcurran/PB130/blob/master/Images/R%20Interface.png?raw=true)
+![R Interface](https://github.com/thomcurran/PB130/blob/master/Images/R%20Interface.png?raw=true)
 
 The panel in the upper right contains your workspace as well as a history of the commands that you’ve previously entered. Any plots that you generate will show up in the panel in the lower right corner.
 
@@ -40,3 +40,43 @@ To get you started, try the following commands at the R prompt (i.e. right after
 
 You can either type the command in manually or copy and paste it from this document. So, as you can see, R is a good calculator. Later, we shall also see that R can be used to graph functions and create a variety of interesting graphics.
 
+## R Markdown and R Notebooks
+
+This document is based on an R Notebook or R Markdown document. R notebooks are meant to be like Lab Notebooks in the sciences where you “do (data) science" by:
+
+1. Using code chunks to perform an activity
+2. Seeing the output of the code chunk, and
+3. Commenting on the code and its ouptut in prose between the code chunks.
+
+R Notebooks are interactive documents. The notebooks can check the code while you write it, suggesting corrections where errors appear and displaying output when you run a code chunk. We shall see this in action several times during the workshops.
+
+Practice what you’ve learned by creating a brief CV of your fictional alter ego in an R Markdown document.
+
+First, open an R Markdown document:
+
+1.  to File -> New File -> R Notebook
+
+2. The file will be pre-populated with some content. Ignore it for the moment.
+
+3. You will lightly edit the top of the page between the --- lines (you’ll only change the title) 
+
+4. Then, you’ll mostly edit after that in the body of the document
+
+Using the R Markdown quick reference (In R Studio navigate to Help -> Cheatsheets -> R Markdown Reference Guide), figure out how to ensure the following:
+
+1. The title of the file (and the document itself) should be your name
+
+2. You should include headings for (at least) education or employment
+
+3. Each of the sections should include a bulleted list of jobs/degree(s)
+
+4. Highlight the year in bold
+
+5. Include an image of yourself (either a local file or url).
+
+6. Add a horizontal rule
+
+7. Add a block quote
+
+8. Having done this, go to the top of the page where it says ‘Preview’ on the arrow next to preview click on the arrow and select ‘Knit to HTML.’ It will then produce an html document you can compare with other people.
+I’ll come around and check what people have done.
