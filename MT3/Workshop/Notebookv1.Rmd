@@ -1,9 +1,8 @@
 ---
-title: 'Workshop 2: Basics of Data Manipulaiton'
-output:
-  html_document:
-    df_print: paged
+title: "MT3: The dataframe and basic data manipulation"
+output: html_notebook
 ---
+
 
 ## Learning outcomes
 
@@ -25,14 +24,14 @@ Before you start, open up a new R Notebook: using the menus go to: File -> New F
 
 At the top of the notebook, create a code chunk (CMD + OPTION + I on MacOS or CTRL + ALT + I on Windows) and load these packages (you could also use the command require()):
 
-```{r, results="hide"}
+```{r}
 library(tidyverse)
 library(mosaic)
 ```
 
 Remember that you have to tell R what packages you plan to use in order to use them in the file. We are going to use functions from the mosaic and tidyverse packages and so we have to tell our R Markdown file to use them.
 
-```{r, results="hide"}
+```{r}
 require(tidyverse)
 require(mosaic)
 ```
@@ -43,9 +42,9 @@ We now want to start to work with some data. We shall download a dataset from th
 
 You can go to the World Value Survey site to see what we’ll be working with. Don’t download anything: http://www.worldvaluessurvey.org/WVSContents.jsp. We will be looking at wave 6 data, collected between 2010 and 2014.
 
-You can access the .rdata (R data file) file of the data here: [INSERT LINK]. The file is called WV6_Data_R_v20180912.rds.
+You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. The .rds extension is an R speicifc extension, most commonly we'll work with .csv files.
 
-Download the file and save it in a logical place. I would recommend that you save it in your PBS folder under a folder called Workshop 2.
+Download the file and save it in a logical place. I would recommend that you save it in your PBS folder under a folder called MT3.
 
 Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file.
 
@@ -53,21 +52,21 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT3/Workshop/WV6_Data_R_v20180912.rds")
 ```
 
-This command instructs R to read the rds file and assign it (<-) to an object called WVS (hence readRDS()). Importantly, we are using a command from the tidyverse() package to do this. There is also a base R function called read.rds() but it is much slower than readRDS(). WVS is a data table that we shall use to practise some basic analysis.
+This command instructs R to read the rds file and assign it (<-) to an object called WVS (hence readRDS()). Importantly, we are using a command from the tidyverse() package to do this. There is also a base R function called read.rds() but it is much slower than readRDS(). WVS is a data table that we shall use to practise some basic analysis. 
 
 The data table contains the World Values Survey. You should see that the workspace area in the upper righthand corner of the RStudio window now lists a data set called WDS that has 89565 observations of 440 variables. As you interact with R, you will create a series of objects. Sometimes you load an object as we have done here, and sometimes you create an object yourself as the result of a computation or some analysis you have performed. 
 
 ## Examining the data
 
-The World Values Survey, which started in 1981, consists of nationally representative surveys conducted in almost 100 countries. It is the largest non-commercial, cross-national, time series investigation of human beliefs and values ever executed, currently including interviews with almost 400,000 respondents. Moreover the WVS is the only academic study covering the full range of global variations, from very poor to very rich countries, in all of the world’s major cultural zones.
+The World Values Survey, which started in 1981, consists of nationally representative surveys conducted in almost 100 countries. It is the largest non-commercial, cross-national, time series investigation of human beliefs and values ever executed, currently including interviews with almost 400,000 respondents.
 
-The WVS seeks to help scientists and policy makers understand changes in the beliefs, values and motivations of people throughout the world. Thousands of political scientists, sociologists, social psychologists, anthropologists and economists have used these data to analyze such topics as economic development, democratization, religion, gender equality, social capital, and subjective well-being. You might remember from PB101 some trends that have been examined with this data.
+The WVS seeks to help scientists and policy makers understand changes in the beliefs, values and motivations of people throughout the world. Thousands of political scientists, sociologists, social psychologists, anthropologists and economists have used these data to analyze topics such as economic development, democratization, religion, gender equality, social capital, and subjective well-being. You might remember from PB101 some trends that have been examined with this data.
 
-Impresssive! So, what can we do to look at this data?
+Impresssive! So, what can we do to look at this data? THere are a few options.
 
 1. Doubleclick on it in the environment pane (right corner) to view it.
-2. View()
-3. Just type the dataframe name
+2. View() commend in the console
+3. Just type the dataframe name in the console
 
 ```{r}
 View(WVS) # is the same as:
@@ -76,9 +75,9 @@ WVS
 
 You should see columns of numbers with each row representing a different respondant. The first entry in each row, corresponding the first column, is simply the row number. The second column is the first variable, the second is the second variable, and so on. You can use the right arrow in the data screen to examine the complete data set.
 
-Note that the row numbers in the first column are not part of the WVS data. R adds them as part of its printout to help you make visual comparisons. You can think of them as the index that you see on the left side of a spreadsheet. In fact, the comparison to a spreadsheet will generally be helpful. R has stored the WVS data in a kind of spreadsheet or table called a data frame or data table.
+Note that the row numbers in the first column are not part of the WVS data. R adds them as part of its printout to help you make visual comparisons. You can think of them as the index that you see on the left side of a spreadsheet. In fact, the comparison to a spreadsheet will generally be helpful. R has stored the WVS data in a kind of spreadsheet or table called a dataframe.
 
-You would have seen that looking at the data frame in its entirety is quite cumbersome. We would probably rather just take a look at some portion of our data, such as the top or the bottom of the data. We can do this with the head and tail commands. Run them now to check out the first few rows of the data. By default, head and tail show you 6 rows. You can change that by adding a command and a number after the the name of the data frame.
+You would have seen that looking at the dataframe in its entirety is quite cumbersome. We would probably rather just take a look at some portion of our data, such as the top or the bottom of the data. We can do this with the head and tail commands. Run them now to check out the first few rows of the data. By default, head and tail show you 6 rows. You can change that by adding a command and a number after the the name of the data frame.
 
 ```{r}
 head(WVS)
@@ -95,7 +94,7 @@ tail(WVS, 12)
 
 What happens?
 
-Okay, still a bit messy, What about finding out the dimensions of the data frame with dim()?
+Okay, a bit messy, What about finding out the dimensions of the data frame with dim()?
 
 ```{r}
 dim(WVS)
@@ -174,11 +173,17 @@ All of which are redundant for our interests. This is common when retrieiving la
 During this course, we shall use a variety of data verbs, commands that “do” things to data (hence “verb”). The list of data verbs includes:
 
 1. mutate(): change the date, thus ‘mutate’ it in some way
+
 2. filter(): filter some subset of cases out from the total list of variables
+
 3. select(): select some subset of variables out from the total list of variables
+
 4. join(): join two different data tables together
+
 5. group_by(): group a data table using a variable (e.g. gender) to understand some patterns in the data
+
 6. summarise(): summarise the data to find some useful statistic; often combined with group_by to contrast differences across groups
+
 7. gather() and spread(): gather and spread re-shape the data by making the data narrower (for gather) or wider (for spread) depending on what we need. Normally, we need to re-shape data when we want to change the particular cases that we have so that we can draw insights based on alternative cases to those we already have. For example, to draw a graph, we might need to change the case into a summary statistic, such as the average number of people engaged in an activity, rather than having the case be each unique individual in a dataset.
 
 ## Piping 

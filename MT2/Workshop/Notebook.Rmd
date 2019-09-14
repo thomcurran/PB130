@@ -3,7 +3,7 @@ title: "MT2 Workshop: Introduction to R and RStudio"
 output: html_notebook
 ---
 
-## Learnign outcomes
+## Learning outcomes
 
 At the end of today’s workshop you should be able to do the following:
 
@@ -13,7 +13,7 @@ At the end of today’s workshop you should be able to do the following:
 
 ## Basics
 
-The goal of this lab is to introduce you to R and RStudio. Let us clarify which is which:
+The goal of this lab is to introduce you to R and RStudio. Let us first clarify which is which:
 
 1. R is the name of the programming language itself, and
 
