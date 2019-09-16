@@ -108,7 +108,7 @@ You can see the names of these columns (or variables) by typing the names() comm
 names(WVS)
 ```
 
-You should see that the data frame contains the columns that match those in the WVS codebook (see: LINK).
+You should see that the data frame contains the columns that match those in the WVS codebook (see: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf).
 
 Another way to obtain similar information is to ask for the structure of the data using the command str()
 
@@ -154,7 +154,7 @@ favstats(~V10, data = WVS)
 
 As you can see, we have summary information about people's happiness from wave 6 of the WVS. But can you spot the problem here?
 
-If you said the minimum value -5 is outside of the range of values (1-4) then you are correct! This is becuase in the WVS not everybody answered this question or responded that they did not know. So rather than 1-4, the V10 variable ranges from -5 to 4, and includes (see codesheet here: [link]):
+If you said the minimum value -5 is outside of the range of values (1-4) then you are correct! This is becuase in the WVS not everybody answered this question or responded that they did not know. So rather than 1-4, the V10 variable ranges from -5 to 4, and includes (see codesheet here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf):
 
 -5. HT: Missing-Dropped out survey; RU: Inappropriate response
 
@@ -235,7 +235,7 @@ From eyeballing the data we can see that there appears to be no minus values in 
 
 ```
 
-So we have successfully removed the redundant information. Now lets hone in on this data. Let's say that in our project we are only interested in well-being within the USA. To do this, we need to create a new dataframe (Just_USA) from a subset of cases within the Short_WVS dataframe. Here we will use the V2 variable (country) and use the filter() function. Looking at the WVS codesheet tells us that the numeric code for USA in V2 is 840.
+So we have successfully removed the redundant information. Now lets hone in on this data. Let's say that in our project we are only interested in well-being within the USA. To do this, we need to create a new dataframe (Just_USA) from a subset of cases within the Short_WVS dataframe. Here we will use the V2 variable (country) and use the filter() function. Looking at the WVS codesheet tells us that the numeric code for USA in V2 is 840 (codesheet is here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf).
 
 ```{r}
 Just_USA <- # into new dataframe
@@ -250,7 +250,7 @@ Let’s go through a step-by-step interpretation of this code:
 
 2. Second, we tell R to pipe in (to use) the Short_WVS data.
 
-3. Third, we then (%>%) tell R to use the filter command where it takes the variable date and only selects the case(s) for which date is equal to “840” (the use of two equals signs == is very important here becuase it is used to assign a specific value! You will get an error if you only use one equals sign)
+3. Third, we then (%>%) tell R to use the filter command where it takes the variable date and only selects the case(s) for which date is equal to “840” (the use of two equals signs == is very important here becuase it is used to assign a specific value. You will get an error if you only use one equals sign)
 
 4. Fourth, we tell R to display our new dataframe Just_USA. (notice, there’s no pipe %>% at the end of the line before Just_USA)
 
@@ -265,13 +265,13 @@ Just_USA <- # into existing dataframe
 Just_USA # check dataframe
 ```
 
-We could of course do the same for any other calculation. Try for instance using the mutate() fucntion to create a new variable called "product" that contains values of V10 multiplied by V11.
+Notice here that R understand 1 equals sign (i.g., =) as part of a calculation. So when you are calculating something it is =, when you are assigning something it is ==. We could of course do the same for any other calculation. Try for instance using the mutate() fucntion to create a new variable called "product" that contains sum of V10 multiplied by V11.
 
 ```{r}
 
 ```
 
-Now we have created the wellbeing variable, we can address our focus aim, which is to understand levels of wellbeing in the USA. To do that, lets use the favstats() function to see what the average wellbeing score is for people in the USA
+Now we have created the wellbeing variable, we can address our focal aim, which is to understand levels of wellbeing in the USA. To do that, lets use the favstats() function to see what the average wellbeing score is for people in the USA
 
 ```{r}
 favstats(~wellbeing, data = Just_USA)
@@ -306,5 +306,15 @@ Now its your turn to do some data manipulation with the WVS. I want you to creat
 
 ```{r}
 
+```
+
+## Conclusion
+
+That was an introduction to R and RStudio, but we will provide you with more functions and a more complete sense of the language as the course progresses. Feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
+
+You can also practice R using a package called Swirl. 
+
+```{r}
+install.packages("Swirl")
 ```
 
