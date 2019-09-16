@@ -24,17 +24,21 @@ Before you start, open up a new R Notebook: using the menus go to: File -> New F
 
 At the top of the notebook, create a code chunk (CMD + OPTION + I on MacOS or CTRL + ALT + I on Windows) and load these packages (you could also use the command require()):
 
+
 ```{r}
 library(tidyverse)
 library(mosaic)
 ```
 
+
 Remember that you have to tell R what packages you plan to use in order to use them in the file. We are going to use functions from the mosaic and tidyverse packages and so we have to tell our R Markdown file to use them.
+
 
 ```{r}
 require(tidyverse)
 require(mosaic)
 ```
+
 
 ## Loading data
 
@@ -48,9 +52,11 @@ Download the file and save it in a logical place. I would recommend that you sav
 
 Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file.
 
+
 ```{r}
 WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT3/Workshop/WV6_Data_R_v20180912.rds")
 ```
+
 
 This command instructs R to read the rds file and assign it (<-) to an object called WVS (hence readRDS()). Importantly, we are using a command from the tidyverse() package to do this. There is also a base R function called read.rds() but it is much slower than readRDS(). WVS is a data table that we shall use to practise some basic analysis. 
 
@@ -62,22 +68,27 @@ The World Values Survey, which started in 1981, consists of nationally represent
 
 The WVS seeks to help scientists and policy makers understand changes in the beliefs, values and motivations of people throughout the world. Thousands of political scientists, sociologists, social psychologists, anthropologists and economists have used these data to analyze topics such as economic development, democratization, religion, gender equality, social capital, and subjective well-being. You might remember from PB101 some trends that have been examined with this data.
 
-Impresssive! So, what can we do to look at this data? THere are a few options.
+Impresssive! So, what can we do to look at this data? There are a few options.
 
 1. Doubleclick on it in the environment pane (right corner) to view it.
+
 2. View() commend in the console
+
 3. Just type the dataframe name in the console
+
 
 ```{r}
 View(WVS) # is the same as:
 WVS
 ```
 
+
 You should see columns of numbers with each row representing a different respondant. The first entry in each row, corresponding the first column, is simply the row number. The second column is the first variable, the second is the second variable, and so on. You can use the right arrow in the data screen to examine the complete data set.
 
 Note that the row numbers in the first column are not part of the WVS data. R adds them as part of its printout to help you make visual comparisons. You can think of them as the index that you see on the left side of a spreadsheet. In fact, the comparison to a spreadsheet will generally be helpful. R has stored the WVS data in a kind of spreadsheet or table called a dataframe.
 
 You would have seen that looking at the dataframe in its entirety is quite cumbersome. We would probably rather just take a look at some portion of our data, such as the top or the bottom of the data. We can do this with the head and tail commands. Run them now to check out the first few rows of the data. By default, head and tail show you 6 rows. You can change that by adding a command and a number after the the name of the data frame.
+
 
 ```{r}
 head(WVS)
@@ -92,29 +103,36 @@ tail(WVS)
 tail(WVS, 12)
 ```
 
+
 What happens?
 
-Okay, a bit messy, What about finding out the dimensions of the data frame with dim()?
+Okay, a bit messy. What about finding out the dimensions of the data frame with dim()?
+
 
 ```{r}
 dim(WVS)
 ```
 
+
 This command should output [1] 89565   440, indicating that there are 89565 rows and 440 columns (we’ll get to what the [1] means in a bit), just as it says next to the object in your workspace. Thats a lot of data!
 
 You can see the names of these columns (or variables) by typing the names() command
+
 
 ```{r}
 names(WVS)
 ```
 
+
 You should see that the data frame contains the columns that match those in the WVS codebook (see: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf).
 
 Another way to obtain similar information is to ask for the structure of the data using the command str()
 
+
 ```{r}
 str(WVS)
 ```
+
 
 As we saw with the dim command, the str command tells us that the data has 89565 observations and 440 variables. As with the names command, str also tells us the names of the variables and the format of these variables. It tells us that V1 (wave) contains only the number 6 and has the labelled format “num” (which is short for “numeric” which means a number). It also tells us that in V1 the number 6 has a "chr" label (which is short for “character”, which means a word or character string, in this case "wave"). Although not in this data frame, R can understand other data formats, including integers and categorcial variables.
 
@@ -148,9 +166,11 @@ Let’s try the favstats command with the WVS data frame for the Happiness quest
 
 The function favstats() uses the following structure favstats(~VARIABLENAME, data = DATANAME). That is, we use a tilde ~ before the name of our variable, and we also specify the data as being a particular data object we plan to use.
 
+
 ```{r}
 favstats(~V10, data = WVS)
 ```
+
 
 As you can see, we have summary information about people's happiness from wave 6 of the WVS. But can you spot the problem here?
 
@@ -192,7 +212,7 @@ Before we do much else, we want to think about how to write good code. One of do
 
 I like the to think of my programs that include the pipe as stories told by a 6-year-old:
 
-![Piping Example](https://github.com/thomcurran/PB130/blob/master/Images/piping.png?raw=true)
+![Figure 1. Piping Example](https://github.com/thomcurran/PB130/blob/master/Images/piping.png?raw=true)
 
 That way, I don’t get confused about what it means because I always get the functions in the right sequence.
 
@@ -206,6 +226,7 @@ WVS %>% # data first, and then..
 
 Let’s start to examine the data a little more closly. Rarely would we be conducting analyses on the entirity of a data set the size of the WVS, so a useful starting point is to retain only the vairables of interest (and get rid of all others). Let's say we are interested only in a country-level analysis of the well-being variables measured by V10 (feeling of happiness) and V11 (subjective health). We can access only the data in these variables by creating a new dataframe (WVS_short) a using the select() function.
 
+
 ```{r}
 WVS_short <- # new data frame
   WVS %>% # original dataframe
@@ -213,11 +234,13 @@ WVS_short <- # new data frame
 head(WVS_short) # inspect new dataframe 
 ```
 
+
 We now have a more managable data frame WVS_short that contians only the variables of interest to our analyses.
 
 ## Filtering and mutating
 
 Great, now remember that we know V10 and V11 contain redundant information in the range of values (i.e., values of -5 to -1 are no response or dont knows). Lets now filter those redundant values out of our WVS_short dataframe using the filter() function. 
+
 
 ```{r}
 WVS_short <- # into existing dataframe
@@ -226,16 +249,20 @@ filter(V10 >= "1" & V11 >= "1") # Filter V10 and V11 at a value of 1 and above
 WVS_short # check dataframe
 ```
 
+
 From eyeballing the data we can see that there appears to be no minus values in our data frame. How else can we check this more rigorously using favstats()?
 
+
 ```{r}
 
 ```
 ```{r}
 
 ```
+
 
 So we have successfully removed the redundant information. Now lets hone in on this data. Let's say that in our project we are only interested in well-being within the USA. To do this, we need to create a new dataframe (Just_USA) from a subset of cases within the Short_WVS dataframe. Here we will use the V2 variable (country) and use the filter() function. Looking at the WVS codesheet tells us that the numeric code for USA in V2 is 840 (codesheet is here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf).
+
 
 ```{r}
 Just_USA <- # into new dataframe
@@ -244,9 +271,10 @@ filter(V2 == "840") # Filter on the country code
 Just_USA # check the new dataframe
 ```
 
+
 Let’s go through a step-by-step interpretation of this code:
 
-1.First, we tell R we want to assign the name Just_USA to our new variable.
+1. First, we tell R we want to assign the name Just_USA to our new variable.
 
 2. Second, we tell R to pipe in (to use) the Short_WVS data.
 
@@ -258,6 +286,7 @@ Let’s go through a step-by-step interpretation of this code:
 
 We now have a data file that contains interpretable information on happiness (V10) and subjective health (V11) for Americans contained in the Just_USA dataframe. This is great but there is one more thing we need to do. Remeber that we considered wellbeing as variable that consists of both happiness and subjective health. Well, we need to create that welbeing variable in the Just_USA dataframe. To do that, we are going to use the mutate() fucntion to add happiness and wellbeing together and create a new variable called "wellbeing".
 
+
 ```{r}
 Just_USA <- # into existing dataframe
   Just_USA %>% # from existing dataframe
@@ -265,17 +294,22 @@ Just_USA <- # into existing dataframe
 Just_USA # check dataframe
 ```
 
-Notice here that R understand 1 equals sign (i.g., =) as part of a calculation. So when you are calculating something it is =, when you are assigning something it is ==. We could of course do the same for any other calculation. Try for instance using the mutate() fucntion to create a new variable called "product" that contains sum of V10 multiplied by V11.
+
+Notice here that R understand 1 equals sign (i.g., =) as part of a calculation. So when you are calculating something it is =, when you are assigning something it is ==. We could of course do the same for any other calculation. Try for instance using the mutate() fucntion to create a new variable called "product" that contains sum of V10 multiplied by V11.#
+
 
 ```{r}
 
 ```
 
-Now we have created the wellbeing variable, we can address our focal aim, which is to understand levels of wellbeing in the USA. To do that, lets use the favstats() function to see what the average wellbeing score is for people in the USA
+
+Now we have created the wellbeing variable, we can address our focal aim, which is to understand levels of wellbeing in the USA. To do that, lets use the favstats() function to see what the average wellbeing score is for people in the USA.
+
 
 ```{r}
 favstats(~wellbeing, data = Just_USA)
 ```
+
 
 Given that the range of values for wellbeing range from 1 to 8, a mean of 3.67 suggests that people in the USA have pretty high wellbeing (remember lower scores indicte better well-being).
 
@@ -312,9 +346,24 @@ Now its your turn to do some data manipulation with the WVS. I want you to creat
 
 That was an introduction to R and RStudio, but we will provide you with more functions and a more complete sense of the language as the course progresses. Feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
 
-You can also practice R using a package called Swirl. 
+You can also practice R using a package called Swirl. The following code installs the package swirl.
+
 
 ```{r}
-install.packages("Swirl")
+install.packages("swirl")
 ```
 
+
+To start swirl, you need to load the package with the library() function, and then run it with swirl()
+
+
+```{r}
+library("swirl")
+swirl()
+```
+
+
+Once you have loaded the package, enter your name and follow the instructions in the console. Complete lesson 1: "R Programming: The basics of programming in R"
+
+
+Don't also forget to complete the essential readings!
