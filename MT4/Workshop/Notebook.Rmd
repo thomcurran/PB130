@@ -323,7 +323,7 @@ This looks much more worthwhile and the trend is relevant without the outlier of
 ## Exercise
 
 
-1. Plot mean levels of happiness across countries ordered from low to high (Be sure to check it is labelled correctly)
+1. Plot mean levels of happiness across countries ordered from low to high (be sure to check it is labelled correctly)
 
 
 ```{r}
