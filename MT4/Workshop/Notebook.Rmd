@@ -1,0 +1,354 @@
+---
+title: "MT4: Visulisng and plotting data"
+output: html_notebook
+---
+
+
+## Learning outcomes 
+
+1. Learn how to graph and interpret the distributional properties of variables
+
+2. Learn how to create and modify histograms and boxplots in ggplot
+
+3. Learn how to manipulate grouped data
+
+4. Learn how to plot grouped data using the World Values Survey
+
+
+## Load required packages
+
+
+```{r}
+library(tidyverse)
+library(mosaic)
+library(ggplot2)
+```
+
+
+## The WVS data
+
+
+If you would like to have a quick recap on the data we will be working with, go to the World Value Survey site. Don’t download anything: http://www.worldvaluessurvey.org/WVSContents.jsp.
+
+You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. The .rds extension is an R speicifc extension, most commonly we'll work with .csv files.
+
+Download the file and save it in a logical place. I would recommend that you save it in your PBS folder under a folder called MT4.
+
+Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file.
+
+
+```{r}
+WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT3/Workshop/WV6_Data_R_v20180912.rds")
+```
+```{r}
+
+```
+
+
+Hopefully this processes is becoming more familiar. What can we do to look at this data?
+
+1. Don’t just doubleclick on it to view it.
+
+2. Don’t type View()
+
+We can consider some other ideas - head() the data
+
+```{r}
+head(WVS)
+```
+
+
+What happens?
+
+What about finding out the structure of it with str()?
+
+
+```{r}
+str(WVS)
+```
+
+
+## Case Study in Visulising Data: Wellbeing
+
+
+Lets pick up where we left off last week and look at two variables - happiness and subjective health as a proxy for wellbeing. But instead of looking at one or two coutires, lets see what wellbeing looks like across all the nations in the WVS. The happiness variable, for example, asks the question: “Taking all things together, would you say you are (fill in the value)
+
+1. Very happy
+
+2. Rather happy
+
+3. Not very happy
+
+4. Not at all happy
+
+I looked in the codebook, and the happiness and wellbeing variables are listed as V10 and V11. So I look for them and select them, then head the new dataframe entitled WVSwellbeing. I'm also selecting the country code varable so we can use this to group the wellbeing scores later. 
+
+
+```{r}
+WVSwellbeing <- #into new dataframe
+  WVS %>% # from WVS dataframe
+  select(V2A, V10, V11)
+head(WVSwellbeing)
+```
+
+
+While we are manipulaitng the data, lets also calculate our wellbeing variable as the average of V10 and V10 and add it to the dataframe.
+
+
+```{r}
+WVSwellbeing <- # into existing dataframe
+  WVSwellbeing %>% # from existing dataframe
+  mutate(wellbeing = (V10 + V11)/2) # avergage V10 and V10 and asign the sum to a new variable called wellbeing
+WVSwellbeing # check dataframe
+```
+
+
+I can then run favstats() on the variables
+
+
+```{r}
+favstats(~V10,  data = WVSwellbeing)
+favstats(~V11, data = WVSwellbeing)
+favstats(~wellbeing, data = WVSwellbeing)
+```
+
+
+That doesn’t tell us much, because I need to edit the dataframe since the variables have values I can’t interpret like -5. I need to filter the data too. Just like we did last week.
+
+
+## Histograms
+
+
+Another tool I’d recommend to diagnose issues with data is just a straight plot of the data. We can plot the frequencies of the different reported values by using geom_histogram() in ggplot().
+
+
+```{r}
+WVSwellbeing %>% 
+  ggplot(aes(x = V10)) + # in ggplot a plus sign (+) signifies that there is more script to come. Its like piping (%>%) in that it tells R we are not finished yet.
+  geom_histogram(binwidth=.4, colour="black", fill="white") # draw a histogram for V10 with line color black and fill color white
+WVSwellbeing %>% 
+  ggplot(aes(x = V11)) +
+  geom_histogram(binwidth=.4, colour="black", fill="white")
+WVSwellbeing %>% 
+  ggplot(aes(x = wellbeing)) +
+  geom_histogram(binwidth=.4, colour="black", fill="white")
+```
+
+
+This is essentially the same information as in favstats() but this time graphed. Notice, again, that we have values of -5 through -1 that aren’t too useful to us. We want to filter these out of the dataframe. We can do that by using filter()
+
+
+```{r}
+WVSwellbeing <- # into existing dataframe
+WVSwellbeing %>% # from existing daraframe
+filter(V10 >= "1" & V11 >= "1") # Filter V10 and V11 at a value of 1 and above
+WVSwellbeing # check dataframe
+```
+
+
+Okay, lets run those ggplots again now we have filtered the variables.
+
+
+```{r}
+WVSwellbeing %>% # use wellbeing dataframe
+  ggplot(aes(x = V10)) + #create ggplot with 1 variable (V10)
+  geom_histogram(binwidth=.4, colour="black", fill="white") + 
+  theme_minimal() # this is a theme command that gets rid of that ugly grey defult background
+WVSwellbeing %>% 
+  ggplot(aes(x= V11)) +
+  geom_histogram(binwidth=.4, colour="black", fill="white") +
+  theme_minimal()
+WVSwellbeing %>% 
+  ggplot(aes(x= wellbeing)) +
+  geom_histogram(binwidth=.4, colour="black", fill="white") +
+  theme_minimal()
+```
+
+
+Better. Now lets take a closer look at the wellbeing distribution and add a few things to the histogram. First, let overlay it with a density curve to peek at the distribution.
+
+
+```{r}
+WVSwellbeing %>% 
+  ggplot(aes(x= wellbeing)) + 
+  geom_histogram(aes(y=..density..), binwidth=.4, colour="black", fill="white") + 
+  geom_density(adjust = 4, fill = "antiquewhite3", alpha = .2) + # I've added a density function here to overlay the distribution for a 4 point scale (adjust = 4). The fill is a kind of beige (antiquewhite3) and the alpha of .2 is the transparency
+  theme_minimal()
+```
+
+
+There is a slight negative skew but nothing that should worry us too much. Lets add a line for the mean value.
+
+
+```{r}
+WVSwellbeing %>% 
+  ggplot(aes(x= wellbeing)) +
+  geom_histogram(aes(y=..density..), binwidth=.4, colour="black", fill="white") + 
+  geom_density(adjust = 4, alpha = .2, fill = "antiquewhite3") +
+  geom_vline(aes(xintercept=mean(wellbeing)), col="black", linetype="dashed", size=1) + # add a vertical line (vline) at the point (xintercept) of the mean of wellbeing, color it black (col=black) and make it dashed (linetype)
+  theme_minimal()
+```
+
+
+Nice, we have a good visulisation here of the distribution of wellbeing!
+
+## Box-plots
+
+
+In R, we can also visulaise this data using a boxplot. This shows the measure of central tendency (median) and range (Variance) of values in a distribution. It can be created using the boxplot() function.
+
+The boxplot() function takes in any number of numeric variables, drawing a boxplot for each variable. Lets do that for our happiness, subjective health, and wellbeing variables
+
+
+```{r}
+boxplot(WVSwellbeing$V10, WVSwellbeing$V11,WVSwellbeing$wellbeing, names = c("happiness", "health", "wellbeing")) # the boxplot function requires an object so we use the dollar sigh ($) after the dataframe to denote the variables. names is an optiona addition to name the variables in the plot.
+```
+
+
+What do these suggest? Like the histgrams, it seems there is a negative skew in the distributions. However, there is a more even spread in our created wellbeing measure. Why do you think this? The wellbeing measure can take on the range of values, including decimals. Across all of the plots, most scores are clustering at the bottom of the distribution. There are some interesting things we can do here to make these plots more presentable. Perhaps some colour?
+
+
+```{r}
+boxplot(WVSwellbeing$V10, WVSwellbeing$V11,WVSwellbeing$wellbeing, names = c("happiness", "health", "wellbeing"), col = c("orange", "red", "green")) # just the addition of a color request col =
+```
+
+
+To this point, we have been using the base package to create box plots(boxplot()), but ggplot gives us alot more options. Lets overlay the datapoints for a better look at our distributions. But before we do that, lets trim this dataframe down so that we can make it managable. Lets take a look at only Algeria (12) and Australia (36) 
+
+
+```{r}
+WVStrimmed <- # into new dataframe
+WVSwellbeing %>% # from WVSwellbeing
+filter(V2A == c("12", "36")) # Filter on the country codes
+WVStrimmed # check the new dataframe
+```
+
+
+Now lets take a random sub sample of this dataframe so we can actually see the points on a graph (otherwise they would cluster into one big blob given there is so much data!). 200 should be enough.
+
+
+```{r}
+RandomSample <- sample_n(WVStrimmed, 200)
+```
+
+
+Given our wellbeing variable has the best spread, let take a closer inspection of this distribution. Let's first take a look at Algeria and Australia seperately. Here are the descriptive statistics for each.
+
+```{r}
+favstats(~wellbeing, V2A, data = RandomSample) # addition of a second factor variable splits the descriptives each each level of that factor
+```
+
+
+We can see the median value is the same (2), but the means differ. There is also more spread in the Algerian data (larger SD). Okay, lets see those distributions in box plots overlayed with the data points.
+
+
+```{r}
+a <- ggplot(RandomSample, aes(x= as.factor(V2A), y = wellbeing), names = c("wellbeing"), labels = TRUE) # assign a ggplot containing wellbeing as the object "a" that treats V2A as factor (country) and wellbeing as the outcome of interest
+a + geom_boxplot(width = 0.3, fill = "white") + geom_jitter(aes(), width = 0.1, size = 1) + labs(x ="Country") + theme_minimal() # # into object a add (+) a boxplot of width 0.3 with whit fill (no color) then add (+) to that the lable "Country" for the x axis and finally add (+) the minimal theme to remove background color and indentations
+```
+
+
+Now we can begin to see to value of inspecting our data. As we saw in the descriptives, there is more spread in the Algeria data, but the median wellbeing score is the same. What about the mean? Let's now overlay the mean values.
+
+
+```{r}
+a <- ggplot(RandomSample, aes(x= as.factor(V2A), y = wellbeing), names = c("wellbeing"), labels = TRUE) 
+a + geom_boxplot(width = 0.3, fill = "white") + geom_jitter(aes(), width = 0.1, size = 1) + labs(x ="Country") + theme_minimal() + stat_summary(fun.y = mean, geom = "point", shape = 18, size = 2.5, color ="red") # I have just added here an additional line to put the mean for y (wellbeing) as a summary point on the box plots
+```
+
+
+What do we see here? Although the median scores are the same, the Algerian mean is slightly larger than the Australian one. Aussies appear to feel a little happier and healthier than Algerians. Again, this shows how visulising the data provides information regarding spread, outliers, and central tendency.
+
+Let's now overlay the countries in one box plot to get an overveiew of the overall distrubution of the two countries when combined.
+
+
+```{r}
+a <- ggplot(RandomSample, aes(x= factor(1), y = wellbeing), names = c("wellbeing")) # rather than x being our country variable, here I;ve left it empty so we have only 1 boxplot (factor(1))
+a + geom_boxplot(width = 0.3, fill = "white") + geom_jitter(aes(color = as.factor(V2A), shape = as.factor(V2A)), width = 0.1, size = 1) + labs(x =NULL) + theme_minimal() + theme(legend.title=element_blank()) # Now I'm using color and shape to differnetiate the data points for Algeria and Australia in the box plot. I;m also removing the x label (x=NULL) and the legend title (element_blank()) as these are not needed
+```
+
+
+Okay, great! We've looked at how to visulaise the distributions of our variables. Hopefully, you have a good idea of how these are presented and some of the functions that are used to adjust things like size and color. Of course, these are only two ways of visulising the distribution of variables. There are many others! As always, I encourage you to explore these in your own time using the readings. There is also a very useful online data visulaization guide here: http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html#4.%20Distribution 
+
+
+## Graphing mean wellbeing by country
+
+
+Let's now get back to the original aim of this session and look at graphing wellbeing by country. For this, we need to return to our WVSwellbeing dataframe. First, lets summarise the happiness, health, and wellbeing variables by country. To do this, we are going to create a new dataframe (WVSsummary) that contains the mean happiness, health, and wellbeing scores for each country.
+
+
+```{r}
+WVSsummary <- # into new dataframe
+  WVSwellbeing %>% # from WVSwellbeing
+  group_by(V2A) %>% # group by country
+  summarise(meanhappy = mean (V10), meanhealth = mean(V11), meanwellbeing = mean(wellbeing)) # calculate the mean values for happiness, health, and wellbeing and place them as new variables in the dataframe
+head(WVSsummary)
+```
+
+
+Now lets plot the mean wellbeing for each country. To make the figure inteligible I’ve reordered the x-axis by the mean value of wellbeing (from low to high). If you’re interested, you can remove that part of the code to see what would happen instead. I’ve also added some additional details. I’ve asked ggplot() to switch the x-axis so that each label is at 90 degree to the axis and the size of the font is 8 points. I’ve also added a title and subtitle.
+
+
+```{r}
+WVSsummary %>% 
+  ggplot(aes(x = reorder(V2A, meanwellbeing), y = meanwellbeing)) + 
+  geom_point() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = .5), text = element_text(size = 8)) + 
+  xlab("Country") + 
+  ylab("Mean Reported Wellbeing Value") + 
+  labs(title = "Self-reported wellbeing", 
+       subtitle = "Source: World Values Survey, Wave 6, 2010-14")
+```
+
+
+Are the results of this for all countries credible? The values for Egypt are messing with our interpretation a little, so I’m going to filter Egypt (code = 818) for argument’s sake and re-do the figure. 
+
+
+```{r}
+WVSsummary %>% 
+  filter(V2A != "818") %>%
+  ggplot(aes(x = reorder(V2A, meanwellbeing), y = meanwellbeing)) + 
+  geom_point() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = .5), text = element_text(size = 8)) + 
+  xlab("Country") + 
+  ylab("Mean Reported Wellbeing Value") + 
+  labs(title = "Self-reported wellbeing", 
+       subtitle = "Source: World Values Survey, Wave 6, 2010-14")
+```
+
+
+This looks much more worthwhile and the trend is relevant without the outlier of Egypt. Even so, some of the answers beggar belief. For example, the results for Belarus and Ukraine are really saddening. Remember that the higher the score, the less happy people are.
+
+
+## Exercise
+
+
+1. Plot mean levels of happiness across countries ordered from low to high (Be sure to check it is labelled correctly)
+
+
+```{r}
+
+```
+
+
+
+2. Plot mean levels fo health across countries ordered from low to high (be sure to check it is labelled correctly)
+
+
+```{r}
+
+```
+
+
+3. What variable appears to be causing the problems for Egypt? Is it happiness or is it health?
+
+
+## Conclusion
+
+That was an introduction to data visulaization in R. As always, feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
+
+I would encourage you to continue to work with the WVS data set.Look at the variable Codebook (download from Moodle): https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf. Find a variable in which you’re interested (really, anything) and have a go graphing the distribution and cross-country differences.
+
+You can also practice data visualisation in R using a Swirl as introduced in the notebook for MT2. In the main menu you should select option "4" (Exploratory Data Analysis: The basics of exploring data in R). Complete lessons 1 through 10.
+
+Don't also forget to complete the essential readings!
