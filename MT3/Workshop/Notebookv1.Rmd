@@ -344,7 +344,8 @@ Now its your turn to do some data manipulation with the WVS. I want you to creat
 
 ## Conclusion
 
-That was an introduction to R and RStudio, but we will provide you with more functions and a more complete sense of the language as the course progresses. Feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
+
+That was an introduction to basic data manipulation R and RStudio, but we will provide you with more functions and a more complete sense of the language as the course progresses. Feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
 
 You can also practice R using a package called Swirl. The following code installs the package swirl.
 

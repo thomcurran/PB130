@@ -6,13 +6,18 @@ output: html_notebook
 
 ## Learning outcomes 
 
-1. Learn how to graph and interpret the distributional properties of variables
+At the end of today’s workshop you should be able to do the following:
 
-2. Learn how to create and modify histograms and boxplots in ggplot
 
-3. Learn how to manipulate grouped data
+1. Graph and interpret the distributional properties of variables
 
-4. Learn how to plot grouped data using the World Values Survey
+2. Create and modify histograms and boxplots in ggplot
+
+3. Manipulate grouped data
+
+4. Plot grouped data using the World Values Survey
+
+5. Plot simple relationships in data
 
 
 ## Load required packages
@@ -268,7 +273,7 @@ a + geom_boxplot(width = 0.3, fill = "white") + geom_jitter(aes(color = as.facto
 ```
 
 
-Okay, great! We've looked at how to visulaise the distributions of our variables. Hopefully, you have a good idea of how these are presented and some of the functions that are used to adjust things like size and color. Of course, these are only two ways of visulising the distribution of variables. There are many others! As always, I encourage you to explore these in your own time using the readings. There is also a very useful online data visulaization guide here: http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html#4.%20Distribution 
+Okay, great! We've looked at how to visulaise the distributions of our variables. Hopefully, you have a good idea of how these are presented and some of the functions that are used to adjust things like size and color. Of course, these are only two ways of visulising the distribution of variables. There are many others! As always, I encourage you to explore these in your own time using the readings. There is also a very useful online data visulaization guide here: http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html#4.%20Distribution and here: http://www.sthda.com/english/articles/32-r-graphics-essentials/133-plot-one-variable-frequency-graph-density-distribution-and-more/ 
 
 
 ## Graphing mean wellbeing by country
@@ -341,6 +346,10 @@ This looks much more worthwhile and the trend is relevant without the outlier of
 
 
 3. What variable appears to be causing the problems for Egypt? Is it happiness or is it health?
+
+## Simple realtionships in data
+
+
 
 
 ## Conclusion
