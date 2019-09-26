@@ -17,8 +17,6 @@ At the end of today’s workshop you should be able to do the following:
 
 4. Plot grouped data using the World Values Survey
 
-5. Plot simple relationships in data
-
 
 ## Load required packages
 
@@ -44,7 +42,7 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 
 
 ```{r}
-WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT3/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT4/Workshop/WV6_Data_R_v20180912.rds")
 ```
 
 
@@ -478,10 +476,6 @@ This looks much more worthwhile and the trend is relevant without the outlier of
 
 
 3. What variable appears to be causing the problems for Egypt? Is it happiness or is it health?
-
-## Simple realtionships in data
-
-
 
 ## Conclusion
 
