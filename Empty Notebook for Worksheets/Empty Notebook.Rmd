@@ -1,0 +1,29 @@
+---
+title: ""
+author: ""
+date: '(`r format(Sys.time(), "%B %d, %Y")`)'
+output: 
+  github_document: default
+  html_notebook: default 
+---
+
+## Introduction
+This notebook...
+
+## Dependencies
+This notebook requires...
+
+```{r load-packages}
+# tidyverse packages
+
+
+# other packages
+
+```
+
+## Load Data
+This notebook requires...
+
+```{r load-data}
+
+```
