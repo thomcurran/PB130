@@ -1,9 +1,6 @@
 ---
 title: "Tomas Curzola, Columbian soccer ace"
-output:
-  html_document:
-    df_print: paged
-  pdf_document: default
+output: html_document
 ---
 
 

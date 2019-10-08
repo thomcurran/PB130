@@ -1,6 +1,6 @@
 ---
 title: "MT3: The dataframe and basic data manipulation"
-output: html_notebook
+output: html_document
 ---
 
 
@@ -22,7 +22,7 @@ At the end of today’s workshop you should be able to do the following:
 
 Before you start, open up a new R Notebook: using the menus go to: File -> New File -> R Notebook.
 
-At the top of the notebook, create a code chunk (CMD + OPTION + I on MacOS or CTRL + ALT + I on Windows) and load these packages (you could also use the command require()):
+At the top of the notebook, create a code chunk and load these packages (you could also use the command require()):
 
 
 ```{r}
@@ -54,7 +54,7 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 
 
 ```{r}
-WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT3/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT3/Workshop/WV6_Data_R_v20180912.rds")
 ```
 
 
@@ -295,7 +295,7 @@ Just_USA # check dataframe
 ```
 
 
-Notice here that R understand 1 equals sign (i.g., =) as part of a calculation. So when you are calculating something it is =, when you are assigning something it is ==. We could of course do the same for any other calculation. Try for instance using the mutate() fucntion to create a new variable called "product" that contains sum of V10 multiplied by V11.#
+Notice here that R understands 1 equals sign (e.g., =) as part of a calculation. So when you are calculating something it is =, when you are assigning something it is ==. We could of course do the same for any other calculation. Try for instance using the mutate() fucntion to create a new variable called "product" that contains sum of V10 multiplied by V11.
 
 
 ```{r}
@@ -347,11 +347,11 @@ Now its your turn to do some data manipulation with the WVS. I want you to creat
 
 That was an introduction to basic data manipulation R and RStudio, but we will provide you with more functions and a more complete sense of the language as the course progresses. Feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
 
-You can also practice R using a package called Swirl. The following code installs the package swirl.
+You can also practice R using a package called Swirl. The following code installs the package swirl. Remeber to dehash the code so it will run!
 
 
 ```{r}
-install.packages("swirl")
+#install.packages("swirl")
 ```
 
 
@@ -359,8 +359,8 @@ To start swirl, you need to load the package with the library() function, and th
 
 
 ```{r}
-library("swirl")
-swirl()
+#library("swirl")
+#swirl()
 ```
 
 
