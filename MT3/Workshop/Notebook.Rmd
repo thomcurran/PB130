@@ -20,40 +20,36 @@ At the end of today’s workshop you should be able to do the following:
 
 ## Preliminaries
 
-Before you start, open up a new R Notebook: using the menus go to: File -> New File -> R Notebook.
-
-At the top of the notebook, create a code chunk and load these packages (you could also use the command require()):
+Before you start, we need to install the required packages, which today are tidyverse and mosiac.
 
 
-```{r}
+```{r eval=FALSE}
+install.packages("tidyverse")
+install.packages("mosaic")
+```
+
+
+Remember that you have to tell R what packages you plan to use in order to use them in the file. So we need to load these packages as well as install them (you could also use the command require()):
+
+
+```{r eval=FALSE}
 library(tidyverse)
 library(mosaic)
 ```
 
 
-Remember that you have to tell R what packages you plan to use in order to use them in the file. We are going to use functions from the mosaic and tidyverse packages and so we have to tell our R Markdown file to use them.
-
-
-```{r}
-require(tidyverse)
-require(mosaic)
-```
-
-
 ## Loading data
 
-We now want to start to work with some data. We shall download a dataset from the World Values Survey. 
+We now want to start to work with some data. We use a dataset from the World Values Survey. 
 
 You can go to the World Value Survey site to see what we’ll be working with. Don’t download anything: http://www.worldvaluessurvey.org/WVSContents.jsp. We will be looking at wave 6 data, collected between 2010 and 2014.
 
-You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. The .rds extension is an R speicifc extension, most commonly we'll work with .csv files.
+You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. This file is also in the MT3 workshop folder. The .rds extension is an R speicifc extension, most commonly we'll work with .csv files. 
 
-Download the file and save it in a logical place. I would recommend that you save it in your PBS folder under a folder called MT3.
-
-Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file.
+Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file. An easy way to do this is to click on the dataframe name in the files window, change the name to WVS and click OK. The code will appears in the console. Just copy and paste that code in your R chunk.
 
 
-```{r}
+```{r eval=FALSE}
 WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT3/Workshop/WV6_Data_R_v20180912.rds")
 ```
 
@@ -77,7 +73,7 @@ Impresssive! So, what can we do to look at this data? There are a few options.
 3. Just type the dataframe name in the console
 
 
-```{r}
+```{r eval=FALSE}
 View(WVS) # is the same as:
 WVS
 ```
@@ -90,16 +86,16 @@ Note that the row numbers in the first column are not part of the WVS data. R ad
 You would have seen that looking at the dataframe in its entirety is quite cumbersome. We would probably rather just take a look at some portion of our data, such as the top or the bottom of the data. We can do this with the head and tail commands. Run them now to check out the first few rows of the data. By default, head and tail show you 6 rows. You can change that by adding a command and a number after the the name of the data frame.
 
 
-```{r}
+```{r eval=FALSE}
 head(WVS)
 ```
-```{r}
+```{r eval=FALSE}
 head(WVS, 8)
 ```
-```{r}
+```{r eval=FALSE}
 tail(WVS)
 ```
-```{r}
+```{r eval=FALSE}
 tail(WVS, 12)
 ```
 
@@ -109,7 +105,7 @@ What happens?
 Okay, a bit messy. What about finding out the dimensions of the data frame with dim()?
 
 
-```{r}
+```{r eval=FALSE}
 dim(WVS)
 ```
 
@@ -119,7 +115,7 @@ This command should output [1] 89565   440, indicating that there are 89565 rows
 You can see the names of these columns (or variables) by typing the names() command
 
 
-```{r}
+```{r eval=FALSE}
 names(WVS)
 ```
 
@@ -129,7 +125,7 @@ You should see that the data frame contains the columns that match those in the 
 Another way to obtain similar information is to ask for the structure of the data using the command str()
 
 
-```{r}
+```{r eval=FALSE}
 str(WVS)
 ```
 
@@ -167,7 +163,7 @@ Let’s try the favstats command with the WVS data frame for the Happiness quest
 The function favstats() uses the following structure favstats(~VARIABLENAME, data = DATANAME). That is, we use a tilde ~ before the name of our variable, and we also specify the data as being a particular data object we plan to use.
 
 
-```{r}
+```{r eval=FALSE}
 favstats(~V10, data = WVS)
 ```
 
@@ -186,13 +182,13 @@ If you said the minimum value -5 is outside of the range of values (1-4) then yo
 
 -1. Don´t know
 
-All of which are redundant for our interests. This is common when retrieiving large data sets - they are often messy and require manipulating or cleaning!
+All of which are redundant for our interests. This is common when retrieiving large data sets - they are often messy and require manipulating or cleaning! We want tidy data!
 
 ## Data manipulation
 
 During this course, we shall use a variety of data verbs, commands that “do” things to data (hence “verb”). The list of data verbs includes:
 
-1. mutate(): change the date, thus ‘mutate’ it in some way
+1. mutate(): change the data, thus ‘mutate’ it in some way
 
 2. filter(): filter some subset of cases out from the total list of variables
 
@@ -208,11 +204,11 @@ During this course, we shall use a variety of data verbs, commands that “do”
 
 ## Piping 
 
-Before we do much else, we want to think about how to write good code. One of doing that is by using “pipes”. In R, the %>% symbol is called a pipe. You should read the pipe as saying “Then” or “And then”. A pipe “pipes in” an argument so that you are able to use it in a function.
+Before we do much else, we want to think about how to write good code. One of teh ways of doing that is by using “pipes”. In R, the %>% symbol is called a pipe. You should read the pipe as saying “Then” or “And then”. A pipe “pipes in” an argument so that you are able to use it in a function.
 
 I like the to think of my programs that include the pipe as stories told by a 6-year-old:
 
-![Figure 1. Piping Example](https://github.com/thomcurran/PB130/blob/master/Images/piping.png?raw=true)
+![*Figure 1. Piping Example*](https://github.com/thomcurran/PB130/blob/master/Images/piping.png?raw=true)
 
 That way, I don’t get confused about what it means because I always get the functions in the right sequence.
 
@@ -220,16 +216,14 @@ So the command we will use to tell R what data to use is the following:
 
 WVS %>% # data first, and then..
 
-*Don’t leave this command by itself - R will look for what you’re trying to “pipe” the data into.*
-
 ## Selecting variables
 
 Let’s start to examine the data a little more closly. Rarely would we be conducting analyses on the entirity of a data set the size of the WVS, so a useful starting point is to retain only the vairables of interest (and get rid of all others). Let's say we are interested only in a country-level analysis of the well-being variables measured by V10 (feeling of happiness) and V11 (subjective health). We can access only the data in these variables by creating a new dataframe (WVS_short) a using the select() function.
 
 
-```{r}
-WVS_short <- # new data frame
-  WVS %>% # original dataframe
+```{r eval=FALSE}
+WVS_short <- # create new data frame WVS_short
+  WVS %>% # original dataframe pipe ("and then")
   select(V2, V10, V11) # variables of interest to retain
 head(WVS_short) # inspect new dataframe 
 ```
@@ -242,9 +236,9 @@ We now have a more managable data frame WVS_short that contians only the variabl
 Great, now remember that we know V10 and V11 contain redundant information in the range of values (i.e., values of -5 to -1 are no response or dont knows). Lets now filter those redundant values out of our WVS_short dataframe using the filter() function. 
 
 
-```{r}
+```{r eval=FALSE}
 WVS_short <- # into existing dataframe
-WVS_short %>% # from existing daraframe
+WVS_short %>% # from existing daraframe pipe ("and then")
 filter(V10 >= "1" & V11 >= "1") # Filter V10 and V11 at a value of 1 and above
 WVS_short # check dataframe
 ```
@@ -264,7 +258,7 @@ From eyeballing the data we can see that there appears to be no minus values in 
 So we have successfully removed the redundant information. Now lets hone in on this data. Let's say that in our project we are only interested in well-being within the USA. To do this, we need to create a new dataframe (Just_USA) from a subset of cases within the Short_WVS dataframe. Here we will use the V2 variable (country) and use the filter() function. Looking at the WVS codesheet tells us that the numeric code for USA in V2 is 840 (codesheet is here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf).
 
 
-```{r}
+```{r eval=FALSE}
 Just_USA <- # into new dataframe
 WVS_short %>% # from WVS_short
 filter(V2 == "840") # Filter on the country code
@@ -278,16 +272,16 @@ Let’s go through a step-by-step interpretation of this code:
 
 2. Second, we tell R to pipe in (to use) the Short_WVS data.
 
-3. Third, we then (%>%) tell R to use the filter command where it takes the variable date and only selects the case(s) for which date is equal to “840” (the use of two equals signs == is very important here becuase it is used to assign a specific value. You will get an error if you only use one equals sign)
+3. Third, we then (%>%) tell R to use the filter command where it takes the variable "V2" and only selects the case(s) for which the value is equal to “840” (the use of two equals signs == is very important here becuase it is used to assign a specific value. You will get an error if you only use one equals sign)
 
-4. Fourth, we tell R to display our new dataframe Just_USA. (notice, there’s no pipe %>% at the end of the line before Just_USA)
+4. Fourth, we tell R to display our new dataframe Just_USA. (notice, there’s no pipe %>% at the end of the line before Just_USA. Have a think why that might be)
 
 ## Mutating
 
 We now have a data file that contains interpretable information on happiness (V10) and subjective health (V11) for Americans contained in the Just_USA dataframe. This is great but there is one more thing we need to do. Remeber that we considered wellbeing as variable that consists of both happiness and subjective health. Well, we need to create that welbeing variable in the Just_USA dataframe. To do that, we are going to use the mutate() fucntion to add happiness and wellbeing together and create a new variable called "wellbeing".
 
 
-```{r}
+```{r eval=FALSE}
 Just_USA <- # into existing dataframe
   Just_USA %>% # from existing dataframe
   mutate(wellbeing = V10 + V11) # add up V10 and V10 and asign the sum to a new variable called wellbeing
@@ -306,12 +300,12 @@ Notice here that R understands 1 equals sign (e.g., =) as part of a calculation.
 Now we have created the wellbeing variable, we can address our focal aim, which is to understand levels of wellbeing in the USA. To do that, lets use the favstats() function to see what the average wellbeing score is for people in the USA.
 
 
-```{r}
+```{r eval=FALSE}
 favstats(~wellbeing, data = Just_USA)
 ```
 
 
-Given that the range of values for wellbeing range from 1 to 8, a mean of 3.67 suggests that people in the USA have pretty high wellbeing (remember lower scores indicte better well-being).
+Given that the range of values for wellbeing contains 1 through 8, a mean of 3.67 suggests that people in the USA have pretty high wellbeing (remember lower scores indicte better well-being).
 
 
 ## Activity
@@ -350,17 +344,17 @@ That was an introduction to basic data manipulation R and RStudio, but we will p
 You can also practice R using a package called Swirl. The following code installs the package swirl. Remeber to dehash the code so it will run!
 
 
-```{r}
-#install.packages("swirl")
+```{r eval=FALSE}
+install.packages("swirl")
 ```
 
 
 To start swirl, you need to load the package with the library() function, and then run it with swirl()
 
 
-```{r}
-#library("swirl")
-#swirl()
+```{r eval=FALSE}
+library("swirl")
+swirl()
 ```
 
 
