@@ -170,7 +170,7 @@ favstats(~V10, data = WVS)
 
 As you can see, we have summary information about people's happiness from wave 6 of the WVS. But can you spot the problem here?
 
-If you said the minimum value -5 is outside of the range of values (1-4) then you are correct! This is becuase in the WVS not everybody answered this question or responded that they did not know. So rather than 1-4, the V10 variable ranges from -5 to 4, and includes (see codesheet here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf):
+If you said the minimum value -5 is outside of the range of values (1-4) then you are correct! This is becuase in the WVS not everybody answered this question, or responded that they "did not know". So rather than 1-4, the V10 variable ranges from -5 to 4, and includes (see codesheet here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf):
 
 -5. HT: Missing-Dropped out survey; RU: Inappropriate response
 
@@ -341,7 +341,7 @@ Now its your turn to do some data manipulation with the WVS. I want you to creat
 
 That was an introduction to basic data manipulation R and RStudio, but we will provide you with more functions and a more complete sense of the language as the course progresses. Feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
 
-You can also practice R using a package called Swirl. The following code installs the package swirl. Remeber to dehash the code so it will run!
+You can also practice R using a package called Swirl. The following code installs the package swirl.
 
 
 ```{r eval=FALSE}
