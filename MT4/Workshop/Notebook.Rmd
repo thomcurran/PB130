@@ -65,7 +65,7 @@ WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "charact
 ## Case Study in Visulising Data: Wellbeing
 
 
-Lets pick up where we left off last week and look at two variables - happiness and subjective health as a proxy for wellbeing. But instead of looking at one or two coutires, lets see what wellbeing looks like across all the nations in the WVS. The happiness variable, for example, asks the question: “Taking all things together, would you say you are (fill in the value)
+Lets pick up where we left off last week and look at two variables - happiness and subjective health as a proxy for wellbeing. But instead of looking at one or two countries, lets see what wellbeing looks like across all the nations in the WVS. The happiness variable, for example, asks the question: “Taking all things together, would you say you are (fill in the value)
 
 1. Very happy
 
@@ -86,13 +86,13 @@ head(WVSwellbeing)
 ```
 
 
-While we are manipulaitng the data, lets also calculate our wellbeing variable as the average of V10 and V10 and add it to the dataframe.
+While we are manipulaitng the data, lets also calculate our wellbeing variable as the average of V10 and V10 and add it to the dataframe. I've left the mutate function empty for you to fill in.
 
 
 ```{r}
 WVSwellbeing <- # into existing dataframe
   WVSwellbeing %>% # from existing dataframe
-  mutate(wellbeing = (V10 + V11)/2) # avergage V10 and V10 and asign the sum to a new variable called wellbeing
+  mutate() # avergage V10 and V10 and asign the sum to a new variable called wellbeing
 WVSwellbeing # check dataframe
 ```
 
@@ -129,13 +129,13 @@ WVSwellbeing %>%
 ```
 
 
-This is essentially the same information as in favstats() but this time graphed. Notice, again, that we have values of -5 through -1 that aren’t too useful to us. We want to filter these out of the dataframe. We can do that by using filter()
+This is essentially the same information as in favstats() but this time graphed. Notice, again, that we have values of -5 through -1 that aren’t too useful to us. We want to filter these out of the dataframe. We can do that by using filter(). I've left the filter function empty for you to fill in.
 
 
 ```{r}
 WVSwellbeing <- # into existing dataframe
 WVSwellbeing %>% # from existing daraframe
-filter(V10 >= "1" & V11 >= "1") # Filter V10 and V11 at a value of 1 and above
+filter() # Filter V10 and V11 at a value of 1 and above
 WVSwellbeing # check dataframe
 ```
 
