@@ -21,12 +21,12 @@ At the end of today’s workshop you should be able to do the following:
 
 
 ```{r}
-#install.packages("tidyverse")
-#install.packages("mosaic")
-#install.packages("ggplot2")
-#install.packages("moments")
+install.packages("tidyverse")
+install.packages("mosaic")
+install.packages("ggplot2")
+install.packages("moments")
 install.packages("~/PB130_0.1.0.tar.gz", repos = NULL, type = "source")
-#install.packages("sjlabelled")
+install.packages("sjlabelled")
 ```
 
 
