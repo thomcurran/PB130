@@ -1,5 +1,5 @@
 ---
-title: "MT4: Visulisng and plotting data"
+title: "MT8: Explaining Variation"
 output: html_notebook
 ---
 
@@ -8,13 +8,13 @@ output: html_notebook
 At the end of today’s workshop you should be able to do the following:
 
 
-1. Graph and interpret the distributional properties of variables
+1.Build an empty model by calcuating the predicted values and the residuals
 
-2. Create and modify histograms and boxplots in ggplot
+2. Calcuate error using sum of sqaures, variance, and standard deviation
 
-3. Manipulate grouped data
+3. Use lm() and anova() to test our calcaultions
 
-4. Plot grouped data using the World Values Survey
+4. Compare distributions of choice for Australia and Japan using Z-scores
 
 ## Install required packages
 
@@ -47,13 +47,11 @@ If you would like to have a quick recap on the data we will be working with, go 
 
 You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. The .rds extension is an R speicifc extension, most commonly we'll work with .csv files.
 
-Download the file and save it in a logical place. I would recommend that you save it in your PBS folder under a folder called MT4.
-
 Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file.
 
 
 ```{r}
-WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT4/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT8/Workshop/WV6_Data_R_v20180912.rds")
 
 WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
 ```
@@ -84,11 +82,11 @@ head(WVSchoice)
 ```
 
 
-Lets now run the favstats() function to see what we are playing with at the whole
+Lets now run the favstats() function to see what we are playing with for the choice variable (V55).
 
 
 ```{r}
-favstats(~V55, data = WVSchoice)
+favstats()
 ```
 
 
@@ -108,7 +106,7 @@ Box-plot, histogram, and descriptives.
 
 ## The empty model
 
-Lets begin to build an empty model for Australia. The first step in this process is to calcuate the mean and save it into the dataframe. Remeber, the mean in our "best guess" of what someone in Austrsalia would score on perceptions of choice given no other information. The mean is the empty model. It is the predicted score. We can calcualte and save the mean as an additional variable in our dataframe using the mutate() function.
+Lets begin to build an empty model for Australia. The first step in this process is to calcuate the mean and save it into the dataframe. Remeber, the mean is our "best guess" of what someone in Austrsalia would score on perceptions of choice given no other information. The mean is the empty model. It is the predicted score. We can calcualte and save the mean as an additional variable in our dataframe using the mutate() function.
 
 
 ```{r}
@@ -126,7 +124,7 @@ WVSaus
 ```
 
 
-Now we can see that the mean as the model predicts that Australians will score 7.81 in terms of perceptions of control. However, as is evident from the dataframe - that is a pretty terrible model. 
+Now we can see that the mean as the model predicts that Australians will score 7.81 in terms of perceptions of control. However, as is evident from the dataframe - that is a pretty terrible model - there are alot of deviations from the mean. 
 
 Lets visualise this distribution using a histogram to see this better.
 
@@ -145,7 +143,7 @@ WVSaus %>%
 
 Most people do not score 7.81. Some score higher, some score lower. There is also a negative skew here, with extreme scores on the left-hand tail pulling the mean leftwards.
 
-The beauty of the mean as a model is that this slight skew is accounted for by adding all the responses together and dividing them by the sample. In other words, using the mean as the model ensures the higher and lower scores are perfectly balanced. To see this, lets calculate the second important part of our model - the error or residual. The error, remember, is the difference of the model (mean) from the observed score. 
+The beauty of the mean as a model is that this slight skew is accounted for by adding all the responses together and dividing them by the sample. In other words, using the mean as the model ensures the higher and lower scores are perfectly balanced. To see this, lets calculate the second important part of our model - the error (or residual). The error, remember, is the difference of the model (mean) from the observed score. 
 
 We can calcualte the error by taking the observed score for choice and subtracting it from the mean score. Lets use the mutate function to do that for the participants in this sample.
 
@@ -170,16 +168,16 @@ Now, if we sum the residuals you will see that they will equal zero. This is the
 Let's check this by using the sum() function to sum the residuals.
 
 ```{r}
-sum(WVSchoice$residual_choice)
+sum(WVSaus$residual_choice)
 ```
 
 Any time you see R return a slightly gibberish value contaning "e-", it means that this is an incredibly small value that, for all intents and purposes, we can interpret as zero. So here we see the value of the mean as a model. It minimises the error. 
 
 Thinking about the mean in this way also helps us think about DATA = MODEL + ERROR in a more specific way. If the mean is the model, each data point can now be thought of as the sum of the model (7.81 in our WVS data) plus its deviation from the model. So 9 can be decomposed into the model part (7.81) and the error from the model (+1.19).
 
-It’s easy to fit the empty model, which is why I am starting us here — it’s just the mean (7.81 in this case). But later in the course, we will will learn to fit more complex models. I am going to teach you a way of fitting models in R that you can use now for fitting the empty model, but that will also work in subsequent for fitting more complex models.
+It’s easy to fit the empty model, which is why I am starting us here — it’s just the mean (7.81 in this case). But later in the course, we will will learn to fit more complex models. I am going to teach you a way of fitting models in R that you can use now for fitting the empty model, but that will also work in subsequent weeks for fitting more complex models.
 
-The R function we are going to use is  lm() , which stands for “linear model.” Here’s the code we use to fit the empty model.
+The R function we are going to use is lm(), which stands for “linear model.” Here’s the code we use to fit the empty linear model.
 
 ```{r}
 lm(V55 ~ NULL, data = WVSaus)
@@ -187,14 +185,14 @@ lm(V55 ~ NULL, data = WVSaus)
 
 Although the output seems a little odd, with words like “Coefficients” and “Intercept,” it does give you back the mean of the distribution (7.81), as expected. We will see in subsequent weeks why the mean is referred to as the intercept, but for now just think about the intercept as the best fitting model. Our "best guess", so to speak. The word “NULL” is another word for “empty” (as in “empty model.”)
 
-It will be helpful as we go forward to save the results of this model fit in an R object. Here’s code that uses  lm()  to fit the empty model, then saves the results in an R object called TinyEmpty.model:
+It will be helpful as we go forward to save the results of this linear model in an R object. Here’s code that uses  lm()  to fit the empty model, then saves the results in an R object called Aus.model
 
 ```{r}
 Aus.model <- lm(V55 ~ NULL, data = WVSaus)
 Aus.model
 ```
 
-Using this model we can request a couple of cool outputs that highlight the key properties of DATA = MODEL + ERROR. First lets request the predicted values from this model using the predict() function and add them to the WVSaus dataframe:
+Using this model we can request a couple of cool outputs that highlight the key properties of DATA = MODEL + ERROR. First lets request the predicted values from this model using the predict() function and add them to the WVSaus dataframe
 
 
 ```{r}
@@ -214,7 +212,9 @@ WVSaus
 
 Again, this output is exactly the same as we calcualted by hand. This is no coincidence, the model is subtracting the mean from the observed data and saving it as the residual or error.
 
-Okay, back to the model and lets hone in on the error. Remeber when we summed the residuals and were left with a zero value? This highlights the usefulness of the mean in balancing the residuals, but we are left with the problem that the sum of the residuals does not tell us a great deal about the TOTAL amount of error in our model. When the mean is the model, ALL distribututions will have a sum of residual equalling zero irrespective of whether the amount of error is large or small. Can you think how we remedy this?
+## Error
+
+Back to the model and lets hone in on the error. Remeber when we summed the residuals and were left with a zero value? This highlights the usefulness of the mean in balancing the residuals, but we are left with the problem that the sum of the residuals does not tell us a great deal about the TOTAL amount of error in our model. When the mean is the model, ALL distribututions will have a sum of residual equalling zero irrespective of whether the amount of error is large or small. Can you think how we remedy this?
 
 Thats right, we can square the residuals to get rid of the minus values. The sum of squares also has another useful property in that it is minimised at the mean. And this is what we are attempting to do with statistics - minimise the error! 
 
@@ -233,7 +233,7 @@ sum(WVSaus$residuals_square)
 ```
 
 
-We can also check this using a function called  anova()  to look at the error from the Aus.model lm() object we tested earlier. ANOVA stands for ANalysis Of VAriance. Analysis means “to break down”, and in the coming weeks we will use this function to break down the variation of outcome variables into parts. However for now we will use  anova() just to test out how much error there is around the model, measured in sum of squares.
+We can also check this using a function called  anova()  to look at the error from the Aus.model lm() object we created earlier. ANOVA stands for ANalysis Of VAriance. Analysis means “to break down”, and in the coming weeks we will use this function to break down the variation of outcome variables into parts. However for now we will use  anova() just to test out how much error there is around the model, measured in sum of squares.
 
 
 ```{r}
@@ -255,7 +255,7 @@ You will see this value is the same as the Mean Sq value from the ANOVA output. 
 
 Because it is an average, variance is not impacted by sample size, and thus, can be used to compare the amount of error across two samples of different sizes. 
 
-We can also express error in terms of standard deviation. The standard deviation is simply the square root of the variance. We generally prefer thinking about error in terms of standard deviation because it yields a number that makes sense using the original scale of measurement. So, for example, if you were modeling responses on a 7-point likert scale, variance would express the error in squared points (not something we are used to thinking about), whereas standard deviation would express the error in origional units (i.e., the 7-point scale). Lets again use R as a calcualtor to work out the SD:
+We can also express error in terms of standard deviation. The standard deviation is simply the square root of the variance. We generally prefer thinking about error in terms of standard deviation because it yields a number that makes sense using the original scale of measurement. So, for example, if you were modeling responses on a 7-point likert scale, variance would express the error in squared points (not something we are used to thinking about), whereas standard deviation would express the error in origional units (i.e., the 7-point scale). Lets again use R as a calcualtor to work out the SD using the sqrt() function:
 
 ```{r}
 sqrt(3.69)
@@ -275,9 +275,9 @@ We have looked at the mean as a model and we have learned some ways to quantify 
 
 Let's say an Australian participant - Jericho - in the WVS has a perception of choice score at one unit above the mid-point; 6. What does this mean? Does this participant have a particuarly high score? How can we know? By now you may be getting the idea that just knowing the score of one person doesn’t tell you very much.
 
-To interpret the meaning of Jericho's single score, it helps to know something about the distribution the score came from. Specifically, we need to know something about its shape, center and spread.
+To interpret the meaning of Jericho's single score, it helps to know something about the distribution the score came from. 
 
-Standard deviation is really useful here. We know that Jericho’s score is about 2 points lower than the average Australain choice score. But now we also know that, on average, choice scores are 1.9 points away from the mean, both above and below. Although Jericho's score is below average, it is definitely not one of the lowest in the distribution. Let's draw another histogram but this time add a layer to it that plots Jericho's score in the distribution of values.
+Standard deviation is really useful here. We know that Jericho’s score is about 2 points lower than the average Australain choice score. But now we also know that, on average, choice scores are 1.9 points away from the mean the SD, both above and below. Although Jericho's score is below average, it is definitely not one of the lowest in the distribution. Let's draw another histogram but this time add a layer to it that plots Jericho's score in the distribution of values.
 
 ```{r}
 WVSaus %>% 
@@ -285,7 +285,7 @@ WVSaus %>%
   geom_histogram(aes(y=..density..), binwidth=1, colour="black", fill="white") + 
   geom_vline(aes(xintercept=mean(V55)), col="blue", size=1) + 
   geom_vline(aes(xintercept=6), col = "red", size=1) +
-  ylab("Number of Responses") +
+  ylab("Number of Responses") + # this adds a vertical line for the score of "6"
   xlab("Perceptions of Choice") +
   ggtitle("Distribution of Perceptions of Choice for Australia in the WVS with Blue Line Showing the Mean and Red Line Showing Jericho") +
   theme_minimal(base_size = 8)
@@ -296,11 +296,11 @@ We can combine information from our model regarding the mean and standardd devai
 
 
 ```{r}
-WVSaus$Z1 <- WVSaus$residuals/1.92
+WVSaus$Z1 <- WVSaus$residuals/1.92 # remeber the Z score is the residual divided by the SD, in this case 1.92
 WVSaus
 ```
 
-R can also direct calcualte Z scores using the scale() function:
+R can also directly calcualte Z scores using the scale() function:
 
 ```{r}
 WVSaus$Z2 <- scale(WVSaus$V55)
@@ -308,7 +308,7 @@ WVSaus
 ```
 
 
-You will see that both Z scores are more or less the same, however, it is best to use the direct scale() function as calculations by hand are liable to minor errors of rounding.
+You will see that both Z scores are more or less the same, however, it is best to use the scale() function as calculations by hand are liable to minor errors of rounding.
 
 Lets check out the distribution of Z scores using the favstats() function:
 
@@ -322,7 +322,7 @@ The Z Score has tranformed the choice variable so that it now has a mean of zero
 -1.81/1.92 # Jericho scored 6 and the mean is 7.81 so 6 - 7.81 = -1.81. We take this residual and divide it by the SD of 1.92.
 ```
 
-Here we can see that Jericho's score is almost 1 standard deviation below the Australian mean. If we plot this in a histogram as we did before, but this time with Z scores, we can see a similar picture:
+Here we can see that Jericho's score is almost 1 standard deviation below the Australian mean. If we plot this in a histogram as we did before, but this time with Z scores plotting the error distribution, we can see a similar picture:
 
 ```{r}
 WVSaus %>% 
@@ -337,14 +337,14 @@ WVSaus %>%
 ```
 
 
-Now with this distribution of Z scores we can do something pretty cool. We can find the normal curve that best fits the data and that normal curve can then be used to make predictions about how likely it is that any randomly sampled Australian would report a perception of choice that is larger than Jericho's of 6. To do this, we are going to us the xpnorm() function to fit the normal curve and then use it to tell us the exact probability:
+Now with this distribution of Z scores we can do something pretty cool. We can find the normal curve that best fits the data and that normal curve can then be used to make predictions about how likely it is that any randomly sampled Australian would report a perception of choice that is larger than Jericho's of 6. To do this, we are going to us the xpnorm() function to fit the normal curve and then use it to tell us the exact probability
 
 
 ```{r}
 xpnorm(6, mean = 7.81, sd = 1.92) # 6 is the score we are making predictions about, the mean for the Australia distribution is 7.81 and the SD is 1.92
 ```
 
-The first window tells us that there is a 17% chance that any randomly sampled Australian would score less than 6 on perceptions of choice, whereas 83% would report I larger score. Perhaps Jericho is a low scorer after all!
+The first window tells us that there is a 17% chance that any randomly sampled Australian would score less than 6 on perceptions of choice, whereas 83% would report a larger score. Perhaps Jericho is a low scorer after all!
 
 The second window plots Jericho's score under the fitted normal curve. You can see that his Z-score, -.94, is exactly as we calcualted and it cuts off 83% of the sample. Pretty impressive use of our mean and SD!
 
@@ -373,7 +373,7 @@ WVSjapan
 ```
 
 
-What is the mean score for Japan?
+What is the mean score for Japan? 
 
 Now create a new variable for the residuals (error):
 
@@ -399,7 +399,7 @@ Calcualate the sum of squares for the Japan model:
 
 What is the sum of squares?
 
-Calcualte the variance, remeber to use the degrees of freedom in this calculation:
+Calcualte the variance, remember to use the degrees of freedom in this calculation:
 
 ```{r}
 
@@ -415,7 +415,7 @@ Calcualte the standard deviation:
 
 What is the standard deviation?
 
-Let's build the empty model for Japan using the lm() funtion: 
+Let's build the empty model for Japan using the lm() funtion and save it as an R object Japan.model: 
 
 
 ```{r}
@@ -427,7 +427,7 @@ Now lets check our calculations for the mean and variance using the anova() func
 
 
 ```{r}
-anova() # enter the name of the model you have built usign lm()
+anova() # enter the name of the model you have built using lm()
 anova
 ```
 
@@ -461,12 +461,13 @@ How many standard deviations is Jericho's score of 6 away from the mean in the J
 
 Now plot the distribution of z scores and add a blue line to represent the mean and a red line to represent Jericho's score:
 
+
 ```{r}
 
 ```
 
 
-Finally, use the xpnorm() function to fit the normal curve around this distribution and find how likely it is that any randomly sampled Japanese would report a perception of choice that is larger than Jericho's of 6.
+Finally, use the xpnorm() function to fit the normal curve around this distribution and find how likely it is that any randomly sampled Japanese person would report a perception of choice that is larger than Jericho's of 6.
 
 
 ```{r}

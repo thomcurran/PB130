@@ -1,20 +1,21 @@
 ---
-title: "MT4: Visulisng and plotting data answers"
+title: "MT8: Explaining Variation"
 output: html_notebook
 ---
 
 ## Learning outcomes 
 
+
 At the end of today’s workshop you should be able to do the following:
 
 
-1. Graph and interpret the distributional properties of variables
+1.Build an empty model by calcuating the predicted values and the residuals
 
-2. Create and modify histograms and boxplots in ggplot
+2. Calcuate error using sum of sqaures, variance, and standard deviation
 
-3. Manipulate grouped data
+3. Use lm() and anova() to test our calcaultions
 
-4. Plot grouped data using the World Values Survey
+4. Compare distributions of choice for Australia and Japan using Z-scores
 
 ## Install required packages
 
@@ -47,15 +48,13 @@ If you would like to have a quick recap on the data we will be working with, go 
 
 You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. The .rds extension is an R speicifc extension, most commonly we'll work with .csv files.
 
-Download the file and save it in a logical place. I would recommend that you save it in your PBS folder under a folder called MT4.
-
 Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file.
 
 
 ```{r}
-WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT4/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT8/Workshop/WV6_Data_R_v20180912.rds")
 
-WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
+WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names of th countries) rather than its default "numeric" value.
 ```
 
 
