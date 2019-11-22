@@ -1,0 +1,461 @@
+---
+title: "MT9: Comparing Groups"
+output: html_notebook
+---
+
+## Learning outcomes 
+
+At the end of today’s workshop you should be able to do the following:
+
+
+1.Conduct a paired samples t-test or one-parameter model using the t.test and lm fucntions
+
+2. Conduct and independent samples t-test or two-parameter model using the t.test and lm model fucntions
+
+3. Conduct a between groups ANOVA or three-parameter model using the anova and lm functions
+
+
+## Install required packages
+
+```{r}
+install.packages("tidyverse")
+install.packages("supernova")
+install.packages("ggplot2")
+install.packages("sjlabelled")
+install.packages("fastDummies")
+```
+
+
+## Load required packages
+
+The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
+
+
+```{r}
+library("tidyverse")
+library("mosaic")
+library("ggplot2")
+library("sjlabelled")
+library(fastDummies)
+```
+
+
+## One-parameter linear model or paired samples t-test or 
+
+
+To practice conducting a one-parameter linear model with paried differences (paired t-test), we are going to use a dataset from Pruzek & Helmreich (2009). This dataset presents 15 paired data corresponding to the weights (lbs) of girls before and after 14-weeks of psychological therapy for anorexia. 
+
+The data are from an intervention study with pre and post weights and give a good example of a paired design. Many interventions are set up like this in psychology, and the our one-parameter linear model is how we test for differences from pre-test to post-test. 
+
+We are going to go through testing these models with the lm() function first, and I'll then show you the equivalence with the t.test() function. 
+
+First, lets load this data into our R environment. Go to the MT9 folder, and then to the workshop folder, and find the "anorexia.csv" file. Click on it aand then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can run the code below and it will do the same thing.
+
+
+```{r}
+anorexia <- read_csv("MT9/Workshop/anorexia.csv")
+anorexia
+```
+
+
+You will see that this dataframe has three columns and 15 subjects (rows). X1 is the girls' pre-therapy weight and X2 is the girls' post-therapy weight. The Subject variable is the subject code for each participant.
+
+Before we delve into this topic lets just clarify the research question and null hypothesis we are testing:
+
+*Research Question* - Do girls have different before and after therapy weights?
+
+*Null Hypothesis* - The difference between girls' weight before and after therapy will be zero.
+
+
+## Descriptives
+
+
+Lets first inspect this data and take a look at the means and standard devations for each time point. By now, you should know how to do this. As a reminder, we can use favstats() to inpect the descriptives.
+
+
+```{r}
+favstats(~X1, data=anorexia)
+favstats(~Y1, data=anorexia)
+```
+
+
+Okay, there appears to be a small reduction in weight from pre to post therapy evidenced by the means (not a good start). But there is quite substancial variance in both samples, as evidenced by the SD, so the question is whether this mean difference is statistically meaningful.
+
+To address this question, lets first calcualte the difference scores for each participant and take a look at the mean difference between the pairs.
+
+
+```{r}
+anorexia$difference <- anorexia$Y1 - anorexia$X1
+anorexia
+```
+
+Lets now use favstats again to examine the mean difference between the paried scores.
+
+
+```{r}
+favstats(~difference, data=anorexia)
+```
+
+
+Here we have a mean reduction of 1.08 lbs from before to after therapy. The SD asscoaited with that reduction is 1.97. We can also think about this mean difference as our predicted value, like the mean was the predicted vlaue in the empty model. All else being euqal and with no othe information, our best guess would be that the psychological therapy would result in a weight redution of 1.08 lbs. As we saw wih the descriptives, this is not good news for our intervention.
+
+## Setting up the linear model
+
+Okay, lets set our up our linear model to examine the statitical significance of that -1.07 lb mean difference. Like last week, we are using the lm function to test a one-parameter model - but this time the parameter is the difference between the pairs of observations.
+
+
+```{r}
+anorexia.model <- lm(Y1 - X1 ~ NULL, data=anorexia) # notice how I've set this up. The lm is taking the difference score (Y1- X1) and inputting it to a one-parameter model (NULL). I am then saving that model as an R object called anorexia.model
+summary(anorexia.model) # the summary command just calls the summary statistics for the anorexia.model
+```
+
+
+Notice that the model part of this formula - bo - is the same as the mean difference we just calcuated -1.08 lbs? This shows that we still have a one-parameter model here but instead of the mean of an outcome in the empty model, this time we have the mean of the differences in outcome variable for our paired t-test.
+
+Notice also we have some other statistics that we didn't see in the empty model. The standard error is the estimate of error in the estimate of model due to sampling variance. It is calcuated by taking the standard deviation of the mean difference and dividing it by the sqrt of the sample size. Larger sample sizes and smaller mean difference deivations result in a smaller standard error of the estimate. We cal calcualte this by hand using the information we have already called.
+
+
+```{r}
+1.973018/sqrt(15) # 1.97 is the SD for the mean difference and the sample size is 15
+```
+
+
+We also have a t-ratio. This is the ratio of the model estimate - bo - to its standard error. The larger the estimate relative to the SE the larger t will be. Here we have a t-ratio of -2.117. We can also calcualte this by hand using the information we have already called.
+
+
+```{r}
+-1.0787/0.5094311 # ratio of the estimate (mean difference) to the standard error
+```
+
+
+So we have a t-ratio for the mean difference between the pre and post-therapy weights of -2.12. But is this large enough to be statistically significant? Can we say that a zero mean difference is unlikely given the data? 
+
+Well take a look at the p value (pr) in the lm () output and remember we said that statisticians count .05 and lower probabilities as unlikely. Our p value is > .05 and therefore we cannot reject the null hypothesis. It seems that weight appears to fall across the time periods in our sample but that decrease is not statitically significant.
+
+We might write this up in a research paper as follows:
+
+There was no statistically significant difference between pre-therapy and post-therapy weight in the current sample: t(14) = -2.12, p > .05.
+
+## Equivalence with the paried t.test
+
+Just to show you that the paired t-test is equivalent to a linear model, lets do the same analysis using the t.test function.
+
+
+```{r}
+t.test(anorexia$Y1, anorexia$X1, paired = TRUE) # setting up the t-test requires the post then pre variables entered in order rathern than as a difference score - R calcualtes the difference score for us in the t.test function.
+```
+
+See how the t ratio, p-value and mean difference is exactly the same as the linear model we tested? Thats becuase the analyses are exactly the same! Students are often taught t-test as a seperate statistical test to independent t-test, ANOVA and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model! This equivalence helps us understand what is happing when we run stats in the psychological and behavioural sciences. Its all underpinned by the linear model.
+
+
+## Two-parameter model or independent t-test
+
+
+Okay lets now move to a different research topic and question to examine differences between independent groups. We will start with a two-parameter model (two groups) and move to a three parameter model. As we saw in the lecture, the two-parameter model is often called an independent t-test and the three-parameter model is often called ANOVA. Like the paired t-test, we will see that both of these tests are linear models that can be analysed using the lm() in R. 
+
+To start, lets ask different research question using some data I have collected on levels of perfectionism in American, Canadian, and British college students. Thsi data is from Curran & Hill (2019). Many observational studies in psychology are set up like this, and the our two-parameter linear model is how we test for differences in scores across the countries. 
+
+Lets start by collapsing the USA and Canada into one region called North America and look to see if North American students differ in their levels of perfecitonism to those in the UK. Later, we will extend this model to look at differences across the three countires.
+
+First, lets load this data into our R environment. Go to the MT9 folder, and then to the workshop folder, and find the "perfectionism.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can run the code below and it will do the same thing.
+
+
+```{r}
+perfectionism <- read_csv("MT9/Workshop/perfectionism.csv")
+perfectionism
+```
+
+You will see that this dataframe has four columns and 139 data points (rows). Study is the study that the mean level of perfectionism was taken from, SOP is the mean level of self-oriented perfectionism reported in the study, Country is the varaible containing the country that the data was collected in (i.e., Canada, the USA, and the UK), and Region (i.e., North America and the UK) is the World region that the data was collected from.
+
+Before we delve into this topic lets just clarify the research question for our two-parameter model and null hypothesis we are testing:
+
+*Research Question* - Do levels of perfectionism differ between college students from North America and the UK?
+
+*Null Hypothesis* - The difference between college students' levels of perfectionism in North America and the UK will be zero.
+
+## Descriptives
+
+Lets first inspect this data and take a look at the means and standard devations for each region. By now, you should know how to do this. As a reminder, we can use favstats() to inpect the descriptives.
+
+
+```{r}
+favstats(~SOP, Region, data=perfectionism) # the second line of fav stats is our factor and it splits the SOP scores into a mean for North America and a mean for the UK.
+```
+
+
+Okay, there appears to be a small difference here and we can calcualate this difference by hand. We just take the UK mean from the North America mean to ascertain the increment needed from the UK to get the North America mean.
+
+```{r}
+4.607002 - 4.513348
+```
+
+
+North American students appear to have a higher score on perfectionism than UK students. THe difference is 0.093654 points on a 1-7 Likert scale, which doesnt seem a great deal but in the context of the equally small SD, could be significant. The question therefore is whether this mean difference is statistically meaningful.
+
+
+## Setting up the linear model
+
+Now lets set our up our linear model to examine the statitical significance of that 0.09 mean difference. This time though we are using the lm() function to test a two-parameter model becuase we now have two means to estimate.
+
+Before we do so, I want to show you have to dummy code the variables because the meaning of the intercept changes in line with how the explainatory variable is coded. The intercept, remember, is the value of the outcome (perfectionism) when the explainatory variable equals zero. And so the meaning of zero becomes very important. In this example, I want to know what the increment is from the UK mean to the North America mean, so I'm going to dummy code my explainatory variable as UK = 0 and North America = 1. This way, the interpretation of b0 (intercept) is the UK mean, and the interpretation of b1 is the increment needed for the North America mean or - in other words - the mean difference. To do so I'm just going use the ifelse() function to assign codes.
+
+```{r}
+perfectionism$dummy <- ifelse(perfectionism$Region == c("NORTH_AMERICA"), 1, 0) # this code creates new variable "dummy" and inserts either 1 or 0 depending on whether north america is TRUE in the Region variable
+perfectionism
+```
+
+Now a new variable is created that assigns UK a code 0 and North America a code 1. In reality, R will do this for you if you feed it a categorical variable, but I wanted to show you how this is working.
+
+Okay lets now build our two-parameter model.
+
+```{r}
+perfectionism.model <- lm(SOP ~ 1 + dummy, data=perfectionism) # notice how I've set this up. Unlike the empty or one-parameter model we now have a variable after the tilda (~). This is no longer an empty model with just the mean or intercept but it now contains an intercept (1) and an explainatory variable - namely, our dummy coded region. Thus y ~ 1 + x is the R-way of writing y = b + mx (the stright line equation!).
+
+summary(perfectionism.model) # the summary command just calls the summary statistics for the perfectionism.model
+```
+
+
+Notice that the intercept part of our model - bo - is the same as the mean perfectionism score for the UK - 4.51? Notice also that b1 is the mean difference or the increment needed to get to the North American mean (i.e.,  0.09 + 4.51 = 4.60)? This shows that we now have two parameters, and a mean difference that is exactly as we calcuated by hand.
+
+Notice also we have the same other statistics as in our previous model. The standard error and the t-ratio. From what you now know about these statistics, you should be able to work out whether the difference of .09 is statistically meanignful. We have a t of 1.88 and a p value of .06 - we cannot reject the null hypothesis.
+
+We might write this up in a research paper as follows:
+
+There was no statistically significant difference between North America and the UK in college student perfectionism scores: t(137) = 1.87, p > .05.
+
+## Partitioning variance
+
+Another way, perhaps more informative, way to think about this analysis is that we are adding an explainatory variable to the empty model. By doing this, we are attempting to reducing the empty model error. Or, in other words, to explain or reduce the empty model variance.  That is the key to statistics; entering information to models that helps us make better predictions. Our reasoning here is that we can better predict perfectionism scores if we know which region a person comes from.
+
+We've established that we cannot be certain that the mean difference in the popualtion is not zero (i.e., p > .05), but how much variance in perfectionism is explained by region? We can answer this question using the supernova() function in R, which breaks down the variance in perfectionism due to the model (ie., Region) and error (i.e., variance left over once we've subtracted out the model)
+
+```{r}
+supernova(perfectionism.model)
+```
+
+Taking a look at the supernove table tells us that the total variance - or sum of squares - in perfectionism scores is 6.95. This is variance of perfectionism in the empty model (i.e., the mean as the model). Entering our predictor in the model reduced the sum of squares in the empty perfectionism model by 0.17. We have, then, a sum of squares 6.78 left after subtracting out the model that includes our predictor (i.e., 6.95-0.17). 
+
+When we look at the ratio of total variance (in the empty model) to error variance (in the one-parameter model) we are left with the proportion of empty model variance explained by the model, or PRE. We can see in this example that the PRE is .03. So only about 3% of perfectionism variance is explained by Region. Not a great deal.
+
+Everytime we add a predictor to the model, we spend a degree of freedom and the RPE does not take this into consideration. However, the F ratio does because it is the ratio of model variance to error variance. You can think about it like the ratio variance explained in the model to variance unexplained in the model. Because variance is clacuated using the degrees of freedom, the F-ratio tells us whether the degrees of freedom that we spent in order to make our model more complicated (i.e., adding a parameter) were “worth it”. 
+
+In this case we see an F ratio of 3.52 and a p value of .06. In line with what you understand about p values, this is not statistically significant. Therefore, the interpretation is that adding region to the empty model was not worth it. The variance explained was too small to justify the additional parameter. Notice that this chimes with the interpretation of the t ratio - that there is no significant difference between the groups.
+
+
+## Equivalence with the independent t.test
+
+Just to show you that the independent t-test is equivalent to a linear model, lets do the same analysis using the t.test fucntion.
+
+
+```{r}
+t.test(perfectionism$SOP ~ perfectionism$dummy, var.equal=TRUE) # setting up the t-test requires the outcome variance and the explainatory variance seperated by tilda (~) - R calcualtes the difference score for us in the t.test function.
+```
+
+See how the t ratio, p-value and mean difference is exactly the same as the linear model we tested? Thats becuase the analyses are exactly the same! Students are often taught independet t-test as a seperate statistical test to paired t-test, ANOVA, and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model! This equivalence helps us understand what is happing when we run stats in the psychological and behavioural sciences. Its all underpinned by the linear model.
+
+
+## Three-parameter model or one-way ANOVA
+
+
+Lets stay with the perfectionism data but this time we are going to test for difference between USA, Canada, and the UK rather than the UK and North America. Such an analysis, whereby three means are compared is often called a one-way ANOVA in the literature, but we will see it is really just another linear model - this time with three parameters rather than two.
+
+Before we start, lets just clarify the research question for our three-parameter model and null hypothesis we are testing:
+
+*Research Question* - Do levels of perfectionism differ between college students from the USA, Canada, and the UK?
+
+*Null Hypothesis* - The difference between college students' levels of perfectionism in the USA, Canada, and UK will be zero.
+
+
+## Descriptives
+
+Lets first inspect this data and take a look at the means and standard devations for each country. By now, you should know how to do this. As a reminder, we can use favstats() to inpect the descriptives.
+
+
+```{r}
+favstats(~SOP, Country, data=perfectionism) # the second line of fav stats is our factor and it splits the SOP scores into a mean for USA, a mean for Canada, and a mean for the UK.
+```
+
+
+Okay, there appears to be small differences here and we can calcualate these differences by hand. 
+
+```{r}
+4.576998-4.495725 # CAN-UK diff
+4.576998-4.665186 # CAN-USA diff
+4.495725-4.665186 # UK-USA diff
+```
+
+We can see that Canadians have higher levels of perfectionism than Brits but lower levels than Americans. Americans have higher levels of perfectionism than Brits. Again, the differences are small, but in the context of the small SD these may be significant. The question therefore is whether this mean difference is statistically meaningful.
+
+## Setting up the linear model
+
+Now lets set our up our linear model to examine the statitical significance of those mean differences. This time though we are using the lm() function to test a three-parameter model becuase we now have three means to estimate.
+
+Before we do so, like the two-parameter mode, I want to show you have to dummy code the variables in a three-group model because the meaning of zero is very important. In this case, we need to create two dummy variables with UK as the reference group. I have chose UK as the reference group beacuse we know it has the lowest mean. This necessitates the creation of a USA vs others contrast (USA = 1, others = 0), and a Canada vs others contrast (Canada = 1, others = 0). Setting it up this way makes in the interpretation of the intercept the UK mean (becuase UK is always coded 0), b1 the increment needed to find the USA mean from the UK mean, and b2 the increment needed to find the Canada mean from the UK mean. The difference between b1 and b2 gives the mean difference between the USA and Canada.
+
+We could code the variables by hand but there is a useful function in R that does this for us. Its called fastdummies and uses a dummy_cols() function to dummy code variables given a categorical input. So lets go ahead and creat those dummy variables.
+
+
+```{r}
+perfectionism <- dummy_cols(perfectionism, select_columns = "Country") # into the perfectionism dataframe create dummy columns using the "Country" variable in the perfectionism data frame
+perfectionism
+```
+
+You will see that this function returns three new dummy variables - Country_CAN, Country_USA, and Country_UK. This is quite cool becuase it is giving us the option of which group to use as the reference. I have said we should use the UK as the reference because it has the lowest mean. so the two varaibles we will carry forward for analysis are: Country_CAN and Country_USA.
+
+Okay lets now build our three-parameter model.
+
+```{r}
+perfectionism.model2 <- lm(SOP ~ 1 + Country_USA + Country_CAN, data=perfectionism) # notice how I've set this up. Unlike the empty or one-parameter model we now have a variable after the tilda (~). This is no longer an empty model with just the mean or intercept but it now contains an intercept (1) and an explainatory variable - namely, our dummy coded region. Thus y ~ 1 + x is the R-way of writing y = b + mx (the stright line equation!).
+
+summary(perfectionism.model2) # the summary command just calls the summary statistics for the perfectionism.model
+```
+
+
+Notice that the intercept part of our model - bo - is the same as the mean perfectionism score for the UK - 4.49? Notice also that b1 is the mean difference or the increment needed to get to the USA mean (i.e.,  0.17 + 4.49 = 4.66) and b2 is the mena difference or increment needed to get to the Canada mean (i.e., 0.08 + 4.49 = 4.57)? The difference between b1 and b2 (.08) is the mean difference between USA and Canada. This shows that we now have three parameters, and mean differences that are exactly as we calcuated by hand.
+
+Notice also we have the same other statistics as in our previous model. The standard error and the t-ratio. From what you now know about these statistics, you should be able to work out whether the difference of .17 between the UK and USA is statistically significant. We have a t of 3.00 and a p value of .003 - we can reject the null hypothesis. For the UK vs Canada difference of .08 we have a t ratio of 1.56 and a p value of 0.12 - we cannot reject the null hypothesis.
+
+We might write this up in a research paper as follows:
+
+There was a statistically significant difference between USA and the UK in college student perfectionism scores: t(136) = 3.00, p < .05. However, there was no statitically significant difference between Canada and the UK in college student perfectionism scores: t(136) = 1.55, p > .05.
+
+
+## Partitioning variance
+
+As we saw with the two-parameter model, another way to think about this analysis is that we are adding two explainatory variables to the empty model. By doing this, we are attempting to reducing the empty model error. Or, in other words, to explain or reduce the empty model variance.  That is the key to statistics; entering information to models that helps us make better predictions. Our reasoning here is that we can better predict perfectionism scores if we know which country a person comes from.
+
+We've established that the mean difference in the popualtion is not zero for USA vs UK but not Canada vs UK, but how much variance in perfectionism is explained by country? And is this meaningful? Again, we can answer this question using the supernova() function in R, which breaks down the variance in perfectionism due to the model (ie., country) and error (i.e., variance left over once we've subtracted out the model)
+
+```{r}
+supernova(perfectionism.model2)
+```
+
+Taking a look at the supernova table tells us that the total variance - or sum of squares - in perfectionism scores is 6.95. This is variance of perfectionism in the empty model (i.e., the mean as the model). Entering our two dummy predictors in the model reduced the sum of squares in the empty perfectionism model by .460. We have, then, a sum of squares 6.49 left after subtracting out the model that includes our predictor (i.e., 6.95-0.46). Compare this with the meagre 0.17 sum of squares explained by Region - splitting region in two and looking at perfectionism scores across the USA, Canada, and UK has explained far more variance. Why? Well, because Americans have much higher perfectionism scores than Brits and Canadians! In other words, the USA expalains error variance in the empty perfectionism model.
+
+When we look at the ratio of total variance (in the empty model) to error variance (in the one-parameter model) we are left with the proportion of empty model variance explained by the model, or PRE. We can see in this example that the PRE is .07. So about 7% of perfectionism variance is explained by Contry. Again, compare this to the 3% explained by Region in the two-parameter model.
+
+Remeber, though, that adding an additional predictor will always result in some variance explained by chance, so the question is - is this increase in explained variance enough? 
+
+Everytime we add a predictor to the model, we spend a degree of freedom and the RPE does not take this into consideration. However, the F ratio does because it is the ratio of model variance to error variance. Because variance is calcuated using the degrees of freedom, the F-ratio tells us whether the degrees of freedom that we spent in order to make our model more complicated (i.e., adding a parameter) were “worth it”. 
+
+In this case we see an F ratio associated with the model of 4.82 and a p value of .01. In line with what you understand about p values, this is a statistically significant result! Therefore, the interpretation is that adding our two Country dummy variables to the empty model was worth it. The variance explained is large enough to justify the additional two parameters. Notice that this chimes with the interpretation of the t ratio - that there was a significant difference between the groups.
+
+
+## Equivalence to ANOVA
+
+Just to show you that the one-way ANOVA is equivalent to a linear model, lets do the same analysis using the anova fucntion.
+
+
+```{r}
+perfectionism.ANOVA <- aov(perfectionism$SOP ~ perfectionism$Country) # setting up the ANOVA requires the outcome variable and the explainatory variable seperated by tilda (~).
+summary(perfectionism.ANOVA) 
+TukeyHSD(perfectionism.ANOVA)# Now we have to use the perfectionism.ANOVA model to find out the pair of countries which differ. For this you may use the Tukey’s HSD test. Don;t worry too much about what this means for now, the output will be the same as the lm() and that is the key learning outcome.
+```
+
+See how the F ratio and mean differences are the same as the linear model we tested? Thats becuase the analyses are exactly the same! Students are often taught one-way ANOVA as a seperate statistical test to paired t-test, independent t-test, and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model! 
+
+Just to add here there are some pairwise comparisons that I have requested to show you how you test for the significance of each pair of differences. Becuase we have multiple means, there are multiple comaprisons and Tukey's test corrects for these multiple comparisons. This is for *reference only* if you should need to call the specific paired differenes in your research. For now, you don't need to worry about the math.
+
+## Exercise
+
+Let's now return to our WVS data and the comparison of perceptions of choice between Australia and Japan. Last week we compared the distributions using z-scores. Let's now go one step further and test the differences in perceptions of choice using a two-parameter linear model or independent t-test.
+
+Before we start, lets just clarify the research question for our two-parameter linear model and null hypothesis we are testing:
+
+*Research Question* - Do perceptions of choice differ between people from Australia and Japan?
+
+*Null Hypothesis* - The difference between perceptions of choice in Australia and Japan will be zero.
+
+## Task 1
+
+Load the WVS dataframe. The WVS data is avalaible in the MT9 workshop folder. Load it into the R environment like you have been doing in previous weeks.
+
+
+```{r}
+WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT9/Workshop/WV6_Data_R_v20180912.rds")
+
+WVS$V2A <- as_character(WVS$V2A)
+```
+
+
+## Task 2 selecting the variables
+
+I looked in the codebook for WVS and the perceptions of choice variable is listed as V55. So lets look for the variable and select it, then head the new dataframe entitled WVSchoice. Lets also select the country code varable, V2A, so we can use this to group the choice scores later. I have left some of the below code blank for you to fill the gap.
+
+```{r}
+WVSchoice <- 
+  WVS %>% 
+  select(??, ??) # SELECT THE VARIABLES OF INTEREST HERE
+head(WVSchoice)
+```
+
+
+## Task 3 filter the variables
+
+Just like other variables in the WVS dataset, we need to edit the dataframe since the choice variable has values we can’t interpret like -5. While we are at it, lets also filter out Australia and Japan as the countries of interest. I have left some of the below code blank for you to fill the gap.
+
+
+```{r}
+WVSchoice <- 
+WVSchoice %>% 
+filter(V55 >= "??" & V2A == c("??", "??")) # Fill in the question marks 
+WVSchoice
+```
+
+## Examine the descriptives
+
+Use the favstats function to inspect the means and SD of the choice scores for Australia and Japan.
+
+```{r}
+favstats(~??, V2A, data=WVSchoice) # Fill in the question mark
+```
+
+
+What is the mean score for Australia?
+
+What is the mean score for Japan?
+
+What is the mean difference?
+
+## Setting up the linear model
+
+Now lets set our up our linear model to examine the statitical significance of that mean difference. We are using the lm() function to test a two-parameter model becuase we now have two means to estimate - one for Australia and one for Japan. As I mentioned above, R actually does the dummy coding for us in the lm() function so we don't need to dummy code the country variable. For noting, R will code Australia as 0 and Japan as 1 (just becuase thats the order they appear in the data set). Lets just build the model with V2A as the explainatory factor.
+
+```{r}
+choice.model <- lm(V55 ~ 1 + ??, data=WVSchoice) # fill in the variable needed for question mark
+summary(choice.model)
+```
+
+What is the mean score for Australia (hint: intercept)?
+
+What is the incremenent needed to find the Japan mean or - put differently - the mean difference?
+
+What is the t-ratio?
+
+What is the p value(remember that e-values mean zero)?
+
+Do we accept or reject the null hypothesis?
+
+Why?
+
+## Paritioning variance
+
+We've established whether there is a statistically significant mean difference, but how much variance in choice is explained by country? We can answer this question using the supernova() function in R, which breaks down the variance in choice due to the model (ie., country) and error (i.e., variance left over once we've subtracted out the model)
+
+```{r}
+supernova(??) # add the choice model you want to examine the variance
+```
+
+What is the total variance or sum of squares for perceptions of choice?
+
+How is that sum of squares partitioned between the model?
+
+And the Error?
+
+What is the percentage of variance explained in by the model?
+
+What is the F ratio?
+
+What is the p value?
+
+What do we conclude in relation to our research question?
