@@ -8,7 +8,7 @@ output: html_notebook
 At the end of today’s workshop you should be able to do the following:
 
 
-1.Conduct a one-parameter linear model (paired samples t-test) using the lm and t.test functions
+1. Conduct a one-parameter linear model (paired samples t-test) using the lm and t.test functions
 
 2. Conduct a two-parameter linear model (independent samples t-test) using the lm and t.test model functions
 
@@ -18,7 +18,6 @@ At the end of today’s workshop you should be able to do the following:
 ## Install required packages
 
 ```{r}
-install.packages("tidyverse")
 install.packages("supernova")
 install.packages("readr")
 install.packages("sjlabelled")
@@ -32,9 +31,7 @@ The required packages are the same as the installed packages. Write the code nee
 
 
 ```{r}
-library("tidyverse")
 library("mosaic")
-library("ggplot2")
 library("sjlabelled")
 library("fastDummies")
 library("supernova")
@@ -55,7 +52,7 @@ First, lets load this data into our R environment. Go to the MT9 folder, and the
 
 
 ```{r}
-anorexia <- read_csv("MT9/Workshop/anorexia.csv")
+anorexia <- read_csv("C:/Users/currant/Dropbox/Work/LSE/PB130/MT9/Workshop/anorexia.csv")
 anorexia
 ```
 
@@ -112,9 +109,9 @@ summary(anorexia.model) # the summary command just calls the summary statistics 
 ```
 
 
-Notice that the model part of this formula - bo - is the same as the mean difference we just calcuated -1.08 lbs? This shows that we still have a one-parameter model here but instead of the mean of an outcome in the empty model, this time we have the mean of the differences in outcome variable for our paired t-test.
+Notice that the model part of this formula - bo - is the same as the mean difference we just calcuated -1.08 lbs? This shows that we still have a one-parameter model here but instead of the mean of an outcome in the empty model, this time we have the mean of the differences in the outcome variable for our paired t-test.
 
-Notice also we have some other statistics that we didn't see in the empty model. The standard error is the estimate of error in the estimate of the model due to sampling variance. It is calcuated by taking the standard deviation of the mean difference and dividing it by the sqrt of the sample size. Larger sample sizes and smaller mean difference deivations result in a smaller standard error of the estimate. We calcalcualte this by hand using the information we have already called.
+Notice also we have some other statistics that we didn't see in the empty model. The standard error is the estimate of error in the estimate of the model due to sampling variance. It is calcuated by taking the standard deviation of the mean difference and dividing it by the sqrt of the sample size. Larger sample sizes and smaller mean difference deivations result in a smaller standard error of the estimate. We calcualte this by hand using the information we have already called.
 
 
 ```{r}
@@ -147,7 +144,7 @@ Just to show you that the paired t-test is equivalent to a linear model, lets do
 t.test(anorexia$Y1, anorexia$X1, paired = TRUE) # setting up the t-test requires the post then pre variables entered in order rathern than as a difference score - R calcualtes the difference score for us in the t.test function.
 ```
 
-See how the t ratio, p-value and mean difference is exactly the same as the linear model we tested? Thats becuase the analyses are exactly the same! Students are often taught t-test as a seperate statistical test to independent t-test, ANOVA and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model! This equivalence helps us understand what is happing when we run stats in the psychological and behavioural sciences. Its all underpinned by the linear model.
+See how the t ratio, p-value and mean difference is exactly the same as the linear model we tested? Thats becuase the analyses are exactly the same! Students are often taught paired t-test as a seperate statistical test to independent t-test, ANOVA and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model. This equivalence helps us understand what is happing when we run stats in the psychological and behavioural sciences. Its all underpinned by the linear model.
 
 
 ## Two-parameter model or independent t-test
@@ -163,7 +160,7 @@ First, lets load this data into our R environment. Go to the MT9 folder, and the
 
 
 ```{r}
-perfectionism <- read_csv("MT9/Workshop/perfectionism.csv")
+perfectionism <- read_csv("C:/Users/currant/Dropbox/Work/LSE/PB130/MT9/Workshop/perfectionism.csv")
 perfectionism
 ```
 
@@ -368,23 +365,23 @@ Before we start, lets just clarify the research question for our two-parameter l
 
 *Null Hypothesis* - The difference between perceptions of choice in Australia and Japan will be zero.
 
-## Task 1
+## Task 1 - Loading the dataframe
 
 Load the WVS dataframe. The WVS data is avalaible in the MT9 workshop folder. Load it into the R environment like you have been doing in previous weeks (i.e., click on it, change name to WVS and copy+paste the code below).
 
 
-```{r}
+```{r eval=FALSE}
 WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT9/Workshop/WV6_Data_R_v20180912.rds")
 
 WVS$V2A <- as_character(WVS$V2A) # maintain this code for the country variable
 ```
 
 
-## Task 2 selecting the variables
+## Task 2 - Selecting the variables
 
 I looked in the codebook for WVS and the perceptions of choice variable is listed as V55. So lets look for the variable and select it, then head the new dataframe entitled WVSchoice. Lets also select the country code varable, V2A, so we can use this to group the choice scores later. I have left some of the below code blank for you to fill the gap.
 
-```{r}
+```{r eval=FALSE}
 WVSchoice <- 
   WVS %>% 
   select(??, ??) # SELECT THE VARIABLES OF INTEREST HERE
@@ -392,23 +389,25 @@ head(WVSchoice)
 ```
 
 
-## Task 3 filter the variables
+## Task 3 - Filter the variables
 
 Just like other variables in the WVS dataset, we need to edit the dataframe since the choice variable has values we can’t interpret like -5. While we are at it, lets also filter out Australia and Japan as the countries of interest. I have left some of the below code blank for you to fill the gap.
 
 
-```{r}
+```{r eval=FALSE}
 WVSchoice <- 
 WVSchoice %>% 
 filter(V55 >= "??" & V2A == c("??", "??")) # Fill in the question marks 
 WVSchoice
 ```
 
-## Examine the descriptives
+
+## Task 4 - Examine the descriptives
 
 Use the favstats function to inspect the means and SD of the choice scores for Australia and Japan.
 
-```{r}
+
+```{r eval=FALSE}
 favstats(~??, V2A, data=WVSchoice) # Fill in the question mark
 ```
 
@@ -420,21 +419,23 @@ What is the mean score for Japan?
 Calcualte the mean difference
 
 
-```{r}
+```{r eval=FALSE}
 
 ```
 
 What is the mean difference?
 
 
-## Setting up the linear model
+## Task 5 - Setting up the linear model
 
 Now lets set our up our linear model to examine the statitical significance of that mean difference. We are using the lm() function to test a two-parameter model becuase we now have two means to estimate - one for Australia and one for Japan. As I mentioned above, R actually does the dummy coding for us in the lm() function so we don't need to dummy code the country variable. For noting, R will code Australia as 0 and Japan as 1 (just becuase thats the order they appear in the data set). Lets just build the model with V2A as the explainatory factor.
 
-```{r}
+
+```{r eval=FALSE}
 choice.model <- lm(V55 ~ 1 + ??, data=WVSchoice) # fill in the variable needed for question mark
 summary(choice.model)
 ```
+
 
 What is the mean score for Australia (hint: intercept)?
 
@@ -448,11 +449,11 @@ Do we accept or reject the null hypothesis?
 
 Why?
 
-## Paritioning variance
+## Task 6 - Paritioning variance
 
 We've established whether there is a statistically significant mean difference, but how much variance in choice is explained by country? We can answer this question using the supernova() function in R, which breaks down the variance in choice due to the model (ie., country) and error (i.e., variance left over once we've subtracted out the model)
 
-```{r}
+```{r eval=FALSE}
 supernova(??) # add the choice model you want to examine the variance
 ```
 
