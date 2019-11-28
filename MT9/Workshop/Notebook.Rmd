@@ -96,11 +96,11 @@ favstats(~difference, data=anorexia)
 ```
 
 
-Here we have a mean reduction of 1.08 lbs from before to after therapy. The SD asscoaited with that reduction is 1.97. We can also think about this mean difference as our predicted value, like the mean was the predicted vlaue in the empty model. All else being euqal and with no othe information, our best guess would be that the psychological therapy would result in a weight redution of 1.08 lbs. As we saw with the descriptives, this is not good news for our intervention.
+Here we have a mean reduction of 1.08 lbs from before to after therapy. The SD associated with that reduction is 1.97. We can also think about this mean difference as our predicted value, like the mean was the predicted value in the empty model. All else being equal and with no other information, our best guess would be that the psychological therapy would result in a weight reduction of 1.08 lbs. As we saw with the descriptives, this is not good news for our intervention.
 
 ## Setting up the linear model
 
-Okay, lets set our up our linear model to examine the statitical significance of that -1.07 lb mean difference. Like last week, we are using the lm function to test a one-parameter model - but this time the parameter is the difference between the pairs of observations.
+Okay, lets set our up our linear model to examine the statitical significance of that -1.08 lb mean difference. Like last week, we are using the lm function to test a one-parameter model - but this time the parameter is the difference between the pairs of observations.
 
 
 ```{r}

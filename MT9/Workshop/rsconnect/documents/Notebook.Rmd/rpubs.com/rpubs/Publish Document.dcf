@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/553743/0d9a66994f6d43b691e4ff47c5635c1c
+bundleId: https://api.rpubs.com/api/v1/document/553743/0d9a66994f6d43b691e4ff47c5635c1c
+url: http://rpubs.com/thomcurran/553743
+when: 1574941772.78587
