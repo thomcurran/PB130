@@ -1,9 +1,11 @@
 ---
-title: "MT10: Simple Relationships"
-output: html_notebook 
+title: 'MT10: Simple Relationships'
+output:
+  html_document:
+    df_print: paged
 ---
 
-## Learning Outcomes
+## Learning Outcomes  
 
 By the end of this workshop, you should be able to:
 
@@ -17,7 +19,7 @@ By the end of this workshop, you should be able to:
 
 ## Install required packages
 
-```{r}
+```{r eval=FALSE}
 install.packages("supernova")
 install.packages("readr")
 install.packages("tidyverse")
@@ -32,7 +34,7 @@ install.packages("Hmisc")
 
 The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
 
-```{r}
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library(supernova)
 library(readr)
 library(tidyverse)
@@ -67,19 +69,20 @@ First, lets load this data into our R environment. Go to the MT10 folder, and th
 
 
 ```{r}
-WHR <- read_csv("~MT10/Workshop/WHR.csv")
+WHR <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT10/Workshop/WHR.csv")
+WHR
 ```
 
 
 ## Two-parameter linear model with continuous variables or simple regression
 
-To practice conducting a two-parameter linear model with continuous variables (simple regression), we are going to use the happiness and GDP variable sin the WHR dataframe. Out theory here is that as the wealth of a country increases, so self-report happiness also increases. In other words, we are expecting a positive relationship between wealth as measured by GDP and happiness as meansured by the Cantril life ladder. Given this expectation, we also expect that we can use a best fitting linear model to make relaiable estimations of happiness from GDP. 
+To practice conducting a two-parameter linear model with continuous variables (simple regression), we are going to use the happiness and GDP variable sin the WHR dataframe. Our theory here is that as the wealth of a country increases, so self-report happiness also increases. In other words, we are expecting a positive relationship between wealth as measured by GDP and happiness as meansured by the Cantril life ladder. Given this expectation, we also expect that we can use a best fitting linear model to make relaiable estimations of happiness from GDP. 
 
 Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
 
-*Research Question* - Is there a linear relationship between inequality and happiness in the World Happiness Report Data?
+*Research Question* - Is there a linear relationship between GDP and happiness in the World Happiness Report Data?
 
-*Null Hypothesis* - The realtionship between inequality and happiness will be zero.
+*Null Hypothesis* - The realtionship between GDP and happiness will be zero.
 
 
 ## Descriptives
@@ -368,7 +371,7 @@ The values are exactly as we have calcuated, but we have a couple of additional 
 Finally, lets put this information together in a plot that contains the correlation coefficient, 
 
 ```{r}
-happiness %>%
+WHR %>%
 ggplot(aes(x = GDP, y = Happiness)) +
     geom_point() +
     stat_smooth(method = "lm",
@@ -395,7 +398,7 @@ Before we delve into this topic, lets just clarify the research question and nul
 As with the GDP variable, there are some missing data points for the GINI coefficient, where data is unavalaible for certain countries at certain time points. Write the code to filter the GINI variable so that it retains all values equal to and above 0.
 
 
-```{r}
+```{r eval=FALSE}
 WHR <- 
 WHR %>% 
 filter(??) # Fill in the gap here for values equal to and above 0
@@ -406,7 +409,7 @@ WHR
 
 Write the code to draw a plot of the distribution of the GINI coefficient. Given that the GINI coefficient is scaled between 0 and 1, change the binwidth to .05.
 
-```{r}
+```{r eval=FALSE}
 WHR %>% 
   ggplot(aes(x= ??)) + ## fill in the variable gap here for GINI
   geom_histogram(aes(y=..density..), binwidth=.05, colour="black", fill="white") + 
@@ -425,7 +428,7 @@ Is the distribution of the GINI coefficient approximately normal?
 
 Now use the rcorr() function to call the correlation coefficient - or Pearson's r - for the relationship between GINI and happiness.
 
-```{r}
+```{r eval=FALSE}
 rcorr(as.matrix(WHR[,c("??","Happiness")], type="??")) # fill in the ?? gaps here for the explanatory variable and the correlation type (pearson)
 ```
 
@@ -439,7 +442,7 @@ Is this correlation statistically significant?
 
 Use a scatter graph to plot the relationship between GINI and happiness and add to this plot the best fitting regression line.
 
-```{r}
+```{r eval=FALSE}
 WHR %>%
 ggplot(aes(x = ??, y = ??)) + # fill in the ?? gaps here
     geom_point() + 
@@ -457,7 +460,7 @@ How does this line compare to the regression line for the relationship between G
 
 Now lets set our up our linear regression model to examine the intercpet and slope of that best fitting line using the lm() function. Don't forget to save the linear model in a new R object. I suggest happiness.model2 
 
-```{r}
+```{r eval=FALSE}
 happiness.model2 <- lm(?? ~ 1 + ??, data=WHR) # add ?? variables to the linear model code
 summary(??) # add the new R object to the summary function
 ```
@@ -480,7 +483,7 @@ Why?
 
 You will see above that the unstandardized estimate for GINI looks very different to the unstandardized estimate for GDP. Every 1 unit increase in GINI equates to a 2.65 decrease in happiness according to our model. On the surface, that looks like a much larger effect than GDP (.74) but we know from the correlation coefficient that the relationship is in fact much smaller (-.19 vs .78). So what is going on here? Well, the relationship appears bigger in the linear model because GINI has a very differenrt scale of measurement than GDP (0-1 versus 0-12). So a 1 unit increase in GINI has a very different meaning to a 1 unit increase in GDP. This is why standardized estimate are so useful - they force the unit of measurement to the same scale so that effects can be directly compared. So lets go ahead and do that now. In the below chunk, use the lm.beta() function to calcuate the standardized estimate for the slope of GINI and happiness.
 
-```{r}
+```{r eval=FALSE}
 lm.beta(??) # add happiness GINI model to the lm.beta function
 ```
 
@@ -492,7 +495,7 @@ How does this compare to the standardized slope for GDP?
 
 We've established whether there is a statistically significant relationship, but how much variance in happiness is explained by GINI? We can answer this question using the supernova() function in R, which breaks down the variance in happiness due to the model (ie., GINI) and error (i.e., variance left over once we've subtracted out the model).
 
-```{r}
+```{r eval=FALSE}
 supernova(??) # add happiness GINI model to the supernova function
 ```
 
