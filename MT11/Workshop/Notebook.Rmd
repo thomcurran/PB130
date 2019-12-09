@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "MT11: Hypothesis Testing and Causal Inference"
 output: html_notebook
 ---
 
@@ -19,7 +19,6 @@ At the end of today’s workshop you should be able to do the following:
 install.packages("supernova")
 install.packages("readr")
 install.packages("sjlabelled")
-install.packages("fastDummies")
 install.packages("supernova")
 install.packages("readr")
 install.packages("tidyverse")
@@ -29,6 +28,7 @@ install.packages("ggpubr")
 install.packages("mosiac")
 install.packages("Hmisc")
 install.packages("car")
+install.packages("plyr")
 ```
 
 
@@ -39,7 +39,6 @@ The required packages are the same as the installed packages. Write the code nee
 
 ```{r}
 library(sjlabelled)
-library(fastDummies)
 library(supernova)
 library(readr)
 library(tidyverse)
@@ -49,6 +48,7 @@ library(ggpubr)
 library(mosaic)
 library(Hmisc)
 library(car)
+library(plyr)
 ```
 
 
@@ -65,7 +65,7 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 
 
 ```{r}
-WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT9/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT11/Workshop/WV6_Data_R_v20180912.rds")
 
 WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
 ```
@@ -76,7 +76,7 @@ Okay lets now move to a new research topic using the WVS to examine differences 
 
 As we should now know, the two-parameter linear model is often called an independent t-test. Like all linear models, this test can be done using the lm() in R. 
 
-To start, lets ask an interesting question (and quite topical) of the WVS. In the data, there are some items that ask respondants about their attitudes toward marginalised groups. One of those questions asks whether respondants:
+To start, lets ask an interesting question of the WVS. In the data, there are some items that ask respondants about their attitudes toward marginalised groups. One of those questions asks whether respondants:
 
 "Would not like to have immigrants/foreign workers as neighbors"
 
@@ -85,7 +85,17 @@ Coders recored a record of 1 if the respondant mentioned this and 2 if the respo
 1 - Mentioned
 2 - Not mentioned
 
-Presently, the issue of attitudes toward immigrants is quite a 'live' one in the USA. So lets see whether Americans who reported that they would not like to have immigrants as neighbors differ in levels of life satisfaction than those who did not report such attitudes. Our theory is that life satisfaction may differentiate these attitudes, but we don;t know yet.
+Presently, the issue of attitudes toward immigrants is quite a 'live' one in the USA. So lets see whether Americans who reported that they would not like to have immigrants as neighbors differ in levels of life satisfaction in the WVS than those who did not report such attitudes. Our theory is that life satisfaction may differentiate these attitudes, but we don't know yet.
+
+The life satisfaction queestion asks: “What is the satisfaction with your life" and is measured on a 1-10 scale:
+
+1. Completely dissatisfied
+
+.
+.
+.
+
+10. Completely satisfied
 
 Before we delve into this topic, though, lets just clarify the research question for our two-parameter linear model and null hypothesis we are testing:
 
@@ -100,7 +110,7 @@ I looked in the codebook and the immigrant variable is listed as V39. We also wa
 ```{r}
 WVSimmigrant <- 
   WVS %>% 
-  select(V2A, V39, V23) # SELECT THE VARIABLES OF INTEREST HERE
+  select( ) # SELECT THE VARIABLES OF INTEREST HERE
 head(WVSimmigrant)
 ```
 
@@ -143,10 +153,10 @@ Okay great, we are ready to go. Lets first inspect this data and take a look at 
 
 
 ```{r}
-favstats(~V23, V39, data=WVSimmigrant) # the second line of fav stats is our factor and it splits the SOP scores into a mean for North America and a mean for the UK.
+favstats(~V23, V39, data=WVSimmigrant) # the second line of favstats is our factor and it splits the satisfaction scores into a mean for the two groups.
 ```
 
-Remember that those who mentioned they would not like to have immigrants as neighbors are codes as 0, all else are coded 1.
+Remember that those who mentioned they would not like to have immigrants as neighbors are coded as 0, all else are coded 1.
 
 We can see that the means are pretty close but there is a slight difference in favour of the all else group. Lets quickly work that mean difference in R.
 
@@ -155,7 +165,7 @@ We can see that the means are pretty close but there is a slight difference in f
 ```
 
 
-The difference is 0.24 points on a 1-10 Likert scale, which doesnt seem a great deal but in the context of the SD, could be significant. The question therefore is whether this mean difference is statistically meaningful or large enough for us to consider the possibility of a zero difference in the population unlikely.
+The difference is 0.24 points on a 1-10 Likert scale, which doesn't seem a great deal but in the context of the SD, could be significant. The question therefore is whether this mean difference is statistically meaningful or large enough for us to consider the possibility of a zero difference in the population unlikely.
 
 ## Setting up the linear model
 
@@ -180,9 +190,9 @@ The implication from this analysis appears to be that Americans who reported the
 
 ## Calculating the 95% confidence interval for the estiamte using normal theory
 
-To this point, I've been showing you how we the use the estiamted standard deviaiton of the sampling distribution - or the *standard error* - to gauge how far away our estiamte is from a zero effect. 
+To this point, I've been showing you how we use the estiamted standard deviaiton of the sampling distribution - or the *standard error* - to gauge how far away our estiamte is from a zero effect. 
 
-When we take the standard error and divide it by the estiamte we have a metric - a t ratio - that tells us how many standard errors our estimate is away from zero. If the t ratio is greater than 1.96, then we reject the null hypothesis and conclude that, assuming a normal sampling distribution, a zero difference is unlikely in the population.
+When we take the standard error and divide it by the estimate we have a metric - a t ratio - that tells us how many standard errors our estimate is away from zero. If the t ratio is greater than 1.96, then we reject the null hypothesis and conclude that, assuming a normal sampling distribution, a zero mean difference is unlikely in the population.
 
 We can make this assumption of a normal sampling distribution because of something called the central limit theorem (see leture notes for more information)
 
@@ -196,7 +206,7 @@ If we treat standard error like we treat standard deviation, then we can classif
 
 This is the essence of the normal theory 95% confidence interval and it is calculated as follows:
 
-95% confidence interval = estiamte +/- (SE*1.96)
+95% confidence interval = estimate +/- (SE*1.96)
 
 If the 95% confidence interval does not include zero, then a zero difference in the population is unlikely. It is just another, more intuitive, way of expressing the p value!
 
@@ -215,11 +225,11 @@ We have a normal theory 95% confidence interval that runs from .02 to to .46. A 
 confint(immigrant.model) # this just takes the linear model R object and returns the confidence interval for the two estiamtes.
 ```
 
-Okay so we are a little off in our rounding but the interpretation stays the same. If we randomly sampled the same data 100 times, the true popualtion mean difference would fall somewhere betwen .01 and .46 in 95 of those samples. Thats all we can say! 
+Okay so we are a little off in our rounding but the interpretation stays the same. If we randomly sampled the same data 100 times, the true popualtion mean difference would fall somewhere between .01 and .46 in 95 of those samples. Thats all we can say! 
 
 However, if zero is not inluded in that range then we can conclude that a zero mean difference is pretty unlikely.
 
-Does this include zero? No! Therefore, the interpretation is that we can reject the null hypothesis. People who would not like to have immigrants as neighbors are still less satisfied with their life under this interpretation of staistical inference.
+Does this include zero? No! Therefore, the interpretation is that we can reject the null hypothesis. People who would not like to have immigrants as neighbors are still less satisfied with their life under this interpretation of statistical inference.
 
 ## Partitioning variance
 
@@ -258,7 +268,7 @@ summary(immigrant.boot) # just like the linear model, the summary function outpu
 
 What R just did there is take a resample of the original sample and calcuate the model coeffciencts (i.e., b0 and b1) and repeat that process 5000 times! Before the advent of fast computers that would have taken weeks, but R does it in 20 seconds or so.
 
-You can see that the output gives the sample estiamtes under the original column and then mean estiamtes from the 5000 resamples in the bootMed column. The difference between the sample and mean bootstrap estiamte is given in the bootBias column.  Finally, the mean standard error from the 5000 resamples is given in the bootSE comlumn.
+You can see that the output gives the sample estimates under the original column and then mean estiamtes from the 5000 resamples in the bootMed column. The difference between the sample and mean bootstrap estiamte is given in the bootBias column.  Finally, the mean standard error from the 5000 resamples is given in the bootSE comlumn.
 
 We can see that the sample mean difference and bootstrap mean difference are virtually the same. The bias is quite small.
 
@@ -274,7 +284,7 @@ confint(immigrant.boot, level = .95, type = "norm") # this function request the 
 
 And well, what do you know! The bootstrap 95% confidence interval tells us something different to the normal theory 95% confidence interval. Here, we see that the range of values runs from -.0001 to .47 (your values might slightly differ to this, bootstrapping will produce slightly different estimates each time it resamples). Cruically, though, this range now includes zero! We cannot reject the null hypothesis.
 
-To get a clue of why the normal theory 95% confidence interval is too liberal (i.e., rejecting the null when it is possibly true), take a look at the distribution of life satisfaction above. We can see a negative skew meaning that a normal curve underestimates values below the mean, and overestimates them above the mean. These differences are marginal, but when the estimate is ONLY JUST significant, as is the case here, it can cause errorneous conclusions. This is why bootstrapping should always be preferred. It makes no assumptions about the distribution of variables and estimates.
+To get a clue about why the normal theory 95% confidence interval is too liberal (i.e., rejecting the null when it is possibly true), take a look at the distribution of life satisfaction above. We can see a negative skew meaning that a normal curve underestimates values below the mean, and overestimates them above the mean. These differences are marginal, but when the estimate is ONLY JUST significant, as is the case here, it can cause erroroneous conclusions. This is why bootstrapping should always be preferred. It makes no assumptions about the distribution of variables and estimates.
 
 As I mentioned in the leture, bootstrapping the estimates is now the conventional way to determine statistical significnacne. So, therefore, the difference in life satisfaction between those who reported they would not like to have immigrants as neighbors and those who didn't mind immigrants as neighbors is not statistically significant.
 
@@ -295,7 +305,7 @@ Okay, lets now give you a chance to set up and test a linear regression model wi
 10. Completely satisfied
 
 
-Some theories propose that economic satisfaction is an important prerequisite for life satisfaction So lets find out if thats the case in the American data. 
+Some theories propose that economic satisfaction is an important prerequisite for life satisfaction. So lets find out if thats the case in the American data. 
 
 Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
 
@@ -305,14 +315,14 @@ Before we delve into this topic, lets just clarify the research question and nul
 
 ## Task 1 - Select the variables and create a random sample
 
-I looked in the codebook and the satisfaction with financial situation of household is listed as V59. We know that the life satisfaction variable is V23. And we also need the country variable V2A to filter for United States. So lets first select those variables out of the WVS dataframe and save it as a new dataframe called WVSfinace
+I looked in the codebook and the satisfaction with financial situation of household is listed as V59. We know that the life satisfaction variable is V23. And we also need the country variable V2A to filter for United States. So lets first select those variables out of the WVS dataframe and save it as a new dataframe called WVSfinace.
 
 
-```{r eval=FALSE}
+```{r}
 WVSfinance <- 
   WVS %>% 
-  select(V23, V59, V2A) # SELECT THE VARIABLES OF INTEREST HERE
-head(WVSfinance)
+  select(??) # SELECT THE VARIABLES OF INTEREST HERE
+WVSfinance
 ```
 
 
@@ -323,7 +333,7 @@ Just like other variables in this dataset, we need to edit the dataframe since t
 ```{r}
 WVSfinance <- 
 WVSfinance %>% 
-filter(V59 >= "1" & V23 >= "1" & V2A == c("United States")) 
+filter(??) 
 WVSfinance
 ```
 
@@ -334,14 +344,14 @@ Write the code to draw a plot of the distribution of the finance satisfaction. G
 
 ```{r eval=FALSE}
 WVSfinance %>% 
-  ggplot(aes(x= V59)) + ## fill in the variable gap here for GINI
+  ggplot(aes(x= ??)) + ## fill in the variable gap here for GINI
   geom_histogram(aes(y=..density..), binwidth=1, colour="black", fill="white") + 
   geom_density(adjust = 4, alpha = .2, fill = "antiquewhite3") +
-  geom_vline(aes(xintercept=mean(V59)), col="black", linetype="dashed", size=1) +
-  geom_vline(aes(xintercept=median(V59)), col="black", size=1) +
+  geom_vline(aes(xintercept=mean(??)), col="black", linetype="dashed", size=1) +
+  geom_vline(aes(xintercept=median(??)), col="black", size=1) +
   ylab("??") + # add appropriate y lab 
   xlab("??") + # add appropriate x lab
-  ggtitle("Distribution of GINI in the WHR") +
+  ggtitle("Distribution of financial staisfaction in the WVS") +
   theme_minimal(base_size = 8) 
 ```
 
@@ -352,7 +362,7 @@ Is the distribution of financial satisfaction approximately normal?
 Now use the rcorr() function to call the correlation coefficient - or Pearson's r - for the relationship between GINI and happiness.
 
 ```{r eval=FALSE}
-rcorr(as.matrix(WVSfinance[,c("V59","V23")], type="pearson")) # fill in the ?? gaps here for the explanatory variable and the correlation type (pearson)
+rcorr(as.matrix(WVSfinance[,c("??","V23")], type="pearson")) # fill in the ?? gap here for the explanatory variable
 ```
 
 What is the correlation coefficient?
@@ -366,7 +376,7 @@ Is this correlation statistically significant?
 Now lets set our up our linear regression model to examine the intercpet and slope of the best fitting regression line using the lm() function. Don't forget to save the linear model in a new R object. I suggest finance.model
 
 ```{r eval=FALSE}
-finance.model <- lm(V23 ~ 1 + V59, data=WVSfinance) # add ?? variables to the linear model code
+finance.model <- lm(?? ~ 1 + ??, data=WVSfinance) # add ?? variables to the linear model code
 summary(finance.model) # add the new R object to the summary function
 ```
 
@@ -389,7 +399,7 @@ Why?
 In the below chunk, use the lm.beta() function to calcuate the standardized estimate for the slope of financial satisfaction and life satisfaction.
 
 ```{r eval=FALSE}
-lm.beta(finance.model) # add finance model to the lm.beta function
+lm.beta(??) # add finance model to the lm.beta function
 ```
 
 What is the standardised slope?
@@ -401,7 +411,7 @@ How does this compare to the standardized slope?
 We've established whether there is a statistically significant relationship, but how much variance in life satisfaction is explained by the financial satisfaction mode? We can answer this question using the supernova() function in R, which breaks down the variance in life satisfaction due to the model and error (i.e., variance left over once we've subtracted out the model).
 
 ```{r eval=FALSE}
-supernova(finance.model) # add finance model to the supernova function
+supernova(??) # add finance model to the supernova function
 ```
 
 
@@ -424,7 +434,7 @@ What do we conclude in relation to our research question?
 Okay, so we have a significnant positve relationship and we also know that the finance satisfaction model exlains a significnant portion of life satisfaction variance. Lets now calcualte the normal theory 95% confidence interval for our model estimates using the confint() function.
 
 ```{r}
-confint(finance.model)
+confint(??) # add the finalnce model to the confint() function
 ```
 
 What is the normal theory 95% confidence interval for the slope of finance satisfaction on life satisfaction?
@@ -442,8 +452,8 @@ We can see that the normal theory confidence interval supports our conclusions f
 So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called finance.boot. Note that we are going to request 5000 resamples so that might take a little time to run!
 
 ```{r}
-finance.boot <- Boot(finance.model, f=coef, R = 5000) 
-summary(finance.boot)
+finance.boot <- Boot(??, f=coef, R = ??) 
+summary(finance.boot) ## add the finance model and stipulate how many resamples you want to run (typically 5,000)
 ```
 
 What is the mean bootsrap estiamte for the slope of finance satisfaction on life satisfaction?
@@ -457,7 +467,7 @@ Are these similar?
 Lets go ahead and call the bootsrap 95% confidence interval using the confint() function.
 
 ```{r}
-confint(finance.boot, level = .95, type = "norm")
+confint(??, level = .95, type = "norm") # add the bootstrap model you just created to this code
 ```
 
 What is the bootstrap 95% confidence interval for the slope of finance satisfaction on life satisfaction?
