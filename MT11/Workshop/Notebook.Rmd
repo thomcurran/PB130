@@ -313,7 +313,7 @@ Before we delve into this topic, lets just clarify the research question and nul
 
 *Null Hypothesis* - The relationship between satisfaction with financial situation of household and life satisfaction will be zero.
 
-## Task 1 - Select the variables and create a random sample
+## Task 1 - Select the variables
 
 I looked in the codebook and the satisfaction with financial situation of household is listed as V59. We know that the life satisfaction variable is V23. And we also need the country variable V2A to filter for United States. So lets first select those variables out of the WVS dataframe and save it as a new dataframe called WVSfinace.
 
@@ -340,7 +340,7 @@ WVSfinance
 
 ## Task 3 - Plot the distribution of the financial satisfaction
 
-Write the code to draw a plot of the distribution of the finance satisfaction. Given that the GINI coefficient is scaled between 0 and 1, change the binwidth to .05.
+Write the code to draw a plot of the distribution of the finance satisfaction. 
 
 ```{r eval=FALSE}
 WVSfinance %>% 
@@ -359,7 +359,7 @@ Is the distribution of financial satisfaction approximately normal?
 
 ## Task 4 - Calcualte the correlation coefficient for the relationship between financial satisfaction and life satisfaction
 
-Now use the rcorr() function to call the correlation coefficient - or Pearson's r - for the relationship between GINI and happiness.
+Now use the rcorr() function to call the correlation coefficient - or Pearson's r - for the relationship between financial satisfaction and life satisfaction.
 
 ```{r eval=FALSE}
 rcorr(as.matrix(WVSfinance[,c("??","V23")], type="pearson")) # fill in the ?? gap here for the explanatory variable
