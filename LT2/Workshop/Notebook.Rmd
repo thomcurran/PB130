@@ -496,7 +496,7 @@ For the lab on Wednesday, we are going to analyse some group data to demonstrate
 
 https://research.sc/participant/login/dynamic/183F1D85-9289-4685-A099-4E572069A0DA
 
-# Task 7 - Use this workshop for your quantitative writing practice due on Friday
+# Task 7 - Use this workshop for your quantitative writing practice due on MONDAY
 
 For the quantitative writing practice due on Friday, I would like for you to practice writing a brief quantitative report on a simple regression, analysing the relationship between GDP and Happiness with the WHR data. This report should include the following:
 
