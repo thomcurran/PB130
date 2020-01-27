@@ -50,7 +50,7 @@ library(plyr)
 
 ## The World Happiness Report data
 
-This week, we are going to use data from the World Happiness Report 2019 (WHR). The World Happiness Report is a landmark survey of the state of global happiness that ranks 156 countries by how happy their citizens perceive themselves to be.  
+Like in MT10, we are going to use data from the World Happiness Report 2019 (WHR). The World Happiness Report is a landmark survey of the state of global happiness that ranks 156 countries by how happy their citizens perceive themselves to be.  
 
 You can go to the WHR site to see what we’ll be working with. Don’t download anything: https://worldhappiness.report/. We will be looking at data from 2019, which includes mean scores for happiness between 2008 and 2018 for each country.
 
@@ -67,7 +67,7 @@ for Taiwan, up to 2014, are from the Penn World Table 9. A few countries are mis
 
 5. *Year of data collection (variable name "Year")*: The year the data were collected.
 
-First, lets load this data into our R environment. Go to the MT10 folder, and then to the workshop folder, and find the "WHR.csv" file. Click on it aand then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
+First, lets load this data into our R environment. Go to the LT2 folder, and then to the workshop folder, and find the "WHR.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
 
 ```{r}
@@ -75,7 +75,7 @@ WHR <- read_csv("LT2/Workshop/WHR.csv")
 WHR
 ```
 
-Before begin analysing, recall that we there are missing values in the GDP and gini variables, so they will need to be dealt with. Lets filter the GDP and gini variables to get rid of the cases with missing values.
+Before we begin analysing, recall that we there are missing values in the GDP and gini variables, so they will need to be dealt with. Lets filter the GDP and gini variables to get rid of the cases with missing values.
 
 ```{r}
 WHR <- # into existing dataframe
@@ -88,7 +88,7 @@ Okay, the data are now ready for analyses.
 
 ## Simple regression
 
-Lets first run a simple regression to refresh our memories about linear modelling with one continuous predictor and one continuous outcome. To recap, simple regresison is a two-parameter linear model and we are going to use the happiness and GDP variables in the WHR dataframe to run one. Just like in MT10, our theory here is that as the wealth of a country increases, so self-report happiness also increases. In other words, we are expecting a positive relationship between wealth as measured by GDP and happiness as meansured by the Cantril life ladder. Given this expectation, we also expect that we can use a best fitting linear model to make relaiable estimations of happiness from GDP. 
+Lets first run a simple regression to refresh our memories about linear modelling with one continuous predictor and one continuous outcome. To recap, simple regresison is a two-parameter linear model and we are going to use the happiness and GDP variables in the WHR dataframe to run one. Just like in MT10, our theory here is that as the wealth of a country increases, so self-report happiness also increases. In other words, we are expecting a positive relationship between wealth as measured by GDP and happiness as meansured by the Cantril life ladder. Given this expectation, we also expect that we can use a best fitting linear model to make estimations of happiness from GDP. 
 
 Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
 
@@ -137,9 +137,9 @@ simple.model <- lm(Happiness ~ 1 + GDP, data = WHR)
 summary(simple.model)
 ```
 
-By now the lienar model output should be familiar. We have an intercpet(b0) of -1.49, which we have established is meaningless becuase it represents the predicted happiness value when GDP = 0. GDP cannot be 0, so this is simply a hypothetical value used to anchor the regression line.
+By now the lienar model output should be familiar. We have an intercpet (b0) of -1.49, which we have established is meaningless becuase it represents the predicted happiness value when GDP = 0. GDP cannot be 0, so this is simply a hypothetical value used to anchor the regression line.
 
-More interesting is the GDP estimate or b1. Here we have a value of .76. This is interpreted like the slope of a line. Therefore, for every one unit increase in GDP, there is an estimated .74 unit increase in mean happiness. Alongside this slope value we have a standard error (sampling variance) and t ratio. Hopefully we should know how these are interpreted. The p value associated with t is well below .05 and therefore we reject the null hypothesis. GDP is a statistically significant predictor of average happiness!
+More interesting is the GDP estimate or b1. Here we have a value of .76. This is interpreted like the slope of a line. Therefore, for every one unit increase in GDP, there is an estimated .76 unit increase in mean happiness. Alongside this slope value we have a standard error (sampling variance) and t ratio. Hopefully we should know how these are interpreted. The p value associated with t is well below .05 and therefore we reject the null hypothesis. GDP is a statistically significant predictor of average happiness!
 
 While we are at it, lets also have R call the standardized estimates by using the lm.beta() function. 
 
@@ -184,7 +184,7 @@ Here we see that the range of values for our slope estimate of the relationship 
 
 ## Partitioning variance
 
-As we have been doing every week, lets partition the variance in our simple regression model between that expalined by the model and that left over(i.e., error). We will use supernova() to do this.
+As we have been doing every week, lets finally partition the variance in our simple regression model between that expalined by the model and that left over(i.e., error). We will use supernova() to do this.
 
 ```{r}
 superanova(simple.model)
@@ -197,9 +197,9 @@ We can also see a PRE or R2 value of .60, which means that GDP explains 60% of t
 
 ## Multiple regression
 
-As we saw in the lecture, one of the great things about the linear model is that it can take any number of predictor variables and use them to explain one outcome variable. It is often the case in psychology that we would be interested in studying multiple predictor variables, rather than just one. For one thing, the addition of predictor variables allows us to control for other third variable influences on relationships - for example, does x predict y controlling for z? For another thing, the addition of predictor variables allows us to ascertain the relative importance of variables on an outcome - for example, which is the best predictor of y, is it x or is it z? There are other reasons why we would add variables to our linear models - not least to improve the accuracy of our predictions or explain more variance in the outcome. When we add more than one continuous predictor variable to our linear model we are multiple regression.
+As we saw in the lecture, one of the great things about the linear model is that it can take any number of predictor variables and use them to explain one outcome variable. It is often the case in psychology that we would be interested in studying multiple predictor variables, rather than just one. For one thing, the addition of predictor variables allows us to control for other third variable influences on relationships - for example, does x predict y controlling for z? For another thing, the addition of predictor variables allows us to ascertain the relative importance of variables on an outcome - for example, which is the best predictor of y, is it x or is it z? There are other reasons why we would add variables to our linear models - not least to improve the accuracy of our predictions or explain more variance in the outcome. When we add more than one continuous predictor variable to our linear model we are conducting multiple regression.
 
-So lets now employ multiple regression on our WHR dataset and add the Gini coefficient to the simple regression model we just tested. The gini coefficient is a metric of economic inequality and some theories propose that economic inequality can be damaging for happiness. In other words, the greater the gaps between the rich and poor, the less happy people are with their lives. We have just seen that country wealth (i.e., GDP) has a strong positive correlation with happiness but can we improve this model, or explain more variance, by adding Gini to it? Let's find out.
+So lets now employ multiple regression on our WHR dataset and add the Gini coefficient to the simple regression model we just tested. The gini coefficient is a metric of economic inequality and some theories propose that economic inequality can be damaging for happiness. In other words, the greater the gaps between the rich and poor, the less happy people are with their lives. We have just seen that country wealth (i.e., GDP) has a strong positive correlation with happiness but can we improve this model, or explain more variance, by adding Gini to it? 
 
 Before we delve into this research question, though, lets just clarify the research question and null hypothesis we are testing:
 
@@ -209,14 +209,14 @@ Before we delve into this research question, though, lets just clarify the resea
 
 ## Correlations
 
-The first step in any test of relationships is to inspect the extent to which our variables co-vary. That is, their correlation. This is especially important for multiple regression because, as we saw in the lecture, the correlations between the predictor variables are removed from the linear model to yield unique effects of the predictor on the outcome (more below). Lets therefore compute the correlation matrix for our variables using the rcorr() function.
+The first step in any test of relationships is to inspect the extent to which our variables co-vary. This is especially important for multiple regression because, as we saw in the lecture, the correlations between the predictor variables are removed from the linear model to yield unique effects of the predictor on the outcome (more below). Lets therefore compute the correlation matrix for our variables using the rcorr() function.
 
 
 ```{r}
 rcorr(as.matrix(WHR[,c("GDP","Happiness", "GINI")], type="pearson")) # note how this code is the same as the rcorr code above but include our additional predictor; GINI
 ```
 
-We already know the correlation of GDP and happiness is .78. However, there is some interesting additional information here. The gini coefficient is also corellated with happiness - albeit sharing a much smaller negative relationship of -.19. Likewise, the gini coefficient and GDP are also negatively correlated, with a correlation coeffcient of -.32. This correlation is important becuase will need to be removed from the linear model so that the regression coefficients of GDP and gini on happines represent unique effects.
+We already know the correlation of GDP and happiness is .78. However, there is some interesting additional information here. The gini coefficient is also corellated with happiness - albeit sharing a much smaller negative relationship of -.19. Likewise, the gini coefficient and GDP are also negatively correlated, with a correlation coeffcient of -.32. This correlation is important becuase it will need to be removed from the linear model so that the regression coefficients of GDP and gini on happines represent unique effects.
 
 ## Setting up the linear model
 
@@ -232,7 +232,7 @@ Because X1i and X2i in the regression model represents the measured GDP of each 
 
 If b1 and b2 are the parameters for the slope of the line, it stands to reason that b0 will be the y-intercept of the line - in other words, the predicted value of happiness when GDP and gini are equal to 0. As the regression line is a straight line, it has to be defined by a slope and an intercept. In the case of a model trying to predict Happiness, of course, the intercept is purely theoretical - it's impossible for a country to have 0 GDP and 0 gini! But, regardless, it is neverless important to know the intercept becuase it is the anchoring point of the regression line - the point at which the regression line passes through the y-axis.
 
-As with last week, we are going to use the lm() to set up and test the multiple regression model of happiness. The  lm()  function can detect whether the predictor variables are continuous (as is the case here), and will by default fit the linear regression model. Let's go ahead and fit the linear regression model for our data and save it in an R object called multiple.model.
+As with all our anayses to date, we are going to use the lm() to build and test the multiple regression model of happiness. The  lm()  function can detect whether the predictor variables are continuous (as is the case here), and will by default fit the linear regression model. Let's go ahead and fit the linear regression model for our data and save it in an R object called multiple.model.
 
 ```{r}
 multiple.model <- lm(Happiness ~ 1 + GDP + GINI, data = WHR) # notice that all I have done here is add an additional variable to the model. This is a good example of what is happening when we run a multiple regression, we are just adding an additional variable to the existing model.
@@ -241,7 +241,7 @@ summary(multiple.model)
 
 By now, hopefully the linear model output should be familiar. We have an intercpet(b0) of -1.98, which we have established is meaningless becuase it represents the predicted happiness value when GDP = 0 and gini = 0. GDP cannot be 0, so this is simply a hypothetical value used to anchor the regression line.
 
-More interesting are the slope estimates. First is the GDP slope estimate or b1. Here we have a value of .77. Holding gini constant, for every one unit increase in GDP, there is an estimated .77 unit increase in mean happiness. Notice this is different from the GDP estimate in the simple model (.73). This is not a mistake. Regression coeffcients in multiple regression are calcualtated differently than in simple regression becuase the shared variance, or correlation, of the predictor variables in removed from the model. In other words, the regression coefficients in multiple regression show the predictive ability of each predictor on the outcome over and above the variance shared between the predictors. 
+More interesting are the slope estimates. First is the GDP slope estimate or b1. Here we have a value of .77. Holding gini constant, for every one unit increase in GDP, there is an estimated .77 unit increase in mean happiness. Notice this is different from the GDP estimate in the simple model (.73). This is not a mistake. Regression coeffcients in multiple regression are calcualtated differently than in simple regression becuase the shared variance, or correlation, of the predictor variables is removed from the model. In other words, the regression coefficients in multiple regression show the predictive ability of each predictor on the outcome over and above the variance shared between the predictors. 
 
 The second coefficient of interest is the slope coefficient for gini or b2. Here we have a value of .81. Holding GDP constant, for every one unit increase in gini, there is an estimated .81 unit increase in mean happiness. Notice here that we have a slight anomoly. The correlation between gini and happines is -.19, but when we control for GDP the relationship becomes positive. This means that, if you remove the variablity in inequality (gini) that is accounted for by country wealth (GDP), the remaining variability shares a postive correlation with happiness. 
 
@@ -269,7 +269,7 @@ WHR$residuals <- resid(multiple.model)
 WHR
 ```
 
-In multiple regression, whats awesome about the predcited values is that they not only give us a means of calcuating the error left over in the model (i.e., residuals), but they also give us a means of plotting the line that best fits our multiple regression model. That is, the one that reflects the relationship between the outcome and the optimally weighted combination of predictor variables. To visualise this, lets create 2 plots - one that shows the simple relationship between happiness and GDP and one that shows the multiple relationships between happiness and a combination of GDP and gini. In both plots, we will demarcate the empty model (i.e., the mean of happiness) with a blue line.
+In multiple regression, whats awesome about the predcited values is that they not only give us a means of calcuating the error left over in the model (i.e., residuals), but they also give us a means of plotting the line that best fits our multiple regression model. That is, the one that reflects the relationship between the outcome and the optimally weighted combination of predictor variables. To visualise this, lets create 2 plots - one that shows the simple relationship between happiness and GDP and one that shows the multiple relationship between happiness and a combination of GDP and gini. In both plots, we will demarcate the empty model (i.e., the mean of happiness) with a blue line.
 
 
 ```{r}
@@ -301,7 +301,7 @@ ggplot(aes(x = predicted, y = Happiness)) +
   theme_classic(base_size = 8)
 ```
 
-You can see here that the addition of gini - though a statistically significant predictor - hasn't really done a great deal in terms of explaining additional empy variance in happiness. The model R is the same and the regression line largely unchanged (more below when we partition the variance)
+You can see here that the addition of gini - though a statistically significant predictor - hasn't really done a great deal in terms of explaining additional empty variance in happiness. The model R is the same and the regression line largely unchanged.
 
 Finally, lets also have R call the standardized estimates by using the lm.beta() function. Standardised estiamstes are really important in multiple regression becuase they allow us to directly compare estimates.
 
@@ -311,11 +311,11 @@ lm.beta(multiple.model)
 ```
 
 
-You will see above that the unstandardized estimate for GINI looks very different to the standardized estimate for GINI. Every 1 unit increase in GINI equates to a .82 increase in happiness according to our model. On the surface, that looks like a much larger effect than GDP (.77) but we know from the correlation coefficient that the relationship is in fact much smaller. So what is going on here? Well, the relationship appears bigger in the linear model because GINI has a very differenrt scale of measurement than GDP (0-1 versus 0-12). So a 1 unit increase in GINI has a very different meaning to a 1 unit increase in GDP. This is why standardized estimates are so useful when comparing coefficients - they force the unit of measurement to the same scale so that effects can be directly compared. Here we can see that although gini appears to have a relationship with happiness, the standardised estimates tell us that that relationship is very small (B = .06). Still statistically significant but much smaller than we would infer from the unstandardised estimates.
+You will see above that the unstandardized estimate for GINI looks very different to the standardized estimate for GINI. Every 1 unit increase in GINI equates to a .82 increase in happiness according to our model. On the surface, that looks like a much larger effect than GDP (.77) but we know from the correlation coefficient that the relationship is in fact much smaller. So what is going on here? Well, the relationship appears bigger in the linear model because GINI has a very different scale of measurement than GDP (0-1 versus 0-12). So a 1 unit increase in GINI has a very different meaning to a 1 unit increase in GDP. This is why standardized estimates are so useful when comparing coefficients - they force the unit of measurement to the same scale so that effects can be directly compared. Here we can see that although gini appears to have a relationship with happiness, the standardised estimates tell us that that relationship is very small (B = .06). Still statistically significant, but much smaller than we would infer from the unstandardised estimates.
 
 ## Calculating the 95% confidence interval for the coefficients using bootstrapping
 
-By now, we know that the sampling distribution (i.e., t-ratio) is not the most optimal way to conduct null hypothesis testing. As we have seen, bootstrapping is the most satisfactory methods that provides a confidence interval for the estimates without making restrictive assumptions regarding the distribution of varaiables and estimates. So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called multiple.boot. Note that we are going to request 5000 resamples so that might take a little time to run!
+By now, we know that the sampling distribution (i.e., t-ratio) is not the most optimal way to conduct null hypothesis testing. As we have seen, bootstrapping is the most satisfactory method that provides a confidence interval for the estimates without making restrictive assumptions regarding the distribution of varaiables and estimates. So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called multiple.boot. Note that we are going to request 5000 resamples so that might take a little time to run!
 
 ```{r}
 multiple.boot <- Boot(multiple.model, f=coef, R = 5000) 
@@ -341,11 +341,11 @@ superanova(multiple.model)
 ```
 
 
-Like in the simple regression, the supernova table shows us that the sum of squares for the empty model is 1898.91. This should not be surprising becuase the empty model is exactly the same whether we test for smple or multiple regression - that is, the mean of happiness as the baseline model. So adding gini has minimised the error further in the model by 6.102 sum of squares. Is this alot? Certainly does not look like it. Furthermore, the PRE or R2 is exactly the same as the simple model - .60 or 60% of the variance explained. So was the addition of gini worth it? There are a couple of ways we can test this.
+Like in the simple regression, the supernova table shows us that the sum of squares for the empty model is 1898.91. This should not be surprising becuase the empty model is exactly the same whether we test for simple or multiple regression - that is, the mean of happiness as the baseline model. So adding gini has minimised the error further in the model by 6.102 sum of squares. Is this alot? Certainly does not look like it. Furthermore, the PRE or R2 is exactly the same as the simple model - .60 or 60% of the variance explained. So was the addition of gini worth it? There are a couple of ways we can test this.
 
-First is the F ratio, which is the ratio of the mean square for the model to the mean square for the error left over after subtracting out the model. The cruical advantage of this metric of fit over R2 is that it accounts for the degrees of freedom in the model. With 1 additional predictor in the model we now have 2 degrees of freedom and an F ratio of 1137.69. This is statistically significant, but lower than the F ratio for the simplre regression model (2246). It seems adding gini to our model is quite exensive in terms of model fit relative to the empty model.
+First is the F ratio, which is the ratio of the mean square for the model to the mean square for the error left over after subtracting out the model. The cruical advantage of this metric of fit over R2 is that it accounts for the degrees of freedom in the model. With 1 additional predictor in the model we now have 2 degrees of freedom and an F ratio of 1137.69. This is statistically significant, but lower than the F ratio for the simple regression model (2246). It seems adding gini to our model is quite exensive in terms of model fit relative to the empty model.
 
-As we saw in the lecture, there is another more direct test of whether adding gini was worth it. Rather than inspect the F ratio for the model comparison to the empty model, we can also calculate F for the comparison between the simple model (GDP only) and the full model (GDP and gini). The calculation for doing this F test is:
+As we saw in the lecture, though, there is another more direct test of whether adding gini was worth it. Rather than inspect the F ratio for the model comparison to the empty model, we can also calculate F for the comparison between the simple model (GDP only) and the full model (GDP and gini). The calculation for doing this F test is:
 
 F = ((R2full - R2imple)/(dffull-dfsimple))/((1-R2full)/dffull) - see lecture notes for formula
 
@@ -355,11 +355,11 @@ Lets quickly run that calcualtion with our numbers from the supanova output
 ((.6040-.6008)/(2-1))/((1-.6040)/1492)
 ```
 
-We have a F ratio of 12.06. F is a standardized metric with a smoothed distribution that can be used for Null Hypothesis Significance Testing. In order to know whether an F of 12.06 is large enough to be considered statistically significant we need to inspect a table of F distributions and F the critical value of F with 1,1492 degrees of freedom that cuts off 95% of the distribution. F tables are freely avaliable online, one of them can be accessed here: https://web.stanford.edu/dept/radiology/cgi-bin/classes/stats_data_analysis/lesson_5/234_7_n.html
+We have a F ratio of 12.06. F is a standardized metric with a smoothed distribution that can be used for Null Hypothesis Significance Testing. In order to know whether an F of 12.06 is large enough to be considered statistically significant we need to inspect a table of F distributions and find the critical value of F with 1,1492 degrees of freedom that cuts off 95% of the distribution. F tables are freely avaliable online, one of them can be accessed here: https://web.stanford.edu/dept/radiology/cgi-bin/classes/stats_data_analysis/lesson_5/234_7_n.html
 
 We can see that with 1 degree of freedom in the numerator and over 120 degress of freedom in the denominator, we would need a F ratio larger than 6.6349 to consider the addition of gini statistically meaningful. Our F ratio is larger than this and therefore we prefer the full model - there is an improvement of fit with gini added but I would caution that it is small and signficant only becuase of the very large sample size (making even small increases in R2 significant)
 
-So what do we conclude in relation to our research question? Well a combination of GDP and gini explain a statistically significant amount of variance in Happiness. Controll for each other, both gini and GDP have positive relationships with Happiness, but GDP is by far the most meaningful predictor.
+So what do we conclude in relation to our research question? Well a combination of GDP and gini explain a statistically significant amount of variance in Happiness. Controlling for each other, both gini and GDP have positive relationships with Happiness, but GDP is by far the most meaningful predictor.
 
 ## Exercise
 
