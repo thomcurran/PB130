@@ -1,0 +1,68 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+#install.packages("probemod")
+require(probemod)
+
+```
+
+
+## Setting up the linear moderation model
+
+```{r}
+mod.model <- lm(Exhaust ~ 1 + Struct + ConReg + Struct*ConReg, data=employee)
+summary(mod.model)
+```
+
+## Probing the moderation: Pick a point
+
+```{r}
+pickapoint(mod.model, dv='Exhaust', iv='Struct', mod='ConReg')
+```
+
+## Probing the moderation: Johnson-Neyman
+
+```{r}
+jn <- jn(mod.model, dv='Exhaust', iv='Struct', mod='ConReg')
+jn
+plot(jn, axlwd = 1, celwd = 1, cblwd = 1)
+```
+
+```{r}
+theta_plot = function(.lm, predictor, moderator, alpha=.05, jn=F) {
+  require(dplyr)
+  require(ggplot2); theme_set(theme_classic())
+  require(stringi)
+  .data = data_frame(b1 = coef(.lm)[predictor],
+                     b3 = coef(.lm)[stri_startswith_fixed(names(coef(.lm)), paste0(predictor,":")) | stri_endswith_fixed(names(coef(.lm)), paste0(":",predictor))],
+                     Z = quantile(.lm$model[,moderator], seq(0,1,.01)),
+                     theta = b1 + Z * b3,
+                     se_b1 = coef(summary(.lm))[predictor, 2],
+                     COV_b1b3 = vcov(.lm)[predictor, stri_startswith_fixed(names(coef(.lm)), paste0(predictor,":")) | stri_endswith_fixed(names(coef(.lm)), paste0(":",predictor))],
+                     se_b3 = coef(summary(.lm))[stri_startswith_fixed(names(coef(.lm)), paste0(predictor,":")) | stri_endswith_fixed(names(coef(.lm)), paste0(":",predictor)), 2],
+                     se_theta = sqrt(se_b1^2 + 2 * Z * COV_b1b3 + Z^2 * se_b3^2),
+                     ci.lo_theta = theta+qt(alpha/2, .lm$df.residual)*se_theta,
+                     ci.hi_theta = theta+qt(1-alpha/2, .lm$df.residual)*se_theta)
+  if (jn) {
+    JN = jnt(.lm=.lm, predictor=predictor, moderator=moderator, alpha=alpha)
+    JN_lines = geom_vline(xintercept=JN, linetype=2)
+    JN_regions = ifelse(length(JN) == 0, "no significance regions", paste(round(JN,2), collapse = "; "))
+    Xlab = paste0(moderator, " (JN Significance Regions: ", JN_regions,")")
+  }
+  else {
+    Xlab = moderator
+    JN_lines = NULL
+  }
+  .data %>%
+    ggplot(aes(Z, theta, ymin=ci.lo_theta, ymax=ci.hi_theta)) + geom_ribbon(alpha = .2) + geom_line() + ggtitle(paste("Conditional Effect of", predictor, "as function of", moderator)) + geom_hline(yintercept=0, linetype=2) + labs(x = Xlab, y=expression(theta)) + JN_lines
+}
+```
+
+
+```{r}
+theta_plot(mod.model, predictor = "Struct", moderator = "ConReg", alpha = .05, jn = T) 
+```
+

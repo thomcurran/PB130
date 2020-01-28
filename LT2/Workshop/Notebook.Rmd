@@ -24,7 +24,7 @@ install.packages("tidyverse")
 install.packages("ggplot2")
 install.packages("lm.beta")
 install.packages("ggpubr")
-install.packages("mosiac")
+install.packages("mosaic")
 install.packages("Hmisc")
 install.packages("car")
 install.packages("plyr")
@@ -71,7 +71,7 @@ First, lets load this data into our R environment. Go to the LT2 folder, and the
 
 
 ```{r}
-WHR <- read_csv("LT2/Workshop/WHR.csv")
+WHR <- read_csv("C:/Users/currant/Dropbox/Work/LSE/PB130/LT2/Workshop/WHR.csv")
 WHR
 ```
 
@@ -377,8 +377,8 @@ Before we delve into this topic, lets just clarify the research question and nul
 
 Before we start, lets load the goals dataframe to the R environment. Go to the LT2 folder, and then to the workshop folder, and find the "goals.csv" file. Click on it aand then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
-```{r}
-goals <- read_csv("LT2/Workshop/goals.csv")
+```{r EVAL=F}
+goals <- read_csv("C:/Users/currant/Dropbox/Work/LSE/PB130/LT2/Workshop/goals.csv")
 goals
 ```
 
@@ -387,7 +387,7 @@ goals
 
 Now use the rcorr() function to call the correlation coefficient - or Pearson's r - for the relationship between GINI and happiness.
 
-```{r}
+```{r EVAL=F}
 rcorr(as.matrix(goals[,c("Task","Ego", "Enthusiasm")], type="??")) # fill in the ?? gap here for the explanatory variable and the correlation type (pearson)
 ```
 
@@ -407,7 +407,7 @@ Is this correlation statistically significant?
 
 Now lets set our up our linear multiple regression model to examine the coeffienct estimates. Remeber that Enthusiasm is our outcome variable and Task and Ego are our predictors. Don't forget to save the linear model in a new R object. I suggest goals.model 
 
-```{r}
+```{r EVAL=F}
 goals.model <- lm(?? ~ 1 + ?? + ??, data=goals) # add ?? variables to the linear model code
 summary(goals.model) # add the new R object to the summary function
 ```
@@ -438,7 +438,7 @@ Do we accept or reject the null hypothesis?
 
 In the below chunk, use the lm.beta() function to calcuate the standardized estimate for the slopes of taks and ego.
 
-```{r}
+```{r EVAL=F}
 lm.beta(??) # add goals.model to the lm.beta function
 ```
 
@@ -452,7 +452,7 @@ Which is the best predcitor of Enthusiasm?
 
 Lets go ahead generate a bootstrap sampling distribution of the estimates and use it to call the bootsrap 95% confidence interval using the confint() function.
 
-```{r}
+```{r EVAL=F}
 goals.boot <- Boot(??, f=coef, R = ??) 
 summary(goals.boot) ## add the goals.model and stipulate how many resamples you want to run (typically 5,000)
 
@@ -471,7 +471,7 @@ Do we accept or reject the null hypothesis?
 
 We've established whether there is a statistically significant relationship between or variables and set up the linear model. Lastly, how much variance in enthusiasm explained by a combination of task and ego? We can answer this question using the supernova() function in R, which breaks down the variance in enthusiasm due to the model (ie., task and ego) and error (i.e., variance left over once we've subtracted out the model).
 
-```{r}
+```{r EVAL=F}
 supernova(??) # add goals.model to the supernova function
 ```
 
@@ -498,7 +498,7 @@ https://research.sc/participant/login/dynamic/183F1D85-9289-4685-A099-4E572069A0
 
 # Task 7 - Use this workshop for your quantitative writing practice due on MONDAY
 
-For the quantitative writing practice due on Friday, I would like for you to practice writing a brief quantitative report on a simple regression, analysing the relationship between GDP and Happiness with the WHR data. This report should include the following:
+For the quantitative writing practice due on Monday, I would like for you to practice writing a brief quantitative report on a simple regression, analysing the relationship between GDP and Happiness with the WHR data. This report should include the following:
 
 Introduction:
 
