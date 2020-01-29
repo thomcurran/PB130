@@ -1,0 +1,87 @@
+---
+title: "LT2 Labs"
+output: html_notebook
+---
+
+## Packages
+
+```{r}
+library(tidyverse)
+library(car)
+library(lm.beta)
+library(mosaic)
+library(Hmisc)
+library(supernova)
+```
+
+## Cleaning: Calculating variables
+
+```{r}
+lab <- 
+  lab %>% 
+  mutate(stress = (STRESS1+STRESS2+STRESS3+STRESS4+STRESS5+STRESS6+STRESS7)/7, sop = (SOP1+SOP2+SOP3+SOP4)/4, spp = (SPP1+SPP2+SPP3+SPP4)/4)
+lab # this code calculates the variables
+```
+
+## Cleaning: Selecting variables
+
+```{r}
+lab <- 
+  lab %>% 
+  select(sop, spp, stress, HOURS_WORK, HOURS_LV)
+lab # I'm just selecting out the key variables here
+
+lab <- # into existing dataframe
+lab %>% # from existing daraframe
+filter(sop >= "0") # and then filtering just to make sure we have no missing values
+```
+
+## Correlations
+
+```{r}
+rcorr(as.matrix(lab[,c("sop","spp","stress", "HOURS_WORK", "HOURS_LV")], type="pearson"))
+```
+
+## Linear model
+
+```{r}
+lab.model <- lm(stress ~ sop + spp, data=lab)
+summary(lab.model)
+```
+
+## Standardised estimates
+
+```{r}
+lm.beta(lab.model)
+```
+
+## Confidence intervals
+
+
+```{r}
+#lab.boot <- Boot(lab.model, f=coef, R = 5000) 
+summary(lab.boot) 
+```
+
+```{r}
+confint(lab.boot, level = .95, type = "norm")
+```
+
+## Partitioning variance
+
+```{r}
+supernova(lab.model)
+```
+
+
+## Adding more predictors
+
+```{r}
+lab.model2 <- lm(stress ~ sop + spp + HOURS_WORK + HOURS_LV, data = lab)
+summary(lab.model2)
+```
+
+```{r}
+lm.beta(lab.model2)
+```
+

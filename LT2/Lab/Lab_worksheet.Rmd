@@ -1,0 +1,95 @@
+---
+title: "LT2 Labs"
+output: html_notebook
+---
+
+## Packages
+
+```{r}
+library(tidyverse)
+library(car)
+library(lm.beta)
+library(mosaic)
+library(Hmisc)
+library(supernova)
+```
+
+## Cleaning: Calculating variables
+
+```{r}
+lab <- 
+  lab %>% 
+  mutate(stress = (STRESS1+STRESS2+STRESS3+STRESS4+STRESS5+STRESS6+STRESS7)/7, sop = (SOP1+SOP2+SOP3+SOP4)/4, spp = (SPP1+SPP2+SPP3+SPP4)/4)
+lab # this code calculates the variables
+```
+
+## Cleaning: Selecting variables
+
+```{r}
+lab <- 
+  lab %>% 
+  select(sop, spp, stress, HOURS_WORK, HOURS_LV)
+lab # I'm just selecting out the key variables here
+
+lab <- # into existing dataframe
+lab %>% # from existing daraframe
+filter(sop >= "0") # and then filtering just to make sure we have no missing values
+```
+
+## Correlations
+
+```{r}
+rcorr(as.matrix(lab[,c("sop","spp","stress", "HOURS_WORK", "HOURS_LV")], type="pearson"))
+```
+
+## Linear model with sop and spp as predictors
+
+```{r}
+lab.model <- ## insert code to build linear model of stress with sop and spp as predictors and save it as object lab.model 
+```
+
+## Standardised estimates
+
+```{r}
+## insert code for standardised estimates
+```
+
+## Bootstrap confidence intervals
+
+
+```{r}
+lab.boot <- Boot(lab.model, f=coef, R = 5000) 
+confint(lab.boot, level = .95, type = "norm")
+```
+
+## Partitioning variance
+
+```{r}
+## insert code to partition lab.model variance using supernova
+```
+
+
+## Adding hours working and hours watching love island to the linear model
+
+```{r}
+lab.model2 <- ## build linear model of stress adding HOURS_WORK and HOURS_LV to sop and spp and save it as a new object called lab.model2
+```
+
+## Standardised estimates
+
+```{r}
+## write code to call standardised estimates using lm.beta
+```
+
+## Bootstrap confidence intervals
+
+```{r}
+## write the code for bootstrap confidence intervals for lab.model2
+```
+
+## Partition variance
+
+```{r}
+## insert code to partition lab.model2 variance using supernova
+```
+
