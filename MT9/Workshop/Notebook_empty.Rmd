@@ -152,7 +152,7 @@ See how the t ratio, p-value and mean difference is exactly the same as the line
 
 Okay lets now move to a different research topic and question to examine differences between independent groups. We will start with a two-parameter model (two groups) and move to a three parameter model. As we saw in the lecture, the two-parameter model is often called an independent t-test and the three-parameter model is often called ANOVA. Like the paired t-test, we will see that both of these tests are linear models that can be analysed using the lm() in R. 
 
-To start, lets ask different research question using some data I have collected on levels of perfectionism in American, Canadian, and British college students. This data is from Curran & Hill (2019). Many observational studies in psychology are set up like this, and the our two-parameter linear model is how we test for differences in scores across the countries. 
+To start, lets ask different research question using some data I have collected on levels of perfectionism in American, Canadian, and British college students. This data is from Curran & Hill (2019). Many observational studies in psychology are set up like this, and the two-parameter linear model is how we test for differences in scores across the countries. 
 
 Lets start by collapsing the USA and Canada into one region called North America and look to see if North American students differ in their levels of perfecitonism to those in the UK. Later, we will extend this model to look at differences across the three countires.
 

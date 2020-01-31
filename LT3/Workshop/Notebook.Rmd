@@ -1,39 +1,311 @@
 ---
-title: "R Notebook"
+title: "LT3: Mediation and Moderation"
 output: html_notebook
 ---
 
-```{r}
-#install.packages("probemod")
-#install.packages("C:/Users/currant/Dropbox/Work/LSE/PB130/Packages/modplot_0.1.0.tar.gz", repos = NULL, type = "source")
-require(probemod)
-require(modplot)
+## Learning Outcomes  
+
+By the end of this workshop, you should be able to:
+
+1. Calcualte the parameters and test for mediation using indirect effects
+
+2. Test interactions with continuous and categorical moderators
+
+3. Plot interactions with continuous and categorical moderators
+
+## Install required packages
+
+```{r eval=FALSE}
+install.packages("probemod")
+install.packages("readr")
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("lm.beta")
+install.packages("Hmisc")
+install.packages("modplot")
+install.packages("mediation")
+install.packages("fastDummies")
+install.packages("interactions")
+install.packages("https://github.com/thomcurran/PB130/blob/master/Packages/modplot_0.1.0.tar.gz?raw=true", repos = NULL, type = "source")
+install.packages("car")
 ```
 
+## Load required packages
+
+The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
+
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
+library(probemod)
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(lm.beta)
+library(Hmisc)
+library(modplot)
+library(mediation)
+library(fastDummies)
+library(interactions)
+library(car)
+```
+
+# The data
+
+To practice conducting mediation and moderation analyses, we are going to use data from research on a sample of 213 call center employees. The focus of this research was to better understand how and why employees were burnout out and what were the potential caused or triggers. This work surveyed employees on serveral theroetically relevant managerial behaviours psycholoigcal processes. In the data are variables drawn from several scales of interest: 
+
+1. *Leader as a Social Context Questionnaire (TSCQ, adapted; Curran, Hill, & Niemiec, 2013).*
+
+This measure assesses perceived provision of structure from leaders (e.g., rules, limits, expectations, help, support, feedback). An example item from this instrument is: “my manager always tells us what they expect of us at work”. Participants indicated the extent to which they believed each of 8 items on a 7-point Likert-type scale ranging from 1 (not at all true) to 7 (very true) to be true. The 8 items have been averaged to yield a manager structure variable called "structure".
+
+2. *Controlling Manager Behavior Scale (CMBS; Bartholomew et al., 2010).*
+
+This measure assesses perceived provision of psychological control from managers. An example item from this instrument is: “my manager pays me less attention if I have displeased them”. Participants indicated the extent to which they believed each of 4 items on a 7-point Likert-type scale ranging from 1 (not at all true) to 7 (very true) to be true. The 4 items have been averaged to yield a manager control variable called "Control".
+
+3. *Psychological Disconnection Scale (PDS; Bartholomew et al., 2011).*
+
+This measure assesses employees' perceived sense of disconnection at work. An example item from this instrument is: “I feel others at work can be dismissive of me.” Participants indicated the extent to which they believed each of 12 items on a 7-point Likert-type scale ranging from 1 (not at all true) to 7 (very true) to be true. The 12 items have been averaged to yield a disconnection variable called "Disconnection".
+
+4. *Work Burnout Questionnaire (WBQ, exhaustion subscale; Masasch).*
+
+This measure assessed employees' perceived exhaustion at work. An example item from this instrument is: “I feel physically worn out at work” Participants indicated the experiences of each of 5 items on a 5-point Likert-type scale ranging from 1 (almost never) to 7 (almost always). The 5 items have been averaged to yield an exhaustion variable called "Exhaustion".
+
+## Load data
+
+First, lets load this data into our R environment. Go to the LT3 folder, and then to the workshop folder, and find the "employee.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
+
+
+```{r}
+employee <- read_csv("LT3/Workshop/employee.csv")
+employee
+```
+
+With this data we are going to test for mediation and moderation in an attempt to predict or explain variance in employee exhaustion. Importantly, these analsyes will all use the linear model that we have been working with on this unit. There is nothing new here as regards the the underlying analyitical framework. Its just regression! First, lets start with mediation.
+
+## Mediation: The effect of manager control on exhaustion through disconnection
+
+The first research question we are going to address is whether employee exhaustion can be explianed by manager control through perceptions of disconnection. The theory here is that manager behaviuour can impact on levels of exhaustion but that the relationship is indirect. That is, it goes through a third variable. In that case, we think that controlling behaviour by managers can contribution to exhaustion BECUASE those behaviours foster a sense of disconnection with those at work. This is a classic case of mediaiton. The relationship between the predictor and outcome is hypothesised to be transmitted through the mediator.
+
+Remember from the lecture that to test for mediation, we need to calculate 3 effects; (1) direct, (2) total, and (3) indirect. The latter, indirect effect, is the focal effect in mediation analysis because it quantifies the predictor’s effect on the outcome through the mechanism represented by the mediator. In other words, it is the product of the indirect regression coefficients that link the predictor with the outcome. The direct effect estimates the relationship between predictor and outcome controlling for the mediator and the total effect is the sum of the direct and indirect effects. We will call the focal effects for mediation analysis using lm(), as we have been doing throughout this course, and then calcuate the maginitude and significance of the indirect effect. As always, before we delve into this topic lets just clarify the research question and null hypothesis we are testing:
+
+*Research Question* - Is the relationship between manager control and employee exhasution mediated by disconnection?
+
+*Null Hypothesis* - The indirect effect of the relationship between manager control and employee exhasution through disconnection will be zero.
+
+## Correlations
+
+An initial step in any test of relationships is to inspect the extent to which our variables co-vary. That is, their correlation. To do so, we can compute a the correlation coefficient or Pearson's r. Pearson's r is a standardized metric and runs between -1 and +1. The closer Pearson's r is to +/-1, the larger the relationship. The rcorr() function computes Pearson's r and its associated p value.
+
+
+```{r}
+rcorr(as.matrix(employee[,c("Control","Disconnection", "Exhaustion")], type="pearson"))
+```
+
+As might be expect, these variables all share positive correlations. According to Cohen (1988, 1992), though, the effect sizes are in the low-to-moderate range (rememer that between .1 and .3 is small, .3 to .5 is moderate, and > .5 is large). They are, however, statistically significant (i.e. p <.05) so we have some initial support for our hypotheses here.
+
+## Simple regression: The a and c paths
+
+As we saw in the lecture, in building our mediation analysis we need to run several regression models. The first is a simple regression between the predictor and the mediator to ascertain the "a" path in our causal chain. In our case, the "a" path reflects the prediction of control on disconnection, so we need to build a simple regression model that regresses disconnection on control and call it model.a. Lets do that now.
+
+```{r}
+model.a <- lm(Disconnection ~ 1 + Control, data=employee)
+summary(model.a)
+lm.beta(model.a) # we can also call the standardised estiamtes in the same chunk to get them on the same output. From now on, we will do this for the standardised estimates.
+```
+
+Great! We can see that the a path in our model - the one from control to disconnection - is .35. This is the unstandardised estimate, the standardised estimate is similar (.36). We can also see that the F ratio (31.93) is significant indictating that the linear model is a better fit than the empty model. As you will know by now, the simple regression slope estimate tells us that for every 1 unit increase in control there is a .35 unit increase in disconnection. The SE is small and the t value is larger that 1.96 (5.65). As such, we can reject the null hypothesis and conclude this is a statistically significant postive effect.
+
+While we are at it we can use simple regression to calcualte the total effect of control on exhausion - or the "c" path. To do so, we need to build a simple regression model that regresses exhaustion on control and call it model.c. Lets do that now.
+
+```{r}
+model.c <- lm(Exhaustion ~ 1 + Control, data = employee)
+summary(model.c)
+lm.beta(model.c)
+```
+
+We can see that the c path in our model - the total effect of control on exhaustion - is .12. The standardised estimate is .17. We can also see that the F ratio (6.23) is significant indictating that the linear model is a better fit than the empty model. The SE of the slope estiamte is small and the t value is larger that 1.96 (2.50). As such, we can reject the null hypothesis and conclude this is a statistically significant postive effect.
+
+## Multiple regression: The c' and b paths
+
+Now we have the "a" path in our mediation model, we need the "b" path and the direct effect "c'". The "b" path is the prediction of disconnection on exhuastion controlling for control and the "c'" path is the direct effect of control on exhaution, controlling for disconnection. As such, we need to build a multiple regression model that regresses exhaustion on control and disconnection. Lets do that now and create a new R object for this multiple regression called model.b.
+
+```{r}
+model.b <- lm(Exhaustion ~ 1 + Control + Disconnection, data = employee)
+summary(model.b)
+lm.beta(model.b)
+```
+
+Okay, here we have the "b" and "c'" paths for our mediation sequence in this multiple regression model. We can see that this linear model is a better fit than the empty model as indicated by the F ratio (11.81) and p value (i.e., < .05). Great! Now lets look at the mediation paths.
+
+Starting with the "b" path, we can see that the unstandardised slope estimate for the effect of disconnection on exhasution controlling for control is .20. The standardised slope estimate is .29. The SE is small and the t-value above 1.96 so we can reject the null hypothesis and say that this is a statistically significant positive relationship.
+
+Turning to the "c'" path, we can see that the unstandardised slope estimate for the effect of control on exhasution controlling for disconnection is .04. The standardised slope estimate is .06. The SE is small but so is the estimate and therefore the t-value is below 1.96 and, hence, we cannot reject the null hypothesis. 
+
+Interestingly, when you compare the c' path (direct effect) from the multiple regression with the c path (total effect) from the simple regression you get an sense of how much of the shared variance of control and exhaustion is explained by disconnection. We can see that, in the presence of disconnection, the relationship between control and exhaustion reduces to non-significance (i.e., from .12 to .04). Therefore, there is something common to disconnection and control that explains exhaustion and when that common variance is removed from the model the effect of control on exhaustion becomes non-significant. Although not statitically informative, this certainly alludes to potential mediation.
+
+## Calcualting the indirect effect (i.e., ab)
+
+No that we have the two constituent parts of the indirect effect - that is path a and path b - we can ascertain the magntiude of mediation. The indirect effect is the focal effect of interest in mediation analysis becuase it quantifies the effect of control on exhaustion transmitted through disconnection. The calcuation is really straightforward, it is just the product of ab. So lets take our a path (.35) and our b path (.20) and multiply them.
+
+```{r}
+.35*.20
+```
+
+Here we have an indirect effect of .07. The interpretation of this estimate is that for every one unit increase in control, there is .07 unit increase on exhaustion passing through disconnection.
+
+The question, however, is; is that .07 effect meaningful? Is that a lot? And is it sufficiently large enough for us to deem a zero indirect effect unlikely? As we saw in the lecture, to know this we need to bootstrap the sampling distribution of the indirect effect to ascertain the 95% confidence interval.
+
+## Null hypothesis significance testing for ab using bootstrapping
+
+To bootstrap the indirect effect we are going to use the mediation R package and the mediate() function. This takes the lm() objects we just created for for paths a (model.a) and b (model.b), computes the indirect effect, and then resamples it 5000 times to arrive at a 95% confidence interval. Lets run that analysis now.
+
+```{r}
+mediation <- mediate(model.a, model.b, treat="Control", mediator="Disconnection", boot=TRUE, sims=5000, boot.ci.type="perc", conf.level= 0.95) # treat is another word for predictor so when you run this code make sure your predictor is listed under treat=, boot must always be set to true and we want 5000 simulations (sims=)
+summary(mediation)
+```
+
+The output here is a bit weird. The indirect - or ab - is listed as ACME, which means "average causal mediation effect". Remember I said staticisians like calling the same thigs different names? This is another example. The ACME from this output is the same as the indirect effect (i.e., ab). Here we see an indirect effect of .07, which is the same as we calcualted by hand. We also see some other output. The ADE is the "average direct effect" - or direct effect as we have been calling it - and is .04, just like we saw in the multiple regression model. The total effect is .12, just like we saw in the simple regression model and the proportion mediated is basically the proportion of the total effect that is exaplined by the mediator. In other words, 62% of the variance shared between control and exhaustion is explained by disconnection.
+
+Of most importance here is bootstrap confidence interval for the indirect effect. We can see that with 5000 simulations, the 95% confidence interval for our indirect effect of .07 runs from .03 to .12. Crucially, this interval does not include a zero indirect effect and therefore we can reject the null hypothesis. A sense of disconnection with others at work does indeed mediate the relationship between manager control and exhaustion!
+
+# Moderation: The effect of manager structure on employee exhaustion is conditional upon manager control
+
+The second research question we are going to address is whether the effect of manager structure on employee exhaustion is conditional upon levels of manager control. The theory here is that structure from managers (i.e., help, support, feedback) an important predictor of employees exhaustion but that the magnitude and direction of this prediction will depend heavily on how that structure is conveyed. If conveyed in a controlling fashion, then structure will contribute to higher exhaustion. If conveyed in a non-controlling fashion, then structure will contribute to lower exhaustion. This is classic moderation - the effect of the predictor on the outcome is CONDITIONAL on the level of the moderator.
+
+
+Remember from the lecture that to test for moderation the first step is to run a multiple regression on the outcome with the predictor, the moderator, the predictor*moderator interaction term as the predictor variables. In this model, moderation is estimated by allowing the predictors effect on the outcome to be a linear function of the moderator. In order for moderation to occur, the interaction term must be statistically significant in the regression model. As always, before we delve into this topic lets just clarify the research question and null hypothesis we are testing:
+
+*Research Question* - Is the relationship between manager structure and employee exhasution moderated by manager control?
+
+*Null Hypothesis* - The interaction of manager structure and manager control on employee exhaustion will be zero.
 
 ## Setting up the linear moderation model
+
+Relative to mediation, building the linear model for a test of moderation is straightforward - it is just one multiple regression, albeit with a more complex interpretation. In this multiple regression model, we need to add the predictor, in this case manager structure, the moderator, in this case manager control, and the strucure*control interaction. The outcome is employee exhaustion. When building this model, we will save it as a new R object called mod.model.
 
 ```{r}
 mod.model <- lm(Exhaustion ~ 1 + Structure + Control + Structure*Control, data=employee)
 summary(mod.model)
 ```
 
+As we saw in the lecture, with the interaction term in the model, the unstandardised estimates become conditional effects. That is, b1 and b2 are the effects of the predictor on the outcome conditioned on levels of the other predictor in the model. Think of them conditional effects, reflected by the formula; b1 + b3M. As you can see, the only time b1 reduces to b1 is when M is 0. Accordingly, the unstandardised estimate of strucure on exhaustion (b1) is meaningless becasue it reflects the relationship between these variables when control is 0. Zero is not a possible value for control, so it is not informative to intepret the slope estimates in this model. 
+
+What we do need to do, however, is interpret the interaction term (b3) becusase this tells us to what extent the effect of structure on exhaustion depends on control (and vice versa). In other words, it tells us whether the predictor variables interact with each other to predict the outcome. Here we can see that the interaction term has a slope estimate of .15, a SE of .06, and a t value of 2.47. This t is larger than 1.96 and, therefore, we can reject the null hypothesis. The relationship between strucutre and exhaustion is moderated by control.
+
+Incidently, we can also bootstrap the interaction term, as we have been doing with the slope estimates in simple and multiple regression, to get a 95% confidence interval.
+
+```{r}
+mod.boot <- Boot(mod.model, f=coef, R = 5000)
+confint(mod.boot, level = .95, type = "norm")
+```
+
+As you can see, the 95% confidence interval does not include zero and therefore the bootstrapping procedure supports the interpretation of the normal theory significance test.
+
+Now, while a significant interaction terms tells us whether there is moderation, it doesn't give us any information relating to the nature of that moderation. The better understand our moderation effect, we need to probe it using a couple of techniques. The first is pick-a-point. 
+
 ## Probing the moderation: Pick a point
+
+Pick-a-point is the most commonly used approach to probing interactions (e.g., Aiken & West, 1991; Cohen et al., 2003; Hayes, 2005). This procedure involves arbitrarily picking values of the moderator and calculating the conditional direct effect (i.e., b1 + b3M) of the predictor on the outcome at those values. Three values of the moderator that are normally picked are:
+
+1) 1 SD above the mean (high)
+2) At the mean (med)
+3) 1 SD below the mean (low)   
+
+Once each conditional direct effect of the predictor on the outcome at levels of the moderator is calculated, inferential tests can be employed. Like in any linear model, these inferential tests use a t ratio but with the standard error set at the specific values of the moderator. This means we can now examine where in the distribution of manager control the effect of structure on exhaustion is significant and where in the distribution it is not. Lets go ahead and use the pickapoint() function in the probemod package to do this.
 
 ```{r}
 pickapoint(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
 ```
 
-## Probing the moderation: Johnson-Neyman
+Here we see something very interesting. When we condition the effect of structure on exhastion at various levels of control the relationship not only changes in magnitude and significance but also in direction. A low level of control (1 SD below mean), the effect of structure on exhaustion is -.22, with an SE of .11, and t of -2.10 - a significant negative effect. However, as we progress up the distibution of control, the relationship between structure and exhaustion reduces to -.03 at the mean of control and .15 at high levels of control (1 SD above mean). Both of these estimates are non-significant (i.e., p < .05).
+
+As such, manager structure negatively predicts exhaustion, but only when combined with low manager control. Manager structure does not predict exhaustion when combined with moderate or high manager control.The effect of manager structure on employee exhaustion, then, is conditional upon levels of mananger control. This is classic moderation.
+
+## Probing the moderation: Johnson-Neyman technique
+
+One major problem with the pick-a-point method, however, is that values of the moderatore are picked arbitrarily. As we saw in the lecture, the Johnson-Neyman (JN) technique overcome this limitation by using critical values of the t-distribution (i.e., 1.96) to yield an empirically-derived region of significance for the moderator at which the conditional effect of the predictor on the outcome is and isn't significant.       
+
+We can run this analysis using the jn() function within the probemod package. Lets do that now.
 
 ```{r}
-jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control') # this function takes the lm() object and has the analyst stipulate the predictor (iv=), the moderator(mod=), and outcome (dv=)
 jn
-plot(jn, axlwd = 1, celwd = 1, cblwd = 1)
 ```
 
+You can see that the conditional effect of structure on exhaustion is negative and significant when control is low, but is positive and significant when control is high. More information than the pick-a-point to indicate that at very high levels of control the conditional effect is significant. However, this output is not overly satisfactory becuase it does not show the specific values of the moderator at which the conditional effect becomes statistically significant. So I created a package for this purpose called modplot, which uses a jnt() function to return the specific values of the moderator at which the conditional effect is significant at the .05 level. Three outcomes are possible using this function:
+
+1) A single value of the moderator that the conditional effect is either significant above, or below, but not both.
+
+2) Two values of the moderator that the conditional effect is significant between, or either side of, but not both.
+
+3) No value of the moderator indicating that the conditional effect is either significant across the entire range of the moderator or is not significant anywhere in the range of the moderator. 
 
 ```{r}
-modplot(mod.model, predictor = "Structure", moderator = "Control", alpha = .05, jn = T) 
+jnt(mod.model, predictor = "Structure", moderator = "Control", alpha = .05) # I set up the jnt function to take a lm() object and then to stipulate the predictor and moderator, you can adjust the alpha level using alpha=
 ```
 
+As we can see jnt() has produced two values of the moderator at which the conditional effect is significant between, or either side of. We know from the pick-a-point that the conditional effect is significant outside of these values but not in between, so the conclusion here is that when control is lower than 1.64 the effect of structure on exhaustion is negative and significant. However, when control is higher that 4.85, the effect of structure on exhaustion is positive and significant. This is informative information, but nevertheless quite difficult to visualise so within modplot I also created a modplot() function that plots the relationship between  the predictor and outcome across the range of values of the moderator. In this plot, I also added the confidence interval around the conditional effect and demarcate the JN region of significance with horizontal lines. Lets go ahead and call that plot now.
+
+```{r}
+modplot(mod.model, predictor = "Structure", moderator = "Control", alpha = .05, jn = TRUE) # like the jnt() function, I set the modplot() function to take a lm() object, the predictor, the moderator, the alpha level and whether you want to print the JN values. If jn = FAlSE, vertical lines demarcating the region(s) of significance will not be drawn.
+```
+
+Hopefully this plot brings our analyses to life. You can see that when the effect of structure on exhasution is plotted across the range of values of control the nature of the relationship changes. At low control (i.e., < 1.65), effect of structure on exhasution is negative and significant (i.e., the 95% confidence intervals do not include zero). At high control (i.e., > 4.85), effect of structure on exhasution is positive and significant (i.e., the 95% confidence intervals do not include zero). Pretty neat!
+
+# Activity: Moderation with a categorical moderator
+
+Okay, lets now give you a chance to set up a linear model to test for moderation, but this time with a categorical rather than continuous moderator. For this, lets continute to use the employee dataset, but this time lok at whether gender moderates the relationship between manager control and  employee exhaustion. Before we go on, I want to note that I have fabricated the gender variable for demonstration purposes. Relationships will not look like this in the real world. Our goal here is understand how the effect of manager control is conditioned across two levels of the moderator: males and females. In essence, with this analysis we are interested to know whether the effects of manager control on employee exhaustion depend on whether one is male or female.
+
+Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
+
+*Research Question* - Is the relationship between manager control and employee exhasution moderated by gender?
+
+*Null Hypothesis* - The interaction of manager control and employee gender on employee exhaustion will be zero.
+
+As we are dealing with a categorical moderator, it is always a good idea to create our dummy variable for gender - just like we did for group comparisons in MT8. Here I will write the code for you as that session is a while back, but we use the ifelse() function to create a new variable "dummy" that codes 1 for when Gender=Male and 0 for all else (i.e., Females).
+
+```{r}
+employee$dummy <- ifelse(employee$Gender == c("Male"), 1, 0)
+employee
+```
+
+## Setting up the linear model
+
+Now we have dummy coded the gender variable, lets build the linear model with our predictor (control), our moderator (dummy), and the predictor*moderator interaction and create a new R object called mod.model2.
+
+```{r}
+mod.model2 <- lm(Exhaustion ~ 1 + Control + dummy + Control*dummy, data=employee)
+summary(mod.model2)
+```
+
+The focal coefficient here is b3 - that is, the interaction term.
+
+What is the unstandardised estimate of b3?
+
+What is the SE of b3?
+
+What is the t value for b3?
+
+Is the interaction term statistically significant?
+
+## Probing the interaction
+
+We have a significant interaction term, but what is the nature of this moderation - to understadn this we need to probe it. When we had a continuous predictor, we used pick a point and the JN technique to calcuate conditonal effects at various values of the moderator. However, with a categorical variable there are only two values of the moderator; 0 and 1 or Females and Males. Therefore, there are only 2 conditional effects to calculate. The first is when the moderator = zero and the second when the moderator = 1. We already know the condtional effect when the moderator = 0 becuase it is the b1 estimate in the multiple regression (i.e., -.41). So the female slope estimate for the relationship between manager control and exhaustion is -.41. Among females, manager control appears to lower exhaustion. But what about when the moderator = 1 (i.e., for males)? R is cleaver enough to detect a dummy categorical variable so when we run the pickapoint() function it will return the conditional effects at 0 and 1 (i.e., not +1SD, mean, and -1SD). 
+
+```{r}
+pickapoint(??, dv='??', iv='??', mod='??') ## enter the iv, dv, and dummy variables here
+```
+
+Here we have the condtional effecs at 0 and 1. As we saw, we know the effect for females - it is -.41. 
+
+What is the conditional effect for males? 
+
+For males, does manager control have a positive or neagtive relationship with exhaustion?
+
+Are the conditional effects statistically significant?
+
+Like above, we can plot this interaction. Given the moderator is categorical and only has two levels, we don't need the JN technique - we can just examine the simple slopes for males and females. To do this, we can use the interact_plot() function
+
+```{r}
+interact_plot(mod.model2, pred = Control, modx = dummy) + theme_classic(base_size = 8) ## This function takes a lm object and the predictor (pred=) and moderator (modx=) to plot the simple slopes of control on exhaustion for males and females.
+```
+
+As you can see, males and females have very different relationships for contorl and exhastion - one is positive and one is negative. This is classic moderation. Use simple slopes to plot categorical interaction always and use the JN technique to plot continuous interactions. Note the gender data is fabricated and these effects do not reflect effects in the real world - they are for demonstration purposes only.
