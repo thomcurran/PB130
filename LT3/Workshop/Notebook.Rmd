@@ -7,15 +7,15 @@ output: html_notebook
 
 By the end of this workshop, you should be able to:
 
-1. Calcualte the parameters and test for mediation using indirect effects
+1. Test for mediation using indirect effects
 
-2. Test interactions with continuous and categorical moderators
+2. Test moderation with continuous and categorical moderators
 
-3. Plot interactions with continuous and categorical moderators
+3. Plot moderation with continuous and categorical moderators
 
 ## Install required packages
 
-```{r eval=FALSE}
+```{r}
 install.packages("probemod")
 install.packages("readr")
 install.packages("tidyverse")
@@ -34,7 +34,7 @@ install.packages("car")
 
 The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
 
-```{r loadlib, echo=T, results='hide', message=F, warning=F}
+```{r}
 library(probemod)
 library(readr)
 library(tidyverse)
@@ -272,7 +272,7 @@ employee
 Now we have dummy coded the gender variable, lets build the linear model with our predictor (control), our moderator (dummy), and the predictor*moderator interaction and create a new R object called mod.model2.
 
 ```{r}
-mod.model2 <- lm(Exhaustion ~ 1 + Control + dummy + Control*dummy, data=employee)
+mod.model2 <- lm(?? ~ 1 + ?? + ?? + ??, data=employee) ## Build the linear model using the variables of interest for moderation analysis - don't forget the interaction term
 summary(mod.model2)
 ```
 
