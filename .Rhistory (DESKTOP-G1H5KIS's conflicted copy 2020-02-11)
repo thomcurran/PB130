@@ -1,0 +1,512 @@
+summary(mod.model)
+mod.boot <- Boot(mod.model, f=coef, R = 5000)
+library(car)
+mod.boot <- Boot(mod.model, f=coef, R = 5000)
+confint(mod.boot, level = .95, type = "norm")
+pickapoint(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+summary(jn)
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+jn
+modplot(mod.model, predictor = "Structure", moderator = "Control", alpha = .05, jn = T)
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+jnt(mod.model, predictor = "Exhaustion", moderator = "Structure", alpha = .05)
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+jn
+jnt(mod.model, predictor = "Exhaustion", moderator = "Structure", alpha = .05)
+jnt(mod.model, predictor = "Exhaustion", moderator = "Structure", alpha = .05)
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+jn
+jnt(mod.model, predictor = "Structure", moderator = "Control", alpha = .05)
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control')
+jn
+jnt(mod.model, predictor = "Exhaustion", moderator = "Structure", alpha = .05)
+jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control') # this function takes the lm() object and has the programmer stipulate the predictor (iv=), the moderator(mod=), and outcome (dv=)
+jn
+jnt(mod.model, predictor = "Structure", moderator = "Control", alpha = .05)
+modplot(mod.model, predictor = "Structure", moderator = "Control", alpha = .05, jn = T)
+interact_plot(mod.model2, pred = Control, modx = dummy) + theme_classic(base_size = 8) ## This function takes a lm object and the predictor (pred=) and moderator (modx=) to plot the simple slopes of control on exhaustion for males and females.
+library(interactions)
+interact_plot(mod.model2, pred = Control, modx = dummy) + theme_classic(base_size = 8) ## This function takes a lm object and the predictor (pred=) and moderator (modx=) to plot the simple slopes of control on exhaustion for males and females.
+library(ggplot2)
+interact_plot(mod.model2, pred = Control, modx = dummy) + theme_classic(base_size = 8) ## This function takes a lm object and the predictor (pred=) and moderator (modx=) to plot the simple slopes of control on exhaustion for males and females.
+library(readr)
+employee <- read_csv("LT3/Workshop/employee.csv")
+View(employee)
+library(tidyverse)
+employee %>%
+mutate(Control_Cen = Control-mean(Controll))
+mutate(Control_Cen = Control-mean(Control))
+employee %>% mutate(Control_cen = Control-mean(Control))
+employee %>% mutate(Structure_cen = Structure-mean(Structure))
+employee %>% employee <- mutate(Structure_cen = Structure-mean(Structure))
+employee <- employee %>% mutate(Structure_cen = Structure-mean(Structure))
+employee
+employee <- employee %>% mutate(Control_cen = Control-mean(Control))
+employee
+model.1 <- lm(Exhaustion ~ 1 + Structure + Control + Structure*Control, data = employee)
+model.2 <- lm(Exhaustion ~ 1 + Structure_cen + Control_cen + Structure_cen*Control_cen, data = employee)
+summary(model.1)
+summary(model.2)
+model.a <- lm(Disconnection ~ 1 + Control, data=employee)
+summary(model.a)
+lm.beta(model.a) # we can also call the standardised estiamtes in the same chunk to get them on the same output. From now on, we will do this for the standardised estimates.
+model.c <- lm(Exhaustion ~ 1 + Control, data = employee)
+summary(model.c)
+lm.beta(model.c)
+model.b <- lm(Exhaustion ~ 1 + Control + Disconnection, data = employee)
+summary(model.b)
+lm.beta(model.b)
+library(haven)
+BRADER_2_ <- read_sav("C:/Users/tc560/Dropbox/Work/Units/HL40482/Week 2 - Correlation and Regression/Workshop Materials/BRADER [2].sav")
+View(BRADER_2_)
+model.1 <- lm(TotalABO ~ 1 + Perfectionism, data = data)
+library(haven)
+data <- read_sav("C:/Users/tc560/Dropbox/Work/Units/HL40482/Week 2 - Correlation and Regression/Workshop Materials/BRADER [2].sav")
+View(data)
+model.1 <- lm(TotalABO ~ 1 + Perfectionism, data = data)
+model.2 <- lm(Brooding ~ 1 + Perfectionism, data = data)
+model.3 <- lm(TotalABO ~ 1 + Perfectionism + Brooding, data = data)
+summary(model.1)
+summary(model.2)
+summary(model.3)
+mediation <- mediate(model.2, model.3, treat="Perfectionism", mediator="Brooding", boot=TRUE, sims=5000, boot.ci.type="perc", conf.level= 0.95) # treat is another word for predictor so when you run this code make sure your predictor is listed under treat=, boot must always be set to true and we want 5000 simulations (sims=)
+library(mediate)
+install.packages("mediation")
+library(mediation)
+mediation <- mediate(model.2, model.3, treat="Perfectionism", mediator="Brooding", boot=TRUE, sims=5000, boot.ci.type="perc", conf.level= 0.95) # treat is another word for predictor so when you run this code make sure your predictor is listed under treat=, boot must always be set to true and we want 5000 simulations (sims=)
+summary(mediation)
+load("C:/Users/currant/Dropbox/Work/LSE/PB130/LT5/Workshop/rtfm.Rdata")
+View(rtfm.1)
+View(rtfm.2)
+View(rtfm.1)
+load("C:/Users/currant/Dropbox/Work/LSE/PB130/LT5/Workshop/clinicaltrial_old.Rdata")
+View(clin.trial)
+load("C:/Users/currant/Dropbox/Work/LSE/PB130/LT5/Workshop/clinicaltrial.Rdata")
+View(rtfm.1)
+View(clin.trial)
+library(readr)
+zhang <- read_csv("LT5/Workshop/zhang.csv")
+View(zhang)
+require(tidyverse)
+library(readr)
+zhang <- read_csv("LT5/Workshop/zhang.csv")
+View(zhang)
+long_zhang <- zhang %>% gather(time, extraordinary, 1:2)
+View(long_zhang)
+long_zhang <- zhang %>% gather(time, extraordinary, 3:4)
+long_zhang <- zhang %>% gather(time, extraordinary, 2:3)
+View(long_zhang)
+library(readr)
+zhang <- read_csv("LT5/Workshop/zhang.csv")
+View(zhang)
+long_zhang <- zhang %>% gather(time, extraordinary, 2:3)
+View(long_zhang)
+write.csv(extraordinary, "C:/Users/currant/Dropbox/Work/LSE/PB130/LT5/Workshop/extraordinary.csv")
+write.csv(lomg_zhang, "C:/Users/currant/Dropbox/Work/LSE/PB130/LT5/Workshop/extraordinary.csv")
+write.csv(long_zhang, "C:/Users/currant/Dropbox/Work/LSE/PB130/LT5/Workshop/extraordinary.csv")
+library(readr)
+extraordinary <- read_csv("LT5/Workshop/extraordinary.csv")
+View(extraordinary)
+mod.model <- lm(extraordinary ~ tim*Condition, data = extraordinary)
+mod.model <- lm(extraordinary ~ time*Condition, data = extraordinary)
+summary(mod.model)
+interact_plot(mod.model, pred = time, modx = Condition)
+require(interactions)
+interact_plot(mod.model, pred = time, modx = Condition)
+library(readr)
+extraordinary <- read_csv("LT5/Workshop/extraordinary.csv")
+View(extraordinary)
+mod.model <- lm(extraordinary ~ time*Condition, data = extraordinary)
+summary(mod.model)
+interact_plot(mod.model, pred = time, modx = Condition)
+aov.model <- aov(extraordinary ~ time*Condition, data=extraordinary)
+summary(aov.model)
+summary(aov.model)
+anova(aov.model)
+TukeyHSD(aov.model)
+aov.model <- aov(extraordinary ~ 1 + as.factor(time) + as.factor(Condition) + as.factor(time)*as.factor(Condition), data=extraordinary)
+TukeyHSD(aov.model)
+View(rtfm.1)
+View(rtfm.2)
+load("C:/Users/currant/Dropbox/Work/LSE/PB130/LT5/Workshop/rtfm.Rdata")
+View(rtfm.1)
+linear.model1 <- lm (grade ~ 1 + attend + reading, data = rtfm.1)
+summary(minear.model1)
+linear.model1 <- lm (grade ~ 1 + attend + reading, data = rtfm.1)
+summary(linear.model1)
+require(supernova)
+supernova(linear.model1)
+linear.model1 <- lm (grade ~ 1 + attend + reading, data = rtfm.1)
+summary(linear.model1)
+supernova(linear.model1)
+supernova(linear.model1)
+anova.model <- aov(grade ~ attend + grades, data = rtfm.2)
+anova.model <- aov(grade ~ attend + reading, data = rtfm.2)
+summary(anova.model)
+TukeyHSD(anova.model1)
+anova.model1 <- aov(grade ~ attend + reading, data = rtfm.2)
+summary(anova.model)
+TukeyHSD(anova.model1)
+library(readr)
+zhang <- read_csv("LT5/Workshop/zhang.csv")
+View(zhang)
+library(readr)
+extraordinary <- read_csv("LT5/Workshop/extraordinary.csv")
+View(extraordinary)
+View(extraordinary)
+View(extraordinary)
+View(extraordinary)
+linear.model2 <- lm(extraordinary ~ 1 + time + condition + time*condition, data=extraordinary)
+linear.model2 <- lm(extraordinary ~ 1 + time + Condition + time*condition, data=extraordinary)
+linear.model2 <- lm(extraordinary ~ 1 + time + Condition + time*Condition, data=extraordinary)
+summary(linear.model2)
+linear.boot2 <- Boot(linear.model2, f=coef, R = 5000)
+require(car)
+linear.boot2 <- Boot(linear.model2, f=coef, R = 5000)
+confint(linear.boot2, level = .95, type = "norm")
+require(probemod)
+pickapoint(linear.model2, dv='extraordinary', iv='time', mod='Condition')
+install.packages("sciplot")
+install.packages("sciplot", lib="H:/R/R-3.6.1/library")
+require(sciplot)
+extraordinariness %>%
+lineplot.CI(x.factor = time, response = extraordinary, group = condition, ci.fun = ciMean, xlab = "time", ylab = "extraordinariness")
+extraordinary %>%
+lineplot.CI(x.factor = time, response = extraordinary, group = condition, ci.fun = ciMean, xlab = "time", ylab = "extraordinariness")
+extraordinary %>%
+lineplot.CI(x.factor = time, response = extraordinary, group = Condition, ci.fun = ciMean, xlab = "time", ylab = "extraordinariness")
+extraordinary %>%
+lineplot.CI(x.factor = time, response = extraordinary, group = Condition, ci.fun = ciMean, xlab = "time", ylab = "extraordinariness")
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary, extraordinary$group = extraordinary$Condition, ci.fun = ciMean, xlab = "time", ylab = "extraordinariness")
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, ci.fun = ciMean, xlab = "time", ylab = "extraordinariness")
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, ci.fun = cimean, xlab = "time", ylab = "extraordinariness")
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, ci.fun = ciMeanmean, xlab = "time", ylab = "extraordinariness")
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "time", ylab = "extraordinariness")
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness") + theme_classic(base_size = 8)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordianary, colour=condition, group=condition)) +
+geom_line(aes(linetype=condition), size=.6) +
+geom_point(aes(shape=condition), size=3) +
+geom_errorbar(aes(ymax=extraordianary+se, ymin=extraordianary-se), width=.1)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=extraordianary+se, ymin=extraordianary-se), width=.1)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=y+se, ymin=y-se), width=.1)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=extraordianary+se, ymin=extraordianary-se), width=.1)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=time+se, ymin=time-se), width=.1)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=time+se, ymin=time-se), width=.1)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+ggplot(extraordinary, aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=time+se, ymin=time-se), width=.1)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+ggplot(extraordinary, aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=x+se, ymin=x-se), width=.1)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+ggplot(extraordinary, aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=x+se, ymin=x-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=x+se, ymin=x-se), width=.1) +
+theme_classic()
+require(ggplot2)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordianary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=x+se, ymin=x-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordinary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=Condition), size=.6) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=x+se, ymin=x-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordinary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=Condition), size=3) +
+geom_errorbar(aes(ymax=x+se, ymin=x-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordinary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=as.factor(Condition)), size=3) +
+geom_errorbar(aes(ymax=x+se, ymin=x-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordinary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=as.factor(Condition)), size=3) +
+geom_errorbar(aes(ymax=extraordinary+se, ymin=extraordinary-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordinary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=as.factor(Condition)), size=3) +
+geom_errorbar(aes(ymax=time+se, ymin=time-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=time, y=extraordinary, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=as.factor(Condition)), size=3) +
+geom_errorbar(aes(ymax=extraordinary+se, ymin=extraordinary-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=extraordinary, y=time, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=as.factor(Condition)), size=3) +
+geom_errorbar(aes(ymax=extraordinary+se, ymin=extraordinary-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+extraordinary %>%
+ggplot(aes(x=extraordinary, y=time, colour=Condition, group=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=as.factor(Condition)), size=3) +
+geom_errorbar(aes(ymax=time+se, ymin=time-se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness") + legend(title="Condition",
+c("Ordinary","Extraordinary"))
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness") + legend(title="Condition",
+c("Ordinary","Extraordinary"))
+data2 <- extraordinary %>%
+group_by(time, condition) %>%
+summarise(ex_mean = mean(extraordinary),
+ex_se = psych::describe(extraordinary)$se)
+data2 <- extraordinary %>%
+group_by(time, Condition) %>%
+summarise(ex_mean = mean(extraordinary),
+ex_se = psych::describe(extraordinary)$se)
+View(data2)
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=as.factor(Condition)), size=3) +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymx=ex_mean-1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(linetype=as.factor(Condition), size=.6)) +
+geom_point(aes(shape=as.factor(Condition)), size=3) +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean-1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(linetype=as.factor(Condition)) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean-1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(linetype=as.factor(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean-1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(group=Condition)) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean-1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(group=as.factor(Condition)) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean-1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(group=as.factor(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean-1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(group=as.character(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean-1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=Condition)) +
+geom_line(aes(group=as.character(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean+1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=as.factor(Condition))) +
+geom_line(aes(group=as.factor(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean+1.96*ex_se), width=.1) +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=time, y=ex_mean, colour=as.factor(Condition))) +
+geom_line(aes(group=as.factor(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean+1.96*ex_se), width=.1) +
+labs(x = "Time",
+color  = "Condition",
+y = "Extraordinariness") +
+theme_classic()
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+data2 %>%
+ggplot(aes(x=as.factor(time), y=ex_mean, colour=as.factor(Condition))) +
+geom_line(aes(group=as.factor(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean+1.96*ex_se), width=.1) +
+labs(x = "Time",
+color  = "Condition",
+y = "Extraordinariness") +
+theme_classic()
+data %>%
+group_by(time, Condition) %>%
+summarise(extra_mean = mean(extraordinary), extra_se = psych::describe(extraordinary)$se)
+data <- extraordinary %>%
+group_by(time, Condition) %>%
+summarise(extra_mean = mean(extraordinary), extra_se = psych::describe(extraordinary)$se)
+data %>%
+ggplot(aes(x=as.factor(time), y=ex_mean, colour=as.factor(Condition))) +
+geom_line(aes(group=as.factor(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=ex_mean-1.96*ex_se, ymax=ex_mean+1.96*ex_se), width=.1) +
+labs(x = "Time",
+color  = "Condition",
+y = "Extraordinariness") +
+theme_classic()
+data <- extraordinary %>%
+group_by(time, Condition) %>%
+summarise(extra_mean = mean(extraordinary), extra_se = psych::describe(extraordinary)$se)
+data %>%
+ggplot(aes(x=as.factor(time), y=extra_mean, colour=as.factor(Condition))) +
+geom_line(aes(group=as.factor(Condition))) +
+geom_point() +
+geom_errorbar(aes(ymin=extra_mean-1.96*extra_se, ymax=extra_mean+1.96*extra_se), width=.1) +
+labs(x = "Time",
+color  = "Condition",
+y = "Extraordinariness") +
+theme_classic()
+anova.model2 <- aov(extraordinary ~ as.factor(time) + as.factor(Condition) + as.factor(time)*as.factor(Condition), data = extraordinary)
+summary(anova.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time) + as.factor(Condition) + as.factor(time)*as.factor(Condition), data = extraordinary)
+summary(anova.model2)
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time) + as.factor(Condition) + as.factor(time)*as.factor(Condition), data = extraordinary)
+summary(anova.model2)
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time) + as.factor(Condition) + as.factor(time)*as.factor(Condition), data = extraordinary)
+summary(anova.model2)
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition), data = extraordinary)
+summary(anova.model2)
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(time)), data = extraordinary)
+summary(anova.model2)
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(time)), data = extraordinary)
+summary(anova.model2)
+linear.model2 <- lm(extraordinary ~ 1 + time + Condition + time*Condition + Error(ID/time), data=extraordinary)
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(Condition)), data = extraordinary)
+summary(anova.model2)
+linear.model2 <- lm(extraordinary ~ 1 + time + Condition + time*Condition + Error(ID/time), data=extraordinary)
+linear.model2 <- lm(extraordinary ~ 1 + time + Condition + time*Condition, data=extraordinary)
+summary(linear.model2)
+pickapoint(linear.model2, dv='extraordinary', iv='time', mod='Condition')
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(Condition)), data = extraordinary)
+summary(anova.model2)
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(time)), data = extraordinary)
+summary(anova.model2)
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(Condition)), data = extraordinary)
+summary(anova.model2) ## the Error addition to the ANOVA model tells R that this is a mixed design and that time is the within-person factor with each person categorised by their ID
+supernova(linear.model2)
+anova.model2 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(time)), data = extraordinary)
+summary(anova.model2) ## the Error addition to the ANOVA model tells R that this is a mixed design and that time is the within-person factor with each person categorised by their ID
+TukeyHSD(anova.model2)
+one.way2 <- extraordinary %>%
+group_by(Condition) %>%
+anova_test(dv = extraordinary, wid = ID, within = time) %>%
+get_anova_table() %>%
+adjust_pvalue(method = "bonferroni")
+lineplot.CI(x.factor = extraordinary$time, response = extraordinary$extraordinary, group = extraordinary$Condition, xlab = "Time", ylab = "Extraordinariness")
+library(rstatix)
+install.packages("rstatix")
+install.packages("rstatix")
+install.packages("rstatix", lib="H:/R/R-3.6.1/library")
+require(rstatix)
+one.way2 <- extraordinary %>%
+group_by(Condition) %>%
+anova_test(dv = extraordinary, wid = ID, within = time) %>%
+get_anova_table() %>%
+adjust_pvalue(method = "bonferroni")
+one.way2 <- extraordinary %>%
+group_by(Condition) %>%
+anova_test(dv = extraordinary, wid = ID, within = time) %>%
+get_anova_table() %>%
+adjust_pvalue(method = "bonferroni")
+require(rstatix)
+library(rstatix, lib.loc = "H:/R/R-3.6.1/library")
+one.way2 <- extraordinary %>%
+group_by(Condition) %>%
+anova_test(dv = extraordinary, wid = ID, within = time) %>%
+get_anova_table() %>%
+adjust_pvalue(method = "bonferroni")
+load("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT5/Workshop/rtfm.Rdata")
+anova.model1 <- aov(grade ~ attend + reading, data = rtfm.2)
+summary(anova.model)
+pairwise.t.test(anova.model, p.adj = "bonf")

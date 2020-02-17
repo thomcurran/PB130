@@ -1,0 +1,591 @@
+---
+title: "LT5 Notebook: Factorial ANOVA"
+output: html_notebook
+---
+# Learning Outcomes  
+
+By the end of this workshop, you should be able to:
+
+1. Run a between-persons ANOVA with and without interactions
+
+2. Run a within-persons ANOVA
+
+3. Understand how to run a mixed ANOVA
+
+# Install required packages
+
+```{r}
+install.packages("probemod")
+install.packages("readr")
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("fastDummies")
+install.packages("car")
+install.packages("sjstats")
+install.packages("supernova")
+install.packages("data.table")
+install.packages("emmeans")
+```
+
+# Load required packages
+
+The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
+
+```{r}
+library(probemod)
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(fastDummies)
+library(car)
+library(supernova)
+library(sjstats)
+library(data.table)
+library(emmeans)
+```
+
+# 2 x 2 between-subjects factorial ANOVA with no interaction using the linear model 
+
+Let's first look at a between-subjects 2 x 2 Factorial ANONA in which the predictor variables are both categorical with 2 categories (i.e., 2 x 2 design). 
+
+## The data
+
+To demonstrate a 2 x 2 between-subjects ANOVA we are going to use the student data from the Navarro reading. Here, a researcher was inerested to know whether students obtained higher grades if they attended class (varibale name attend in dataset) and did the readings (variable name reading in the dataset). In this dataset, the predictor variabes - class attendance and readings - were coded as categorical variables with two levels; yes or no. I have created two separate datasets for this task - rtfm.1 and rtfm.2 - both of which are contained in the rtfm.Rdata file. In rtfm.1, the predictors are numerically coded 1 (yes) and 0 (no) for lm() and in the rtfm.2 they are coded categorically (i.e., "yes" and "no") for aov(). Grades is continuous variable of GPA scores. 
+
+Lets load the rtfm.rdata file into our R studio session. To do so, find the rtfm.Rdata file in the LT5 workshop folder, click on it, and then click yes to load it into the global environment. Altenratively, you might be able to run the code below (if neither of these methods work, put your hand up)
+
+```{r}
+load("/LT5/Workshop/rtfm.Rdata")
+```
+
+When you load this file you will find two data objects in the environment; rtfm.1 and rtfm.2. The details for these files are listed above. First, we are going to use the rtfm.1 dataframe to conduct the 2x2 ANOVA with the linear model and then we will see the equivalence of the linear model with aov() using the rtfm.2 dataframe. As we saw in the lecture, ANOVA is just a special case of the linear model.
+
+As always, before we delve into this topic lets just clarify the research question and null hypothesis we are testing:
+
+*Research Question 1* - Is there a significant difference in grades between students who attended class and students who did not attend class?
+
+*Research Question 2* - Is there a significant difference in grades between students who did the reading and students who did not do the reading?
+
+*Null Hypothesis 1* - The grade difference between students who attended class and students who did not attend class will be zero.
+
+*Null Hypothesis 2* - The grade difference between students who did the reading and students who did not do the reading will be zero.
+
+## Setting up the linear model
+
+Now lets set our up our linear model to test our null hypotheses. For this, we just use the linear model, but rather than enter two continuous predictor variables, as we have been doing for multiple regression, we add two categorical predictor variables. The nauture of the variables (i.e., categorical) is what differentiates ANOVA from regression - but that is all! Otherwise, the underlying test is exactly the same.
+
+Becuase of this difference, the lm() function only takes numerical input whereas the aov() only takes categorical input. There are other advantages of using the aov() function for ANOVA that I will come to, but what I want to show you right now is that ANOVA is just a linear model with categorical variables.
+
+To build our linear model, then, we are going to use the rtfm.1 dataset that codes the predictor variables numerically (i.e., 0 and 1). And we are going to write the lm() jsut as we have for multiple regression by adding each predictor to the model with a "+". Notationally, this model can be expresses in the GLM as:
+
+Yi = b0 + b1Xi + b2Xi + ei
+
+Exactly the same as the multiple re gression equation from LT2. ANOVA is just a linear model. Let's go ahead that build that model now and save it as a new R object called "linear.model1".
+
+```{r}
+linear.model1 <- lm (grade ~ 1 + attend + reading, data = rtfm.1)
+summary(linear.model1)
+```
+
+The interpretation of this output is exactly the same as we have been working with for group comparisons and relationships. The intercept is the mean grade for students who did not attend class (attend = 0) and did not do the readings (reading = 0). The slope estimate for attend is the boost needed to the intercept to get to the mean grade for students who attened class (attend = 1) but did not do the readings (reading = 0). The slope estimate for reading is the boost needed to the intercept to get the mean grade for students who did not attend class (class = 0) but did do the readings (readings = 1). 
+
+As you can see, just like in multiple regression these slopes are unique effects. That is, the effect of class attendance on grades, controlling for reading, and the effect of reading on grades, controlling for class attendance. If we were to run two separte linear models for attendance and reading, we would not be controlling for their shared effects. Given this, it is evident that while both appear important to grades, reading is an especially strong predictor.
+
+Both slope estimates are statistically significant, with p values < .05. We can further test statistical significance by calculating the 95% bootstrap confidence intervals around these estimates.
+
+```{r}
+lm.model1.boot <- Boot(linear.model1, f=coef, R = 5000) 
+confint(lm.model1.boot, level = .95, type = "norm")
+```
+
+The confidence intervals for each slope estimate do not include zero. We can reject the null hypothesis. It appears that both class attendance and reading significantly boost grades! 
+
+## Partitioning variance
+
+We've established whether there is a statistically significant relationship, but how much variance in grades is explained by a combination of class attendance and reading and how is this overall variance explianed is partitioned between the two predictors? We can answer this question using the supernova() function in R, which breaks down the variance in grades due to the overall model (ie., a combination of attendance and reading), the model predictors (i.e., attendance and reading separately) and error (i.e., variance left over once we've subtracted out the linear model).
+
+```{r}
+supernova(linear.model1)
+```
+
+As we know by now, the supernova table shows us that the sum of squares for the empty model of grades is 2366.00. Adding reading and class attendance to the linear model of grades has minimised the error in the empty model by 2216.00 sum of squares. Is this alot? Certainly looks like it! Furthermore, the PRE or R2 is .94 and so 94% of grade variance is explained by class attendance and reading. The F ratio, which is the ratio of the mean square for the model to the mean square for the error left over after subtracting out the model, is large and stastically significant (i.e., p < .05). Our linear model is indeed a much better model than the empty model.
+
+In this table is also the variance explained in grades by each each predictor. We can see that of the 2366 sum of squares in the empty model, 648 is reduced by class attendance and 1568 by reading. As we will see, these are sometimes called main effects in ANOVA - and are tested with their respective F-ratios. Alongside the F ratio, each predictor has a PRE or R2 for their respective main effect. This metric is an effect size, often reported as partial eta-squared (pη2) and tells us how large the overall effect is for a particular predictor. Cohen (1988) has provided benchmarks to define small (pη2 = 0.01), medium (pη2 = 0.06), and large (pη2 = 0.14) effects. These are very large effects! As well, supporting the slope estimates in the linear model, both of the main effects are statistically significant.
+
+We can, therefore, reject the null hypotheses and conclude that student grades are higher among students who do the readings and attend the classes.
+
+## Equivalence with aov()
+
+Now, traditionally, 2 x 2 ANOVA is tested using the dedicated aov() function that takes categorical input. By doing this, students are led to wrongly believe that in some way ANOVA and regression are seperate analyses when, in fact, they are doing exactly the same thing. To demonstrate this, lets build the same linear model of grades using the aov() function and save it as a new R object called "anova.model1". The aov() function takes categorical not numerical input for the predictors and therefore we need to use the rtfm.2 dataframe.
+
+```{r}
+anova.model1 <- aov(grade ~ attend + reading, data = rtfm.2)
+summary(anova.model1)
+eta_sq(anova.model1, partial=TRUE)
+```
+
+The output presents the two main effects for each of attendance and reading on grades as well as the effect sizes (partial eta squared). And what do you know, these main effects and effect sizes are EXACTLY the same as those outputted in the supernova table above. Go ahead and check them. I suggested earlier that there are some benefits of using the dedicated aov() function rather than lm() to test linear models with categorial predictors (i.e., factorial ANOVA) and this is becuase they allow us to make direct comparisons of the means. The supernova output reports whats called an omnibus F test for the main effects that tests the null hypothesis that there is no significant difference across the groups within the predictor variable. Obtaining a significant F for the omnibus test doesn't tell you which groups are different to which. We can use the linear model to calculate these differences with the slope coefficients and with 2 predictors each containing 2 levels this is quite straightforward. Indeed, we did this when we inspected the intercept and slope coefficients from the linear.model1 above.
+
+## Post-hoc testing
+
+However, as the number of categories per predictor increases, comparing the means becomes alot more complicated becuase of the sheer number of group comparisons. Within the factoral anova model, we can conduct post-hoc analyses that examine all possible group comparisons being tested using something called pairwise differences. These kinds of comparisons are often called simple effects, apparently referring to the fact they are just comparing means in a straight forward way. To give you an example of this, in the anonva.model1 there are two specific mean comparisons are being tested:
+
+1. The difference in grades between those who attended class and those who did not
+
+2. The difference in grades between those who did the readings and those who did not
+
+A tool called Tukey's "Honestly Significant Difference" (or Tukey's HSD for short) makes these comparisons from the factoral ANOVA model. It constructs 95% simulataneous confidence intervals around each specific mean comparison. Simultaneous just means that there is a 95% probability *all* of these confidence intervals include the true value in the population. To all intents and purposes, it is interpreted in the same way we have been interpreting 95% confidence intervals to date. Lets go ahead and request Tukey's HSD using the TukeyHSD() function from the anova.model1 object.
+
+```{r}
+TukeyHSD(anova.model1)
+```
+
+As we can see, this analysis has outputted those two mean comparisons for us. One for attendance and one for reading. And, just to further demonstrate the equivalence of ANOVA and regression, go ahead and look at the slope coefficients from the linear model above. They are exactly the same as these mean comparisons (i.e., 18 and 28). We can also see that the 95% confidence intervals do not cross zero for each comparison and this therefore supports our earlier conclusions that there are mean differences in grades across the two groups.
+
+For a simple 2 x 2 ANOVA, the mean comparisons are a striaghtforward replication of the slope coeffcients for each caegorical predictor. However, as the number of levels in the categorical predictor increase, examination of the pairwise comparions becomes very useful to researchers, as we shall see in the 2 x 3 ANOVA.
+
+# 2 x 2 between-subjects factorial ANOVA with interaction as a linear model
+
+Now lets look at a 2 x 2 between-subjects factorial ANONA with an interaction in the same student dataset. Whereas in the first example we just looked at main effects of reading and attendance, this time we'll look at main and interactive effects in the same model. You won't be surprised to learn that this is really just an extention of what we did in LT3 when we tested moderation - but, of course, with two categorical predictors rather than two continuous predictors. Buts thats the only difference! Factoral ANOVA is just regression with categorical variables. And when we add an interaction term to the model, we are simply doing exactly what we did in LT3 - adding an interaction term to the linear model notation:
+
+Y = b0 + b1X + b2m + b3xm
+
+Recognise that formula? Its exactly the same as the regression formula for moderation analysis, but in this case the x and m variables are categorical and we are hypothesising that these categorical predictors interact in some way to explain variance in the outcome. Of interest here is the reading by attendance interaction, and we are presupposing that reading and attendance have some kind of synergistic relationship. That is, they each have their own contribution to grades as we saw above, but they also interact in some way to impact grades.
+
+As always, before we delve into this topic lets just clarify the research question and null hypothesis we are testing:
+
+*Research Question* - Is the effect of attendance on grades moderated by reading?
+
+*Null Hypothesis* - The interaction of attendance and reading on grades will be zero.
+
+## Setting up the linear model
+
+Lets set up the linear model. And we don't need to intoduce anything new here - we are just building a moderated regression model in the same way as we did in LT3 - but this time we are using categorical predictors rather than continuous. For this, we just add the interaction term to the main effects linear model we built above (linear.model1). So lets do that now and create a new R object called "linear.model2"
+
+```{r}
+linear.model2 <- lm(grade ~ 1 + attend + reading + attend*reading, data=rtfm.1) # notice that all I am doing here is adding the interaction term to the linear model 
+summary(linear.model2)
+```
+
+We already know that in a linear model with an interaction term, the estimates for b1 and b2 become conditional effects. So here the intercept estimate is the mean grade for students who did not attend class (coded 0) and did not do the readings (coded 0). The slope for attendance is the boost needed to the intercept to find the mean grade for students who did attend (coded 1) but did not do the readings (coded 0). The slope for reading is the boost needed to the intercept to find the mean grade for students who did the reading (coded 1) but did not attend class (coded 0).
+
+As we know from LT3, these main effects, as we have been calling them, are irrelevant in the presence of a significant interaction term because they will depend on the level of the moderator. In this case, however, the interaction of reading and attendance is not significant, and this means that the effect of attendance on grades does not depend on whether students did the reading (and vice versa) - the effect is independent of, or not conditional upon, reading. We can further test statistical significance by calculating the 95% bootstrap confidence intervals around these estimates.
+
+```{r}
+lm.model2.boot <- Boot(linear.model2, f=coef, R = 5000) 
+confint(lm.model2.boot, level = .95, type = "norm")
+```
+
+As with the normal theory estimates, the confidence interval for the interaction estimate includes zero. We should accept the null hypothesis.
+
+## Equivalence with aov()
+
+As with the example above, all we have done is test a linear model with an ineraction term. Doing the same analysis with aov() tests exactly the same model - but with categorical input. To demonstrate this, lets build the same moderated linear model of grades using the aov() function and save it as a new R object called "anova.model2". The aov() function takes categorical not numerical input for the predictors and therefore we need to use the rtfm.2 dataframe.
+
+```{r}
+anova.model2 <- aov(grade ~ 1 + attend + reading + attend*reading, data = rtfm.2)
+summary(anova.model2)
+supernova(linear.model2)
+```
+
+The output presents the two main effects for each of attendance and reading on grades and their interaction term. Ignore the SS and MS for the main effects - with an itneraction term in the model, these effects depend on how the variables are coded and that is why they differ from the linear model output (aov codes differently to 0, 1). If you think back to the moderation lecture, I showed you what happens to the slope coefficients when the scale of measurement changes (i.e., mean centering). That is exactly what is happening here - aov() codes the variables differently to 0,1 and, therefore, the main effects differ across the models. Instead, I want you to focus on the SS, MS, and p value for the interaction term because we know this stays the same irrespective of how the predictor vairables are coded. And what do you know, this term has exactly the same SS, MS, and p value in the ANOVA model as in the linear model. Go ahead and check them.
+
+# 2 x 3 between-subjects factoral  ANOVA with interaction as linear model
+
+Let's now look at a 2 x 3 between-subjects factoral ANONA in which one predictor variable has 2 categories and one has 3 (i.e., 2 x 3 design). 
+
+## The data
+
+To demonstrate a 2 x 3 between-subjects factoral ANOVA we are going to use the clinical trial data from the Navarro reading. Here, a researcher was inerested to know whether patients attending a 2 week Cognitive Behavioural Therapy (CBT) intervention showed better gain in their mood (variable mood.gain) than those who did not receive CBT over the same period. The researcher was also interested in whether any differences in mood were moderated by the type of antidepressant drug the patients were taking (variable drug). Here, there we 3 categories of drugs, namely anxifree, joyzepam, and placebo. In this dataset, the predictor variabes - therapy and drug - were coded as categorical variables. Therapy has 2 levels (CBT and no therapy) and drug has 3 levels (anxifree, joyzepam, and placebo). This is a classic 2 x 3 factoral ANOVA design with a interaction. 
+
+I have created one dataset for this task - clin.trial - which is contained in the clinicaltrial.Rdata file. In clin.trial, the predictors are categorically and mood.gain is a continuous numeric outcome . 
+
+Lets load the clinicaltrial.rdata file into our R studio session. To do so, find the rtfm.Rdata file in the LT5 workshop folder, click on it, and then click yes to load it into the global environment. Altenratively, you might be able to run the code below (if neither of these methods work, put your hand up)
+
+```{r}
+load("/LT5/Workshop/clinicaltrial.Rdata")
+```
+
+The model we are testing for the 2 x 3 between-subjects factoral ANOVA is exactly the same as the 2 x 2 between-subjects factoral ANOVA above except that one of the factors has 2 groups (therapy) and one has 3 groups (drug). The aim here is to compare the means within the groups (i.e., main effects of therapy and drug on mood gain) plus these group means multiplied across the factors (interaction effects). As we have just seen, the main effects are exactly the same as one-way ANOVAs that we tested in LT9, though in the context of a larger model that tests unique effects (i.e., 2 predictors rather than 1 predictor). The interaction effect in a 2 x 3 factoral ANOVA is a little harder to explain in the abstract than the 2 x 2 model, but stick with me because its really just a few numbers multiplied with each other.
+
+Recall in LT9 that when we have a predictor with 3 levels, like our drug variable, we need to create 2 dummy variables. In our example, we create one dummy variable that contrasts joyzepam with others and one dummy variable that contrasts anxifree with others. Set up this way, placebo is the reference group. We do not need to do anything with the therapy factor as it has 2 levels, but we will also numerically dummy code it for the linear model. 
+
+We could dummy code the variables by hand, but there is a useful function in R that does this for us. Its called fastdummies and uses a dummy_cols() function to dummy code variables given a categorical input. So lets go ahead and create those dummy variables.
+
+```{r}
+clin.trial <- dummy_cols(clin.trial, select_columns = "drug") 
+clin.trial <- dummy_cols(clin.trial, select_columns = "therapy") # into the perfectionism dataframe create dummy columns using the "Country" variable in the perfectionism data frame
+clin.trial
+```
+
+Now we have our numeric dummy variables for the linear model, lets take a peek at what a 2 x 3 factoral ANOVA looks like in notational form:
+
+Y = b0 + b1X + b2m1 + b3m2 + b4xm1 + b5xm2
+
+Notice here that the formula is a little more elaborated than a 2 x 2 ANOVA above. This is because the second factor (drug) has 3 levels and therefore needs to be captured with 2 dummy variables (m1 and m2). This also necessitates two interactions, one between x and m1 and one between x and m2. But thats it, thats the only difference between notation for the 2 x 2 and 2 x 3 ANOVA. With an itneraction in the model, of course, the interaction terms become the focal coeffcients of interest. We should know that by now! And as more levels are added to the categorical preditor(s), the number of dummy variables and therefore interactions also increases. It is for this reason that aov() should be prefered in factoral ANOVA analyses - but the point I want you to take away is that aov() is just a linear model under the bonnet.
+
+As always, before we delve into this topic lets just clarify the research question and null hypothesis we are testing:
+
+*Research Question* - Is the effect of therapy on mood moderated by drug?
+
+*Null Hypothesis* - The interaction of therapy and drug on mood will be zero.
+
+## Setting up the linear model
+
+Lets set up the linear model. And we don't need to intoduce anything new here - we are just building a linear model in the same way as we did for the 2 x 2 between-subjects factoral ANOVA - but this time we have have a predictor with 3 levels rather than 2. For this, we just add the relevant dummy variables and interaction terms from the GLM formula above. So lets do that now and create a new R object called "linear.model2full". 
+
+```{r}
+linear.model3full <- lm(mood.gain ~ 1 + therapy_CBT + drug_anxifree + drug_joyzepam + therapy_CBT*drug_anxifree + therapy_CBT*drug_joyzepam, data=clin.trial)
+summary(linear.model3full)
+```
+
+We already know that, in a linear model with interaction terms, the estimates for the main effects become conditional effects. As the number of interaction terms increase, the interpretation of the main effects become more complex so we won't dwell on them here. In any case, the focal coeffients are the interactions. And we can see here that the interaction terms are not significant, and this means that the effects of therapy on mood does not depend on what drug the patients are taking - the effect is independent of, or not conditional upon, drug. We can further test statistical significance by calculating the 95% bootstrap confidence intervals around these estimates.
+
+```{r}
+lm.model3.boot <- Boot(linear.model3full, f=coef, R = 5000) 
+confint(lm.model3.boot, level = .95, type = "norm")
+```
+
+As with the normal theory estimates, the confidence interval for the interaction estimate includes zero. We should accept the null hypothesis.
+
+As we saw in LT3, because the interaction terms between therapy and drug are not different from zero, we can remove them from the model and retain only the main effects. Lets do that now and create a new R object housing this reduced model called "linear.model2reduced"
+
+```{r}
+linear.model3reduced <- lm(mood.gain ~ 1 + therapy_CBT + drug_anxifree + drug_joyzepam, data = clin.trial) 
+summary(linear.model3reduced)
+```
+
+Let's also calculate F for the comparison between the full model (main effects and interactions) and the reduced model (main effects only) - just to check that the reduced model does indeed provide the best fit. As we saw in LT2, the calculation for doing this F test is:
+
+F = ((R2full - R2reduced)/(dffull-dfreduced))/((1-R2full)/dffull) - see LT2 lecture notes for formula
+
+We did this model comparison by hand in LT2, but the anova() function in R allows us to do this a little quicker.
+
+```{r}
+anova(linear.model3reduced, linear.model3full) # ANOVA directly compares two models and returns the F value and associated significance.
+```
+
+Our F here is small (2.48, df = 2, 14) and the associated p value is above .05 so we prefer the reduced model - there is no improvement in fit with interaction terms added. As such, we accept the null hypothesis.
+
+## Equivalence with aov()
+
+As I am sure it is becoming clear by now, doing the same analysis with aov() tests exactly the same model - but with categorical not numerical input. To demonstrate this, lets build the same moderated linear model of mood using the aov() function and save it as a new R object called "anova.model3full". The aov() function takes categorical not numerical input for the predictors and therefore we won't use the dummy variables this time.
+
+```{r}
+anova.model3full <- aov(mood.gain ~ therapy*drug, data = clin.trial)
+summary(anova.model3full)
+```
+
+As we can see here, the F value (2.49) for the interaction term is exactly the same as the F value for the full vs reduced model comparison that we just conducted using the linear model above. Thats becuase, under the bonnet, the analyses for the contribution of the interaction of therapy*drug are exactly the same. To further demonstrate this, we can call the coefficients from the aov() model.
+
+```{r}
+coef(anova.model3full)
+```
+
+And again, compare these coeffcients with the coefficents from the linear model to see that the tests are equivalent.
+
+Now we know we can remove the interaction because it is not significant, so lets do that and save it as a new R object called "anova.model3reduced". While we are at it, lets also request the effect sizes using the etaSquared() function.
+
+```{r}
+anova.model3reduced <- aov(mood.gain ~ therapy + drug, data = clin.trial)
+summary(anova.model3reduced)
+eta_sq(anova.model3reduced, partial=TRUE)
+```
+
+As with the full ANOVA model, we can see that the main effects of therapy and drug are both significant (p < .05) in this reduced model. The effect sizes are also quite large - especially for drug (pη2 = 0.79). As these are omnibus tests, a significant F value only tells us that there is a difference somewhere on the factor. What F does not tell us is where those differences are, so for this we need to run the post-hoc tests of pairwise comparisons.
+
+## Post-hoc tests
+
+The reduced linear model above suggested that there are significant main effects for therapy and the joyzepam vs others contrast. So lets go ahead and request the specific contrasts using using the TukeyHSD() function from the reduced anova R object to see where those signficant comparisons are.
+
+```{r}
+TukeyHSD(anova.model3reduced)
+```
+
+As we can see, this analysis has outputted the specific comparisons for us. Mood is higher for patients receiving CBT vs no therapy (diff = .32, 95% ci = .06, .58). Likewise, we can also see that mood is higher for those taking joyzepam vs placebo (diff = 1.03, 95% ci = .65, 1.42) and vs anxifree (diff = .77, 95% ci = .38, 1.15). There is no difference between anxifree and placebo.
+
+## How its written
+
+We submitted the mood for each group to a 2 (therapy: CBT vs. no therapy) x 3 (drug: joyzepam vs anxifree vs placebo) between-person factoral ANOVA.
+
+There was a main effect of therapy, F (1, 14) = 7.08, MSE = .48, p < 0.05. Mood was greater in CBT than in no therapy (mean diff = .32, 95% CI = .06, .58).
+
+The main effect of drug was also significant, F (1, 14) = 26.15, MSE = 1.73, p < .01. Mood is higher for those taking joyzepam vs placebo (diff = 1.03, 95% ci = .65, 1.42) and vs anxifree (diff = .77, 95% ci = .38, 1.15). There is no difference between anxifree and placebo.
+
+The two-way interaction between therapy and drug was not significant, F (1, 14) = 2.490, MSE = .14, p > 0.05.
+
+# Activity: 2 x 2 within-persons factoral ANOVA with interaction (sometimes called repeated measures factoral ANOVA)
+
+## The data
+
+This lab activity uses the data from “Stand by your Stroop: Standing up enhances selective attention and cognitive control” (Rosenbaum, Mama, Algom, 2017). This paper asked whether sitting versus standing would influence a measure of selective attention, the ability to ignore distracting information.
+
+They used a classic test of selective attention, called the Stroop effect. In a typical Stroop experiment, subjects name the color of words as fast as they can. The trick is that sometimes the color of the word is the same as the name of the word, and sometimes it is not.
+
+Congruent trials occur when the color and word match. So, the correct answers for each of the congruent stimuli shown would be to say, red, green, blue and yello. Incongruent trials occur when the color and word mismatch. The correct answers for each of the incongruent stimuli would be: blue, yellow, red, green.
+
+The Stroop effect is an example of a well-known phenomena. What happens is that people are faster to name the color of the congruent items compared to the color of the incongruent items. This difference (incongruent reaction time - congruent reaction time) is called the Stroop effect.
+
+Many researchers argue that the Stroop effect measures something about selective attention, the ability to ignore distracting information. In this case, the target information that you need to pay attention to is the color, not the word. For each item, the word is potentially distracting, it is not information that you are supposed to respond to. However, it seems that most people can’t help but notice the word, and their performance in the color-naming task is subsequently influenced by the presence of the distracting word.
+
+People who are good at ignoring the distracting words should have small Stroop effects. They will ignore the word, and it won’t influence them very much for either congruent or incongruent trials. As a result, the difference in performance (the Stroop effect) should be fairly small (if you have “good” selective attention in this task). People who are bad at ignoring the distracting words should have big Stroop effects. They will not ignore the words, causing them to be relatively fast when the word helps, and relatively slow when the word mismatches. As a result, they will show a difference in performance between the incongruent and congruent conditions.
+
+The design of the study was a 2 x 2 repeated-measures design. The first predictor was congruency (congruent vs incongruent). The second predictor was posture (sitting vs. standing). The outcome was reaction time to name the word in milliseconds. There were 50 participants in the study.
+
+The research question of this study was to ask:
+
+Does standing up improve reaction time compared to sitting down?
+
+It was predicted that smaller Stroop effects when people were standing up and doing the task, compared to when they were sitting down and doing the task.
+
+The null hypothesis is:
+
+The difference in reaction time between standing up and sitting down will be zero.
+
+## Formatting the data for repeated measures
+
+Lets first load this data. Go to the LT3 folder, and then to the workshop folder, and find the "stroop.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
+
+```{r}
+stroop <- read_csv("LT5/Workshop/stroop.csv")
+stroop
+```
+
+We see there are four columns of numbers. The column names tell us whether the data is for a congruent or incongruent condition, and whether the participant was sitting or standing. Note, this data is in wide-format, not long-format. Each subject has 4 measures per row. We will need to change this to work with the data in R. So we are going to convert the data frame to long format. What we want at the end of this conversion is:
+
+1. A column for the subject variable (i.e., subject ID)
+2. A column for the congruency variable (i.e., congruent vs incongruent)
+3. A column for the posture variable (i.e., sit vs. stand)
+4. A column for the outcome (mean reaction time)
+
+The best way to transform data between long and wide is to use the spread and gather functions from the tidyverse package, and the melt and cast functions, which also do some data frame transforming. The transformation from wide to long can be complicated depending on the structure of the data, and you may often find it helpful to google these functions to look for more examples of their use.
+
+Let’s use the tidyverse gather function to change our data from wide to long.
+
+```{r}
+stroop <- gather(stroop, key=Condition, value=RT, congruent_stand, incongruent_stand, congruent_sit, incongruent_sit)
+stroop
+```
+
+Take a moment to look at stroop. It is almost what we need. It is certainly in long format. There is a column for Subjects (ID), and a column for the outcome (RT), but there is only one column for both predictors (Condition), that’s no good. There are two predictors (condition and posture), we need two columns. Fortunately, the levels in the new Condition column are coded with a specific and consistent structure:
+
+1. congruent_stand
+2. incongruent_stand
+3. congruent_sit
+4. incongruent_sit
+
+If only we could split these by the "_" (underscore), then we would have two columns for the congruency and the posture variable. We can do this using tstrsplit from the data.table package.
+
+```{r}
+new_columns <- tstrsplit(stroop$Condition, "_", names=c("Congruency","Posture"))
+```
+
+You can look inside new_columns to see that we succesfully made the split. Now, we just need to add them on to the stroop_long data frame using cbind().
+
+```{r}
+stroop <- cbind(stroop,new_columns)
+```
+
+Look at the stroop_long data frame and you will find that we have added two new columns, one that codes for Congruency, and the other that codes for posture.
+
+After all of this data transformation you should be familiar with the predictors:
+
+1. Congruency with 2 levels: congruent vs.incongruent
+2. Posture with 2 levels: stand vs. sit
+
+There is only one outcome that we look at, which is the mean reaction time to name the color (RT).
+
+## Conduct the ANOVA
+
+Becasue of the way the data is structured in long format, we cannot run a repeated measures ANOVA using the linear model, but please see the postscript of this notebook for an example of how the tests are equivalent. 
+
+Therefore, we will conduct a repeated measures ANOVA using aov(). This way, we will be able capitilize on the major benefit provided by the repeated measures design. We can remove the variance due to individual subjects from the error terms we use to calculate F-values for each main effect and interaction. If we just used the linear model on this long dataset, we would not be able to remove this variance (see below for more information).
+
+Remember the formula for the 2 x 2 between-subjects factoral ANOVA with interaction above, I’ll remind you:
+
+aov(outcome ~ predictor + moderator + predictor*moderator, dataframe)
+
+To do the same for a repeated measures design, the code looks like this:
+
+aov(outcome ~ predictor + moderator + predictor*moderator + Error(ID/(predictor + moderator + predictor*moderator)), dataframe)
+
+1. outcome = name of dependent variable
+2. predictor = name of first preditor variable
+3. moderator = name of second predictor variable
+4. ID = name of the subject variable, coding the means for each subject in each condition
+5. dataframe = name of the long-format data frame
+
+We have added + Error(Subject/predictor + moderator + predictor*moderator). This tells R to use the appropriate degrees of freedom for the repeated measures ANOVA (i.e., each effect is conditioned on ID - that is, estimated once for each individual).
+
+Here is what our formula will look like:
+
+aov(RT ~ Congruency + Posture + Congruency*Posture + Error(Subject/(Congruency + Posture + Congruency*Posture)), data = stroop)
+
+Go ahead and write that code and request the summary:
+
+```{r}
+anova.model4 <- aov(?? ~ ?? + ?? + C?? + Error(as.factor(ID)/(Congruency + Posture + Congruency*Posture)), data = ??)
+summary(??) 
+```
+
+Is there a main effect of Congruency?
+
+Is there a main effect of Posture?
+
+Is there two-way interaction between Congruency and Posture?
+
+## Post-hoc tests
+
+We can also request the means for the conditions and the paired contrasts. Remember that the F tests are omnibus tests, they don't tell us anything about the specific comparisons. Now there are a few comparisons we could test, but with a significant interaction term the only real comparisons of interest are those that concern the Congruency * Posture interaction. So we can ask:
+
+1. Was the stroop effect only for the sitting condition statistically signficant? In other words, was the difference in mean RT between the incongruent and congruent conditions unlikely under the null (or unlikely to be produced by chance).
+
+2. Was the Stroop effect only for the standing condition statistically signficant? In other words, was the difference in mean RT between the incongruent and congruent conditions unlikely under the null (or unlikely to be produced by chance).
+
+We do these comparisons using emmeans.
+
+```{r}
+emmeans(anova.model4, pairwise ~ Congruency, adjust='bonferroni')
+emmeans(anova.model4, pairwise ~ Posture, adjust='bonferroni')
+emmeans(anova.model4, pairwise ~ Congruency|Posture, adjust='bonferroni')
+```
+
+What is the mean difference in reaction time for the sitting condition?
+
+What is the mean difference in reation time for the standing condition?
+
+Are these differences statistically significant using paired t-test?
+
+We can see that the paired contrasts are significant for both conditions - reation time was slower in incongruent condition for both standing and sitting. But this effect appears to be mitigated somewhat when the pariticipants were standing.
+
+## How its written
+
+We submitted the mean reaction times for each subject in each condition to a 2 (Congruency: congrueny vs. incongruent) x 2 (Posture: Standing vs. Sitting) repeated measures ANOVA.
+
+There was a main effect of Congruency, F (1, 49) = 342.45, MSE = 1684.39, p < 0.001. Mean reaction times were slower for incongruent (922 ms) than congruent groups (815 ms).
+
+The main effect of Posture was significant, F (1, 49) = 7.33, MSE = 4407.09, p =.009. Mean reaction times were slower for sitting (881 ms) than standing groups (855 ms). 
+
+The two-way interaction between Congruency and Posture was significant, F (1, 49) = 8.96, MSE = 731.82, p < 0.004. The Stroop effect was 23 ms smaller in the standing (mean diff = -119ms, t = -17.10, p <.01) than sitting (mean diff = -96, t = 13.80, p <.01) conditions.
+
+# Post script for further learning: 2 x 2 mixed factoral ANOVA with interaction as a linear model
+
+## The data
+
+To demonstrate mixed 2 x 2 ANOVA with an interaction, we are going to use the data from Experiment 3 of; Zhang, T., Kim, T., Brooks, A. W., Gino, F., & Norton, M. I. (2014). A "present" for the future: The unexpected value of rediscovery. Psychological Science, 25, 1851-1860.
+
+The premise of this study was that people often keep diaries to help them remember and contemplate the events of their lives. Months or years later, when people look back through their diary entries, they often gain insights about the overall meaningfulness of these events, as well as their emotional reactions to them. 
+
+With this in mind, Zhang et al. (2014) sought to examine whether individuals are more likely to mispredict the value of rediscovering ordinary events than to mispredict the value of rediscovering extraordinary events, which are more memorable. Becuase of this, it was predicted that ordinary events will come to be perceived as more extraordinary over time, whereas perceptions of extraordinary events will not change across time. 
+
+To test this hypothesis, the authors recruited individuals who were currently involved in romantic relationships, and asked half of the participants to write about an extraordinary day with their romantic partner (Valentine’s Day), and the other half to write about an ordinary day with their romantic partner (what happened two days ago). The authors then asked participants rate the degree of extraordinariness on a scale of 1 to 7 (1 = extremely ordinary, 4 = neither ordinary nor extraordinary, 7 = extraordinary) for their diary entry.
+
+Three months later, the authors contacted all of the participants, and had them read their description of the extraordinary or ordinary day, and then rate how extraordinary the event was in retrospect using the same scale. This is a classic mixed 2 x 2 ANOVA with an interaction. The outcome in this case is ratings of extraordinariness and the predictors are time with two levels (i.e., time 1 and time 2) and condition with two levels (i.e., ordinary or extraordinary day). The design is mixed because time is a within-person factor and condition is a between person factor.
+
+Becasue of the mixed nature of this design, the data is structured slightly differently to how we have been working with to date. Instead of being in horizontal format with each participants score for each variable listed in each row, the data for a mixed design needs to be in vertical format with each participant's score for each time point listed in each row. Lets load the dataset into R and we'll look at what this means.
+
+Go to the LT3 folder, and then to the workshop folder, and find the "extraordinary.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
+
+```{r}
+extraordinary <- read_csv("LT5/Workshop/extraordinary.csv")
+View(extraordinary)
+```
+
+If you go to the data file and click on the "ID" column, it will sort the data file from low to high. As you will see, when you sort the data by ID, each individual has 2 data rows. The first is for the rating of extraordinariness at time point 1 (coded 0) and the second is for the rating of extraordinariness at time point 2 (Coded 1). This is the within-person factor. The condition that the person belongs to (i.e., ordinary coded 0 or extraordinary coded 1) is the same across each time point becuase this is the between-person factor - the factor that differs between persons, but not within them. Structured this way, the linear model can estiamte the effect of time (i.e., differences between the time points) and condition (i.e., the differences between the conditions) simultaneously. 
+
+As always, before we delve into this topic lets just clarify the research question and null hypothesis we are testing:
+
+*Research Question* - Is the effect of time on ratings of event extrordinariness moderated by experimental condition?
+
+*Null Hypothesis* - The interaction of time and condition on event extraordinariness will be zero.
+
+## Setting up the linear model
+
+Now lets set up the linear model. And we don't need to intoduce anything new here - we are just building a moderated regression model in the same way as we did in LT3 - but this time we are using categorical predictors rather than continuous. For this, we add the preditors and their interaction term in the lm() function. So lets add do that now to build our a linear model of extraordinariness and create a new R object called "linear.model2"
+
+```{r}
+linear.model4 <- lm(extraordinary ~ 1 + time + Condition + time*Condition, data=extraordinary)
+summary(linear.model4)
+```
+
+We already know that in a linear model with an interaction term, the estimates for b1 and b2 become conditional effects - differences between the level of the predictor when the other predictor is 0. So here the intercept estimate is the mean extraordinary rating for the people in the ordinary condition (coded 0) at time 1 (coded 0). The slope for time is the boost needed to the intercept to find the mean extraordinary rating for people in the ordinary condition (coded 0) at time point 2 (coded 1). The slope for condition is the boost needed to the intercept to find the mean extraordinary rating for people in the extraordinary condition (coded 1) at time point 1 (coded 0).
+
+As we know from LT3, these main effects, as we have been calling them, are irrelevant in the presence of a significant interaction term because they will depend on the level of the moderator. In this case, the interaction of time and condition means that the effect of time on extraordinariness depends on the condition that participants were assigned to. I don't want you to focus on the t ratios and p values here becuase this is a mixed design and therefore the errors in the linear model are wrong (more below). For now, lets just move forward to probing this interaction.
+
+## Probing the interaction
+
+Okay, so just like moderation analysis, the slope for the interaction term doesn't really tell us a great deal beyond the fact that the effect of the predictor on the outcome depends on the level of the moderator. In order to better understand our interaction, we need to probe it. By now, we should know how to do this with categorical variables. We're just going to examine the conditional effects of time on ratings of extrodinariness across the two levels of our moderator. As we saw in LT3, we can easily do this with the pickpoint() function.
+
+
+```{r}
+pickapoint(linear.model4, dv='extraordinary', iv='time', mod='Condition')
+```
+
+Now we are getting somewhere! Consisitent with the interaction term, we can see that the effect of time on ratings of extraordinariness depend on what condition the participants belong to. In the ordinary condition, we can see that the mean diffence between time 1 and time 2 ratings of extraordiness increased by 1.2 points. However, for people randomly assigned to the extraordinalry condition, the difference between time 1 and time 2 ratings of extraordinariness is much smaller - only 0.17. 
+
+## Plotting the interaction
+
+To get a better understading of this moderation, we can plot it. For this, I'm going to create a new data object called data thast will contain the means and standard errors for each condition, at each time point so that I can then plot them on an interaction plot. As such, I will use ggplot() this time rather than interation.plot() as we did in LT3 becuase I with the standard errors, can plot the confidence intervals around the means for each condition at each time point. Lets go ahead and create that plot.
+
+```{r}
+data <- extraordinary %>% 
+  group_by(time, Condition) %>% 
+  summarise(extra_mean = mean(extraordinary), extra_se = psych::describe(extraordinary)$se) ## this first chunk creates a new dataset called "data" which summarises the means and standard errors for each condition at each time point. Find the "data" object in your R environment and check it out!
+
+data %>% 
+ ggplot(aes(x=as.factor(time), y=extra_mean, colour=as.factor(Condition))) + # I am now plotting time against the extraordinary rating means for each time point across each condition. I am forcing the time and condition variables to factors so that R does not interpret them as continuous variables
+  geom_line(aes(group=as.factor(Condition))) + 
+     geom_point() + 
+     geom_errorbar(aes(ymin=extra_mean-1.96*extra_se, ymax=extra_mean+1.96*extra_se), width=.1) + # I am adding the   error bars that depict the upper and lower confidence from +/- 1.96 SE of the means
+  labs(x = "Time",
+       color  = "Condition",
+       y = "Extraordinariness") +
+theme_classic()
+```
+
+We can see clearly here what is happening in the data. Ordinary experiences were perceived as far more extraordinary at Time 2 than at Time 1, whereas these ratings for the extraordinary experiences did not differ between Time 1 and Time 2. This is precicely the hypothesis that Zhang et al had. Ordinary events come to be perceived as more extraordinary over time, whereas perceptions of extraordinary events do not change across time. 
+
+## Equivalence with aov()
+
+Again, I want to show you equivalence of the lm() with aov() for this mixed 2 x 2 ANOVA to further demonstrate how ANOVA is just a special case of regression. Special in that the predictor variables are categorical and not continuous.
+
+I said above that lm() and aov() are both appropriate methods for anaysing the 2 x 2 ANOVA. However, when there is a mixed deisgn, like this one, aov() should ALWAYS be used. Why? Think back to the coefficients for the linear model and remember I said that we cannot interpret the t values and p values becuase the error portion of the model is wrong? Well thats becuase when we stacked the data into long format we doubled the sample size (i.e., each person has 2 rows, one for time 1 and one for time 2) and the lm() function has no way of knowing that those additional observations are actually grouped by ID. It therefore assumes the sample size is 260 rather than 130 and,  as such, overestimates the degrees of freedom in the residual. Thats why we cannot rely on the lm() for null hypothesis significance testing. 
+
+But this said, the analyses are equivalent and the focal coefficient - the estimate for the interaction - will be identical. For ease, I'm going to run the supernova for the linear model and the summary for the ANOVA model to demonstrate this.
+
+```{r}
+supernova(linear.model4)
+
+anova.model4 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(time)), data = extraordinary)
+summary(anova.model4) ## the Error addition to the ANOVA model tells R that this is a mixed design and that time is the within-person factor with each person categorised by their ID
+```
+
+Of noting here is the degrees of freedom in the total model and - by extention - the error. In the linear model it is overestimated (i.e., 259) but in the ANOVA model it is correct (i.e., 128) because we have conditioned the between person effects on the within person condition. A mixed factoral ANOVA first outputs the main effect of condition. This is the overall effect of condition on extraordinariness ratings irrespective of time. Those in the extraordinary condition rated the events as more extraodinary overall, irrespective of time point. It then outputs the main effect of time, irrespecitve of condition. Here, experiences seemed more extraordinary overall at Time 2 than they did 3 months earlier, at Time 1, irrespecitve of what condition the participants were in. Sound familiar? Thats right, these are the same as unique effects in regression.
+
+Importantly, however, the ANOVA also outputs the interaction between time and condition, F(1, 128) = 15.02, p < .001. And this, of course, is the focal effect of interest. We can interpret the F ratio and P value for this effect becuase the degrees of freedom in the error portion of the model are correct. And, as we can see, the interaction is significant. What I would like you note here is the symatery between the lm() and aov(). The sum of squares for the interaction term is exactly the same in the linear model and the ANOVA model (17.45). The F ratio and p value is wrong becuase there is no adjustment to the error in the lm(), but the mechanics under the hood are exactly the same.
+
+## Post-hoc testing
+
+As a result of the significant interation term, we should conduct our multiple comparisons by conditioning the effect of time on the experimental condition. We do this in the emmeans() function using the vertical bar |. The vertical bar reads as meaning conditional. Here we will condition the effect of time on experimental condition using |. Lets go ahead and do that now.
+
+```{r}
+extraordinary$time <- factor(extraordinary$time, levels = c("1", "0"))
+emmeans(anova.model4, pairwise ~time)
+emmeans(anova.model4, pairwise ~Condition)
+emmeans(anova.model4, pairwise ~time|Condition)
+```
+
+The way these contrasts are calcualated is pre-post and therefore the estimates should be reversed to reflect the direction of effects (i.e., negative vlaues indicate increases and vice versa). I have done this in the first line of code above. Of noting is that the point estimate for the contrasts reveal the story: the increase in ratings of extraordinariness are larger for the oridinary group (mean=1.20, SE=0.19, t=6.31) than for the extraordinary group (mean=.17, SE=0.19, t=.89).
+
+## How its written
+
+We submitted the extrodinariness scores at each time point across each group to a 2 (time: pre vs. post) x 2 (group: ordinary vs extraordinary) mixed factorial ANOVA.
+
+There was a main effect of time, F (1, 8) = 8.89, MSE = 14.45, p < 0.05, 〖"pη" 〗^(2 )= .53. More differences were observed post-intervention than pre-intervention (mean diff = 1.7,  SE = .57, t = 2.98, p < .05).
+
+The main effect of condition was also significant; F (1, 8) = 70.10, MSE = 110.45, p < .01, 〖"pη" 〗^(2 )= .90. Less differences were observed in the control condition versus the experimental condition (diff = -4.7, SE = .56, t = -8.37, p < .05).
+
+The two-way interaction between time and condition was significant, F (1, 8) = 58.70, MSE = 92.45, p < 0.01, 〖"pη" 〗^(2 )= .88. The main effect of time on differences spotted was positive in the experimental condition (pre-post diff = 6.0, SE=0.80, t=7.5, p <.01) but negative in the control condition (pre-post diff = -2.6, SE=0.80, t=-3.25, p <.05).
+
+
+

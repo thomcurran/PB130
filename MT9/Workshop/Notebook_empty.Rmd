@@ -346,14 +346,24 @@ Just to show you that the between groups one-way ANOVA is equivalent to a linear
 
 
 ```{r}
-perfectionism.ANOVA <- aov(perfectionism$SOP ~ perfectionism$Country) # setting up the ANOVA requires the outcome variable and the explainatory variable seperated by tilda (~).
+perfectionism.ANOVA <- aov(SOP ~ Country, data = perfectionism) # setting up the ANOVA requires the outcome variable and the explainatory variable seperated by tilda (~).
 summary(perfectionism.ANOVA) 
-TukeyHSD(perfectionism.ANOVA)# Now we have to use the perfectionism.ANOVA model to find out the pair of countries which differ. For this you may use the Tukey’s HSD test. Don;t worry too much about what this means for now, the output will be the same as the lm() and that is the key learning outcome.
 ```
 
 See how the F ratio and mean differences are the same as the linear model we tested? Thats becuase the analyses are exactly the same! Students are often taught one-way ANOVA as a seperate statistical test to paired t-test, independent t-test, and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model! 
 
-Just to add here there are some additional pairwise comparisons that I have requested (TukeyHSD). I've done this to show you how to test for the significance of each pair of differences. Becuase we have multiple means, there are multiple comaprisons and Tukey's test corrects for these multiple comparisons. This is for *reference only* if you should need to call the specific paired differenes in your research. For now, you don't need to worry about the math.
+One of the advantages of aov() over the lm() when testing one-way ANOVA, however, is that we can use it to generate specifc comparisons for of the multiple grous. For example, we have 3 comparisons in this model we need to test (i.e., UK vs USA, USA vs Canada, and Canada vs USA). The first idea that might come to mind is to just test each comparison separately with a simple t-test, using an significance level of .05. At first glance, this doesn’t seem like a bad idea. However, consider a case where you dont have 2 comparisons but you have 20 comparisons to test, and a significance level of 0.05. What’s the probability of observing at least one significant result in those 20 tests just due to chance? High! Specifcally, with 20 comparisons being made, we have a 64% chance of observing at least one significant difference, even if all of the differences are actually zero. In psychology, it’s not unusual for the number of simultaneous comparisons to be quite a bit larger than 2... and the probability of getting a significant result simply due to chance keeps going up as we add more comparisons.
+
+Methods for dealing with multiple testing frequently call for adjusting the significance level in some way, so that the probability of observing at least one significant result due to chance remains below your desired significance level. The Bonferroni correction does just this, and sets the significance cut-off at α/n. For example, in the example above, with 20 comparisons and significance level of = 0.05, you’d only reject a null hypothesis if the p-value is less than 0.0025 (i.e., .05/20). In our example, we have 3 comparisons, so our p value cut-off will be .05/3 = .017. Accordingly, for each comparison, we are looking for a t ratio that is large enough to be considered statistically significant at the .017 level.
+
+Lets go ahead and request the pairwise comparisons from the ANOVA model of perfectionism and use the Bonferroni ajustment to the p value to adjudicate statistical significance.
+
+
+```{r}
+pairwise.t.test(perfectionism$SOP, perfectionism$Country, p.adj="bonf") # this function takes the outcome variable first, the explanatory variable next, and add the p value adjustment for bonferroni (i.e., p.adj = bonf).
+```
+
+The code outputs the bonferroni adjusted p values, which are more conservative than simple t-test comparisons of 2 group means (becuase we are testing 3 group means). Using the Bonferroni adjustment, only the UK-USA comparison is statistically significant. This suggests that SOP is higher in the US than the UK, but that there is insufficient statistical support to distinguish between the the UK and Canada and the US and Canada.
 
 ## Exercise
 
