@@ -16,7 +16,6 @@ By the end of this workshop, you should be able to:
 
 ```{r}
 install.packages("probemod")
-install.packages("readr")
 install.packages("tidyverse")
 install.packages("ggplot2")
 install.packages("fastDummies")
@@ -25,6 +24,7 @@ install.packages("sjstats")
 install.packages("supernova")
 install.packages("data.table")
 install.packages("emmeans")
+install.packages("psych")
 ```
 
 # Load required packages
@@ -33,7 +33,6 @@ The required packages are the same as the installed packages. Write the code nee
 
 ```{r}
 library(probemod)
-library(readr)
 library(tidyverse)
 library(ggplot2)
 library(fastDummies)
@@ -42,6 +41,7 @@ library(supernova)
 library(sjstats)
 library(data.table)
 library(emmeans)
+library(psych)
 ```
 
 # 2 x 2 between-subjects factorial ANOVA with no interaction using the linear model 
@@ -384,9 +384,10 @@ You can look inside new_columns to see that we succesfully made the split. Now, 
 
 ```{r}
 stroop <- cbind(stroop,new_columns)
+stroop
 ```
 
-Look at the stroop_long data frame and you will find that we have added two new columns, one that codes for Congruency, and the other that codes for posture.
+Look at the stroop data frame and you will find that we have added two new columns, one that codes for Congruency, and the other that codes for posture.
 
 After all of this data transformation you should be familiar with the predictors:
 
