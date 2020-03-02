@@ -363,7 +363,7 @@ So what do we conclude in relation to our research question? Well a combination 
 
 ## Exercise
 
-Okay, lets now give you a chance to set up and test a multiple regression. For this, lets use a dataset that contan data on employee goals and levels of enthusiams in the workplace. This is a real dataset collected in the field from a sample of accontants working at an accountancy firm in Bristol, UK. In this dataset are responses to a survey assessing employees' levels of two motivational goals for work and their enthusiams - all responed to on Likert scales running between 1 and 5. 
+Okay, lets now give you a chance to set up and test a multiple regression. For this, lets use a dataset that contan data on employee goals and levels of enthusiams in the workplace. This is a real dataset collected in the field from a sample of accontants working at an accountancy firm in Bristol, UK. In this dataset are responses to a survey assessing employees' levels of two motivational goals for work and their enthusiasm - all responed to on Likert scales running between 1 and 5. 
 
 The first goal measured is a task goal, which is employees' tendency to strive to develop their skills and abilities, advance their learning, understand material, or complete or master a task (e.g., "I work to master tasks and overcome challenges"). The second is an ego goal, which measures employee tendencies to prove one's competence and to gain favorable judgments about it from others (e.g., "I work to recieve bonuses and awards"). Enthusiasm was measured using an items referring to how much enjoyment and excitment one felt at work (e.g., "I feel a sense of excitement when I'm working")
 
