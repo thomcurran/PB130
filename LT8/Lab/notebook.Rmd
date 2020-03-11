@@ -6,6 +6,13 @@ output: html_notebook
 ## Packages
 
 ```{r}
+install.packages("tidyverse")
+install.packages("car")
+install.packages("psych")
+```
+
+
+```{r}
 library(tidyverse)
 library(car)
 library(psych)
@@ -105,6 +112,7 @@ mean_score <- c(mean(bigfive$neuroticism), mean(bigfive$openness), mean(bigfive$
 personality <- c("neuroticism", "openness", "extraversion", "concienciousness", "agreeableness")
 data <- data_frame(mean_score, personality)
 
+## Now create the bar chart
 
 ```
 

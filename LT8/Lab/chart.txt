@@ -1,0 +1,3 @@
+ggplot(data=data, aes(x=personality, y=mean_score)) +
+  geom_bar(stat="identity", color="blue", fill="white") +
+  theme_classic()
