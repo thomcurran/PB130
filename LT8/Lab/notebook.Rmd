@@ -1,5 +1,5 @@
 ---
-title: "LT2 Lab"
+title: "LT8 Lab"
 output: html_notebook
 ---
 
@@ -8,10 +8,7 @@ output: html_notebook
 ```{r}
 library(tidyverse)
 library(car)
-library(lm.beta)
-library(mosaic)
-library(Hmisc)
-library(supernova)
+library(psych)
 ```
 
 ## Loading the personality data
@@ -80,9 +77,11 @@ alpha(concienciousness)
 alpha(agreeableness)
 ```
 
+Are the scales reliable? Use Nunally's criteria of 0.70 to answer.
+
 ## Cleaning: Calculating variables
 
-Once we have established that the Big 5 scales are reliable, we can move to aggregating the items to create the variables for each sub-scale. We can easily do this with the mutate function, as we saw at the beginning of the first semester.
+Once we have established that the Big 5 scales are reliable, we can move to aggregating the items to creating the variables for each sub-scale. We can easily do this with the mutate function, as we saw at the beginning of the first semester.
 
 ```{r}
 bigfive <- bigfive %>%
@@ -95,5 +94,17 @@ bigfive <- bigfive %>%
   mutate(concienciousness = (c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9)/9)
 bigfive <- bigfive %>%
   mutate(agreeableness = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9)/9)
+```
+
+## Activity: Plot a bar graph showing the mean scores for the personality dimensions
+
+
+```{r}
+# First create dataframe with means
+mean_score <- c(mean(bigfive$neuroticism), mean(bigfive$openness), mean(bigfive$extraversion), mean(bigfive$concienciousness), mean(bigfive$agreeableness))
+personality <- c("neuroticism", "openness", "extraversion", "concienciousness", "agreeableness")
+data <- data_frame(mean_score, personality)
+
+
 ```
 
