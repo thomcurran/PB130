@@ -1,0 +1,99 @@
+---
+title: "LT2 Lab"
+output: html_notebook
+---
+
+## Packages
+
+```{r}
+library(tidyverse)
+library(car)
+library(lm.beta)
+library(mosaic)
+library(Hmisc)
+library(supernova)
+```
+
+## Loading the personality data
+
+Lets load the bigfive dataframe from the survey we just completed.You can do this by clicking the file in the LT8 Lab folder or by trying the code below:
+
+```{r}
+bigfive <- read_csv("LT8/Lab/bigfive.csv")
+bigfive
+```
+
+## Cleaning: Recoding items
+
+The first step when working with psychological test data like this is to identify and tehn recode any reverse items. Recall from the lecture I said some tools have reverse items to mitigate the impact of aquiescence? Well this is true of the Big 5 questionnaire. There are several reverse items for each subscale so we need to recode them so that 5 = 1, 2 = 4, and so on.. Lets do that now with the recode function found in the car package:
+
+```{r}
+# first filter out NAs
+bigfive <- 
+bigfive %>% 
+filter(e1 >= "1")
+
+# note I specify car:: here becuase car and tidyverse have a recode function and I want R to use the car recode function
+bigfive$a1 <- car::recode(bigfive$a1r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$c2 <- car::recode(bigfive$c2r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$e2 <- car::recode(bigfive$e2r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$n2 <- car::recode(bigfive$n2r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$a3 <- car::recode(bigfive$a3r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$c4 <- car::recode(bigfive$c4r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$e5 <- car::recode(bigfive$e5r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$c5 <- car::recode(bigfive$c5r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$n5 <- car::recode(bigfive$n5r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$a6 <- car::recode(bigfive$a6r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$e7 <- car::recode(bigfive$e7r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$n7 <- car::recode(bigfive$n7r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$o7 <- car::recode(bigfive$o7r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$a8 <- car::recode(bigfive$a8r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$o9 <- car::recode(bigfive$o9r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$c9 <- car::recode(bigfive$c9r, "1=5; 2=4; 3=3; 4=2; 5=1")
+
+# select out the items
+
+bigfive <- select(bigfive, e1, e2, e3, e4, e5, e6, e7, e8, c1, c2, c3, c4, c5, c6, c7, c8, c9, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, a1, a2, a3, a4, a5, a6, a7, a8, a9, n1, n2, n3, n4, n5, n6, n7, n8)
+```
+
+## Cleaning: Reliability analysis
+
+The net step after we have recoded the items is to check the scales are reliable. As we saw in the lecture, we can calculate the reilaibility of the Big 5 scales using the Cronbach's alpha, which is the ratio of variance in the true score to error variance. We saw in the lecture tha tit is calculated as:
+
+r = Vt/V
+
+Where Vt is true score variance, and V is overall variance in the measure.
+
+We can call Cronbach's alpha using the alpha function in the psych package. Lets do that now for each of our subscales; Openness, Extraversion, Neuroticism, Agreeableness, and Concienciousness.
+
+```{r}
+extraversion <- select(bigfive, e1, e2, e3, e4, e5, e6, e7, e8)
+neuroticism <- select(bigfive, n1, n2, n3, n4, n5, n6, n7, n8)
+openness <- select(bigfive, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10)
+concienciousness <- select(bigfive, c1, c2, c3, c4, c5, c6, c7, c8, c9)
+agreeableness <- select(bigfive, a1, a2, a3, a4, a5, a6, a7, a8, a9)
+
+alpha(neuroticism)
+alpha(extraversion)
+alpha(openness)
+alpha(concienciousness)
+alpha(agreeableness)
+```
+
+## Cleaning: Calculating variables
+
+Once we have established that the Big 5 scales are reliable, we can move to aggregating the items to create the variables for each sub-scale. We can easily do this with the mutate function, as we saw at the beginning of the first semester.
+
+```{r}
+bigfive <- bigfive %>%
+  mutate(neuroticism = (n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8)/8)
+bigfive <- bigfive %>%
+  mutate(openness = (o1 + o2 + o3 + o4 + o5 + o6 + o7 + o8 + o9 + o10)/10)
+bigfive <- bigfive %>%
+  mutate(extraversion = (e1 + e2 + e3 + e4 + e5 + e6 + e7 + e8)/8)
+bigfive <- bigfive %>%
+  mutate(concienciousness = (c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9)/9)
+bigfive <- bigfive %>%
+  mutate(agreeableness = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9)/9)
+```
+

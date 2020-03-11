@@ -280,7 +280,7 @@ Before we get into the analysis, lets remind ourselves of the research question 
 
 Research Question:
 
-Is there a relationships between GPA and college admission in students from the US?
+Is there a relationship between GPA and college admission in students from the US?
 
 Null hypothesis: The relationship between GPA and college admission will be zero
 
