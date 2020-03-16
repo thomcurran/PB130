@@ -1,0 +1,70 @@
+---
+title: "Example Class Teaching for APA Tables"
+output: html_notebook
+---
+
+## Preliminaries
+
+```{r}
+install.packages("apaTables")
+library(apaTables)
+library(tidyverse)
+```
+
+
+## One-Way ANOVA
+
+```{r}
+perfectionism.ANOVA <- aov(SOP ~ Country, data = perfectionism)
+summary(perfectionism.ANOVA) 
+```
+
+
+## APA Table of one-way ANOVA
+
+```{r}
+apa.aov.table(perfectionism.ANOVA,filename="Table1_APA.doc",table.number = 1)
+```
+
+
+## Pairwise t-tests with bonferroni adjustment
+
+```{r}
+pairwise.t.test(perfectionism$SOP, perfectionism$Country, p.adj="bonf") 
+```
+
+## APA table of pairwise differences
+
+```{r}
+apa.1way.table(iv=Country,dv=SOP,data=perfectionism,filename="Table2_APA.doc",table.number = 2)
+```
+
+## Multiple regression
+
+## Correlations
+
+```{r}
+rcorr(as.matrix(goals[,c("Enthusiasm","Task", "Ego")], type="pearson")) 
+```
+
+## APA Correlation table
+
+```{r}
+select(goals, c(Enthusiasm,Task,Ego)) %>% # this line just selects the variables I want the correlations for
+apa.cor.table(goals, show.conf.interval = TRUE, filename="Table3_APA.doc", table.number=3)
+```
+
+
+## Linear model
+
+```{r}
+goals.model <- lm(Enthusiasm ~ Task + Ego, data = goals)
+summary(goals.model)
+```
+
+## APA regression table
+
+```{r}
+apa.reg.boot.table(goals.model, filename="Table4_APA.doc", table.number=4, number.samples = 5000)
+```
+
