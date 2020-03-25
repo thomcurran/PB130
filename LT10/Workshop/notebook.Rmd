@@ -207,7 +207,7 @@ Our research question is: is there a relationship between age and perfectionism 
 First, lets load this data into our R environment. Go to the LT10 folder, and then to the workshop folder, and find the "perfectionism.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
 
-```{r eval = FALSE}
+```{r}
 perfectionism <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT10/Workshop/perfectionism.csv")
 ```
 
@@ -293,7 +293,7 @@ To illustrate this, I want to return to the data we collected on personality in 
 
 First, lets load this data into our R environment. Go to the LT10 folder, and then to the workshop folder, and find the "bigfive.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
-```{r eval = FALSE}
+```{r}
 bigfive <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT10/Workshop/bigfive.csv")
 ```
 
@@ -383,7 +383,7 @@ A much smaller difference. So this is what I mean when I say unreliablity attenu
 
 For this activity, I want you to have a go at polynomial regression using the perfectionism dataset. To date, we have looked at the linear effect of perfectionism over time, but perhaps the trend is quadratic, or maybe cubic. Have a go at finding out.
 
-## Task 1 - plot the relationship
+## Task 1 - Plot the relationship
 
 Use the chunk code below to plot the points for the relationship between year and spp in the perfectionism dataframe.
 
@@ -409,12 +409,12 @@ perfectionism$year <- (perfectionism$year-??)
 perfectionism
 ```
 
-## Task 3 - test the linear model
+## Task 3 - Test the linear model
 
 First we need to test the linear model to ascertain if there is a linear trend. Lets build the linear model now and save it as a new R object called per1..
 
 ```{r eval = FALSE}
-per1 <- lm(spp ~ ??, data = perfectionism) # must specify the polynomial term in I() to tell R this is polynomial (and not Year specified twice)
+per1 <- lm(spp ~ ??, data = perfectionism) 
 summary(per1)
 ```
 
@@ -424,13 +424,13 @@ What is the beta for year?
 
 Is the beta significant?
 
-## Task 4 - test the quadratic model
+## Task 4 - Test the quadratic model
 
 Next we need to test the quadratic model, with year raised to the 2nd power. To do this we just add year^2 to our linear model. Lets do that now and save it as a new R object called per2..
 
 
 ```{r eval = FALSE}
-per2 <- lm(spp ~ ??, data = perfectionism) # must specify the polynomial term in I() to tell R this is polynomial (and not Year specified twice)
+per2 <- lm(spp ~ ??, data = perfectionism)
 summary(per1)
 ```
 
@@ -450,13 +450,13 @@ Does the addition of the quadratic term improve the model?
 
 Why?
 
-## test the cubic model
+## Test the cubic model
 
 Fianlly we need to test the cubic model, with year raised to the 3rd power. To do this we just add year^3 to our quadratic model. Lets do that now and save it as a new R object called per2..
 
 
 ```{r eval = FALSE}
-per3 <- lm(spp ~ ??, data = perfectionism) # must specify the polynomial term in I() to tell R this is polynomial (and not Year specified twice)
+per3 <- lm(spp ~ ??, data = perfectionism) 
 summary(per3)
 ```
 
@@ -476,7 +476,7 @@ Does the addition of the quadratic term improve the model?
 
 Why?
 
-## Task 5 - plot the trend
+## Task 5 - Plot the trend
 
 To visulaise this relationship draw a figure that fits the best fitting shape to the data (i.e., linear, quadratic, or cubic). You can use the origional plot1 from task 1 and add the stat_smooth layer with the best fitting polynomial model in the formula.
 

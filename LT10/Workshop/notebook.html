@@ -276,15 +276,15 @@ summary(fit1)</code></pre>
 <pre class="r"><code>summary(fit1.boot)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["R"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["original"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["bootBias"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["bootSE"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["bootMed"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"5000","2":"5.15727273","3":"0.0098895438","4":"0.03657094","5":"5.16535746","_rn_":"(Intercept)"},{"1":"5000","2":"0.02931818","3":"-0.0006066695","4":"0.01422653","5":"0.02939681","_rn_":"Year"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["R"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["original"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["bootBias"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["bootSE"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["bootMed"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"5000","2":"5.15727273","3":"0.0088387918","4":"0.03617412","5":"5.16407261","_rn_":"(Intercept)"},{"1":"5000","2":"0.02931818","3":"-0.0003220498","4":"0.01381755","5":"0.02974599","_rn_":"Year"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>confint(fit1.boot, level = .95, type = &quot;norm&quot;) </code></pre>
 <pre><code>## Bootstrap normal confidence intervals
 ## 
 ##                   2.5 %     97.5 %
-## (Intercept) 5.075705450 5.21906092
-## Year        0.002041373 0.05780833</code></pre>
+## (Intercept) 5.077533968 5.21933390
+## Year        0.002558338 0.05672213</code></pre>
 <p>And bootstrapping supports the conclusions of normal theory testing.</p>
 <p>But the question is, can we do better? Can we explain more variance by adding powers of the predictor to model the potential for non-linear effects? For this we need to add the polynomial terms.</p>
 </div>
@@ -319,16 +319,16 @@ summary(fit2)</code></pre>
 summary(fit2.boot)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["R"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["original"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["bootBias"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["bootSE"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["bootMed"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"5000","2":"5.26315851","3":"0.0008554485","4":"0.021924711","5":"5.26315942","_rn_":"(Intercept)"},{"1":"5000","2":"0.02931818","3":"-0.0023930903","4":"0.006670960","5":"0.02863643","_rn_":"Year"},{"1":"5000","2":"-0.01058858","3":"-0.0001362408","4":"0.002292495","5":"-0.01058654","_rn_":"I(Year^2)"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["R"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["original"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["bootBias"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["bootSE"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["bootMed"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"5000","2":"5.26315851","3":"0.0003793887","4":"0.021227077","5":"5.26252881","_rn_":"(Intercept)"},{"1":"5000","2":"0.02931818","3":"-0.0022249448","4":"0.006311432","5":"0.02864626","_rn_":"Year"},{"1":"5000","2":"-0.01058858","3":"-0.0000899252","4":"0.002162167","5":"-0.01056998","_rn_":"I(Year^2)"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>confint(fit2.boot, level = .95, type = &quot;norm&quot;)</code></pre>
 <pre><code>## Bootstrap normal confidence intervals
 ## 
 ##                   2.5 %       97.5 %
-## (Intercept)  5.21933142  5.305274704
-## Year         0.01863643  0.044786114
-## I(Year^2)   -0.01494555 -0.005959129</code></pre>
+## (Intercept)  5.22117481  5.304383426
+## Year         0.01917295  0.043913307
+## I(Year^2)   -0.01473642 -0.006260883</code></pre>
 <p>And the bootsrapping support the normal theory testing.</p>
 <p>As we saw in LT2, it is not an especially good idea to compare models directly using R2 becuase R2 does not take into consideration the degrees of freedom in the model.</p>
 <p>There is another more direct test of whether adding our 2nd degree polynomial significantly improves the model. Rather than inspect the R2 the models, we can also calculate F for the comparison between the simple model (linear effect only) and the full model (linear and quadratic). The calculation for doing this F test is:</p>
@@ -372,17 +372,17 @@ summary(fit3)</code></pre>
 summary(fit3.boot)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["R"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["original"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["bootBias"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["bootSE"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["bootMed"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"5000","2":"5.2631585082","3":"0.0023987916","4":"0.0214632194","5":"5.2649329077","_rn_":"(Intercept)"},{"1":"5000","2":"0.0143638306","3":"-0.0017526776","4":"0.0115543991","5":"0.0149126324","_rn_":"Year"},{"1":"5000","2":"-0.0105885781","3":"-0.0004968912","4":"0.0041692332","5":"-0.0106984896","_rn_":"I(Year^2)"},{"1":"5000","2":"0.0008401321","3":"0.0001049968","4":"0.0009125024","5":"0.0008118943","_rn_":"I(Year^3)"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["R"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["original"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["bootBias"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["bootSE"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["bootMed"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"5000","2":"5.2631585082","3":"0.0022456953","4":"0.021050516","5":"5.2643603113","_rn_":"(Intercept)"},{"1":"5000","2":"0.0143638306","3":"-0.0020160934","4":"0.011147209","5":"0.0148856709","_rn_":"Year"},{"1":"5000","2":"-0.0105885781","3":"-0.0006181268","4":"0.004405400","5":"-0.0106838703","_rn_":"I(Year^2)"},{"1":"5000","2":"0.0008401321","3":"0.0001062168","4":"0.001024947","5":"0.0008085807","_rn_":"I(Year^3)"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>confint(fit3.boot, level = .95, type = &quot;norm&quot;)</code></pre>
 <pre><code>## Bootstrap normal confidence intervals
 ## 
 ##                    2.5 %       97.5 %
-## (Intercept)  5.218692579  5.302826854
-## Year        -0.006529698  0.038762714
-## I(Year^2)   -0.018263234 -0.001920140
-## I(Year^3)   -0.001053337  0.002523607</code></pre>
+## (Intercept)  5.219654560  5.302171066
+## Year        -0.005468205  0.038228053
+## I(Year^2)   -0.018604876 -0.001336026
+## I(Year^3)   -0.001274943  0.002742774</code></pre>
 <p>And the bootsrapping results support the normal theory.</p>
 <p>Furthermore, look at the Multiple R-squared: in the 2nd degree model it is 94.07%, while in the 3rd degree model it is 96.22%. Yes there has been an increase in accuracy of the model, but we know that adding any variable will increase R2 due if nothing else but to chance. Therefore, let’s compare the cubic model with the quadratic model using anova() to see if the addition of the cubic term was worth it.</p>
 <pre class="r"><code>anova(fit2, fit3)</code></pre>
