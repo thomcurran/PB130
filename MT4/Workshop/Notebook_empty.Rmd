@@ -1,6 +1,8 @@
 ---
-title: "MT4: Visulisng and plotting data"
-output: html_notebook
+title: 'MT4: Visulisng and plotting data'
+output:
+  html_document:
+    df_print: paged
 ---
 
 
@@ -20,7 +22,7 @@ At the end of today’s workshop you should be able to do the following:
 ## Install required packages
 
 
-```{r}
+```{r eval=FALSE}
 install.packages("tidyverse")
 install.packages("mosaic")
 install.packages("ggplot2")
@@ -33,7 +35,7 @@ install.packages("sjlabelled")
 ## Load required packages
 
 
-```{r}
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library(tidyverse)
 library(mosaic)
 library(ggplot2)
@@ -56,7 +58,7 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 
 
 ```{r}
-WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT4/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT4/Workshop/WV6_Data_R_v20180912.rds")
 
 WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
 ```
@@ -86,13 +88,13 @@ head(WVSwellbeing)
 ```
 
 
-While we are manipulaitng the data, lets also calculate our wellbeing variable as the average of V10 and V10 and add it to the dataframe. I've left the mutate function empty for you to fill in.
+While we are manipulaitng the data, lets also calculate our wellbeing variable as the average of V10 and V11 and add it to the dataframe. I've left the mutate function empty for you to fill in.
 
 
 ```{r}
 WVSwellbeing <- # into existing dataframe
   WVSwellbeing %>% # from existing dataframe
-  mutate() # avergage V10 and V10 and asign the sum to a new variable called wellbeing
+  mutate(wellbeing=(V10+V11)/2) # average V10 and V11 and asign the sum to a new variable called wellbeing
 WVSwellbeing # check dataframe
 ```
 
@@ -481,7 +483,7 @@ This looks much more worthwhile and the trend is relevant without the outlier of
 1. Plot mean levels of happiness across countries ordered from low to high (be sure to check it is labelled correctly)
 
 
-```{r}
+```{r eval=FALSE}
 
 ```
 
@@ -490,7 +492,7 @@ This looks much more worthwhile and the trend is relevant without the outlier of
 2. Plot mean levels fo health across countries ordered from low to high (be sure to check it is labelled correctly)
 
 
-```{r}
+```{r eval=FALSE}
 
 ```
 

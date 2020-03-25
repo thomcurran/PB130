@@ -233,7 +233,7 @@ A correction for range restriction that is well known is Thorndike Case 2:
 
 Let R be the unrestricted correlaton, r the restricted correlation, S the unrestricted standard deviation, s the restricted standard deviation, then
 
-R = (rS/s)/ sqrt(1-r^2 + r^2(S^2/s^2)).
+R = (rS / s) / sqrt(1 - r^2 + r^2 * (S^2 / s^2)).
 
 ## Estimating the population SD
 

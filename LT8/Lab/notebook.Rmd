@@ -1,18 +1,20 @@
 ---
 title: "LT8 Lab"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ## Packages
 
-```{r}
+```{r eval = FALSE}
 install.packages("tidyverse")
 install.packages("car")
 install.packages("psych")
 ```
 
 
-```{r}
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library(tidyverse)
 library(car)
 library(psych)
@@ -23,7 +25,7 @@ library(psych)
 Lets load the bigfive dataframe from the survey we just completed.You can do this by clicking the file in the LT8 Lab folder or by trying the code below:
 
 ```{r}
-bigfive <- read_csv("LT8/Lab/bigfive.csv")
+bigfive <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT8/Lab/bigfive.csv")
 bigfive
 ```
 

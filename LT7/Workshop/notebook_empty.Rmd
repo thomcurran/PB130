@@ -1,8 +1,10 @@
 ---
 title: 'LT7: Categorical Data Analysis'
 output:
-  pdf_document: default
+  html_document:
+    df_print: paged
   html_notebook: default
+  pdf_document: default
 ---
 
 # Learning Outcomes  
@@ -17,7 +19,7 @@ By the end of this workshop, you should be able to:
 
 # Install required packages
 
-```{r}
+```{r eval = FALSE}
 install.packages("tidyverse")
 install.packages("car")
 install.packages("readr")
@@ -27,7 +29,7 @@ install.packages("readr")
 
 The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
 
-```{r}
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library(car)
 library(tidyverse)
 library(readr)
@@ -35,17 +37,17 @@ library(readr)
 
 ## Chi-square
 
-In general, the chi-square (χ2) test is a useful statistical test to look at differences with categorical variables (e.g., political preference, gender). We can use the χ2 test in two similar, but subtly difference situations:
+In general, the chi-square (x2) test is a useful statistical test to look at differences with categorical variables (e.g., political preference, gender). We can use the x2 test in two similar, but subtly difference situations:
 
-1. When estimating how similar an observed distribution is to an expected distribution (e.g., are the same proportion of people supporting the three political parties?). Here, we use a goodness-of-fit test.
+1. When estimating how similar an observed distribution is to an expected distribution (e.g., are the same proportion of people supporting the three political parties?). Here, we use a goodness of fit test.
 
 2. When estimating whether two variables are independent (e.g., is the likelihood of getting aid from large companies vs. small companies the same for all three political parties?). Here we use an independent test.
 
-Because of the relative simplicty of chi-square, we'll first compute χ2 by hand, and then we will do it using R!
+Because of the relative simplicty of chi-square, we'll first compute x2 by hand, and then we will do it using R!
 
 ## Chi-square goodness of fit test
 
-If you have one categorical variable from a single population, and you’d like to determine whether the sample is consistent with a hypothesized distribution, you can use a χ2 goodness-of-fit test!
+If you have one categorical variable from a single population, and you’d like to determine whether the sample is consistent with a hypothesized distribution, you can use a x2 goodness of fit test!
 
 Null hypothesis (H0): The data follow a specified distribution (typically a truly equal distribution)
 
@@ -60,7 +62,7 @@ Are US citizen's political party preferences equally distrubuted?
 To answer this, lets take a random sample of US citizens and ask them which party they support. This data can be found in the votes dataframe. Write the code to load it below:
 
 ```{r}
-votes <- read_csv("LT7/Workshop/votes.csv")
+votes <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT7/Workshop/votes.csv")
 votes
 ```
 
@@ -107,9 +109,9 @@ e <- N * p
 e
 ```
 
-Since we have 3 categories (Democrat, Republican, Independent), and our null hypothesis is that voters are equally distributed across the categories, our hypothesized proportion p of voters/party = 1/3. Thus, our expected frequencies for each party should be N∗p = 1619 * 13 = 539.6667.
+Since we have 3 categories (Democrat, Republican, Independent), and our null hypothesis is that voters are equally distributed across the categories, our hypothesized proportion p of voters/party = 1/3. Thus, our expected frequencies for each party should be N*p = 1619 * 13 = 539.6667.
 
-## Calculate χ2
+## Calculate x2
 
 Recall from the lecture that the calcualtion for chi-square is just the sum of the observed counts for each cell minus the expected counts squared divided by the expected count. So lets do that calculation now by hand in R and save it as a new object called chisq_gf:
 
@@ -122,7 +124,7 @@ Here we have a chi-square of 11.03. Is that large enough to be considered statis
 
 ## Calculate df and significance
 
-Degrees of freedom in chi-square is k-1, where k is the number of categories. So in this case our df = 3−1 = 2.
+Degrees of freedom in chi-square is k-1, where k is the number of categories. So in this case our df = 3-1 = 2.
 
 We can compare a chi-square of 11.03 with a df of 2 to a table of critical values - like in the lecture. Or we can directly calcualte the p value in R using pchsq(). To do this, we just create a new R object called p_val that contains this calculation.
 
@@ -131,7 +133,7 @@ p_val <- pchisq(chisq_gf, df = 2, lower.tail = F)
 p_val
 ```
 
-So, we calculated χ2 (df=2) = 11.03, p = 0.004.
+So, we calculated x2 (df=2) = 11.03, p = 0.004.
 
 ## Calculating chi-square goodness-of-fit test with R
 
@@ -146,11 +148,11 @@ This is the simple way to do chi-square, but I wanted to show you the process un
 
 ## Writing up results
 
-We can reject the null hypothesis that the voters are equally distributed across political parties, χ2 (df=2) = 11.03, p = 0.004. Thus, the votes are significantly different than we would expect if an equal number of voters ahd voted for each party. From looking at the observed frequencies compared to those expected, it looks like fewer voters were supporting the Independent party (~30%), compared to the Democrats or Republicans (~35%).
+We can reject the null hypothesis that the voters are equally distributed across political parties, x2 (df=2) = 11.03, p = 0.004. Thus, the votes are significantly different than we would expect if an equal number of voters ahd voted for each party. From looking at the observed frequencies compared to those expected, it looks like fewer voters were supporting the Independent party (~30%), compared to the Democrats or Republicans (~35%).
 
 ## Chi-square test of independence
 
-If you have two categorical variables, and you’d like to determine whether the variables are independent (i.e., that there is no relationship between them), you can use a χ2 test of inderpendence.
+If you have two categorical variables, and you’d like to determine whether the variables are independent (i.e., that there is no relationship between them), you can use a x2 test of inderpendence.
 
 Null hypothesis (H0): The 2 categorical variables are independent (there is no relationship between the variables)
 
@@ -191,17 +193,17 @@ addmargins(death_table)
 
 For each cell, we can calculate the expected value by multiplying that cells row and column totals and dividing by our total sample size. 
 
-For instance, using the margins from above, the expected value for 1, maltreat = (94∗102)/350=27.39. 
+For instance, using the margins from above, the expected value for 1, maltreat = (94*102)/350=27.39. 
 
-The expected value for 2, maltreat = (111∗102)/350=32.35.
+The expected value for 2, maltreat = (111*102)/350=32.35.
 
 And so on..
 
-Once we calculate an expected value for each cell, we can then use the same χ2 function using the observed and expected values to calculate our χ2 statistic. 
+Once we calculate an expected value for each cell, we can then use the same x2 function using the observed and expected values to calculate our x2 statistic. 
 
-Try filling in a blank code with the expected values, and then calculate out χ2!
+Try filling in a blank code with the expected values, and then calculate out x2!
 
-```{r}
+```{r eval = FALSE}
 ## write the data out and list the number of columns
 expected <- matrix(c(27.39, 32.35, ??, ??, ??, ??), ncol=2)
 
@@ -223,18 +225,18 @@ X2 = sum(observed-expcected)^2/expected
 
 So for each cell take the observed from the expected, square it, and then divide by the expected. Then, add them all up.
 
-```{r}
+```{r eval = FALSE}
 chisq_in <- (26 - 27.39)^2/27.39 + (31-32.35)^2/32.35 + (?? - ??)^2/?? + (?? - ??)^2/?? + (80 - ??)^2/?? + (?? - ??)^2/?? # fill in the blanks here
 chisq_in
 ```
 
-You should calculate that χ2 = 0.43
+You should calculate that x2 = 0.43
 
 ## Assess significance
 
-The degrees of freedom in an chi-square test of independence is; (number of rows−1)∗(number of columns−1)
+The degrees of freedom in an chi-square test of independence is; (number of rows-1)*(number of columns-1)
 
-Since we have 3 rows and 2 columns, our df = (3−1)∗(2−1) = 2
+Since we have 3 rows and 2 columns, our df = (3-1)*(2-1) = 2
 
 And then use the pchisq() used above to determine our p-value/significance.
 
@@ -256,7 +258,7 @@ Easy!
 
 ## Writing up results
 
-We can accept the null hypothesis that the effect of maltreatment on juvenile death is independent of time, χ2 (df=2) = 0.43, p = 0.81. 
+We can accept the null hypothesis that the effect of maltreatment on juvenile death is independent of time, x2 (df=2) = 0.43, p = 0.81. 
 
 ## Logistic regression
 
@@ -289,7 +291,7 @@ Alternative hypothesis: There will be a positive relationship between GPA and co
 Lets load the college dataframe now or just import it from the LT7 folder:
 
 ```{r}
-college <- read_csv("LT7/Workshop/college.csv")
+college <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT7/Workshop/college.csv")
 college
 ```
 
@@ -364,7 +366,7 @@ Finally, the p-value can be obtained using:
 with(college.model, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = F))
 ```
 
-The chi-square of 13.01 with 1 degrees of freedom and an associated p-value of less than 0.001 tells us that our model as a whole fits significantly better than an empty model. This is sometimes called a likelihood ratio test (the deviance residual is -2*log likelihood - just as we saw in the lecture). To see the model’s log likelihood, we type:
+The chi-square of 13.01 with 1 degrees of freedom and an associated p-value of less than 0.001 tells us that our model as a whole fits significantly better than an empty model. This is sometimes called a likelihood ratio test (the deviance residual is -2log likelihood - just as we saw in the lecture). To see the model’s log likelihood, we type:
 
 ```{r}
 logLik(college.model)
@@ -381,7 +383,7 @@ In anova, much like with each main effect we saw in LT5, the reduction in devian
 
 ## How its written
 
-We used logistic regression to test whether the college admission could be predicted by gpa. The chi-square test statistic for the overall logistic regression model was statistically significant: χ2(1) = 13.01, p < .05. Therefore, our model does fits significantly better than an empty intercept-only model. The logistic regression coefficient indicted that gpa was positively correlated with admission status (b = 1.05, SE = .30, z = 3.10, p < .05). With 5,000 resamples, the bootstrap 95% confidence interval associated with the regression coeffient was .44 to 1.64. The odds ratio associated with the regression coefficient of 2.86 indicated that a one unit increase in gpa enhances the chance of attending college by a factor of 2.86. 
+We used logistic regression to test whether the college admission could be predicted by gpa. The chi-square test statistic for the overall logistic regression model was statistically significant: x2(1) = 13.01, p < .05. Therefore, our model does fits significantly better than an empty intercept-only model. The logistic regression coefficient indicted that gpa was positively correlated with admission status (b = 1.05, SE = .30, z = 3.10, p < .05). With 5,000 resamples, the bootstrap 95% confidence interval associated with the regression coeffient was .44 to 1.64. The odds ratio associated with the regression coefficient of 2.86 indicated that a one unit increase in gpa enhances the chance of attending college by a factor of 2.86. 
 
 ## Adding an additional predictor
 
@@ -438,14 +440,14 @@ Before we delve into this topic, lets just clarify the research question and nul
 Before we start, lets load the cowles dataframe to the R environment. Go to the LT7 folder, and then to the workshop folder, and find the "cowles.csv" file. Click on it aand then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
 ```{r}
-cowles <- read_csv("LT7/Workshop/cowles.csv")
+cowles <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT7/Workshop/cowles.csv")
 ```
 
 ## Task 1 -  Build the multiple logistic regression model
 
 Use the glm() function to build the multiple logistic regression model volunteering. Place the 'volunteer' variable as the outcome in this model and the 'neuroticism' and 'extraversion' variables as the predictors. Save this logisitic regression model in a new R object called cowles.model and call the summary.
 
-```{r}
+```{r eval = FALSE}
 cowles.model <- glm(?? ~ 1 + ?? + ??, data = ??, family = "binomial")
 summary(??)
 ```
@@ -462,7 +464,7 @@ Is the effect of extraversion on volunteering statisticall significant?
 
 Lets go ahead generate a bootstrap sampling distribution of the estimates and name it as a new R object; cowles.boot. Then use it to call the bootsrap 95% confidence interval using the confint() function.
 
-```{r}
+```{r eval = FALSE}
 cowles.boot <- Boot(??, f=coef, R = ??) 
 summary(??) ## add the cowles.model and stipulate how many resamples you want to run (typically 5,000)
 
@@ -479,9 +481,9 @@ Do we accept or reject the null hypothesis?
 
 # Task 3 - The odds ratio
 
-Knowing the estimates in units of log(odds) is not overly informative, so it is also a good idea to also express effects in terms of the odds ratio. This is the increase/decrease in the odds of finding the outcome for every unit increase in the predictor. To do this, we simply  exponentiate (exp) the slope coefficients, and tell R that the object you want to exponentiate is called coefficients and it is part of cowles.model (coef(cowles.model)). We can use the same logic to get odds ratios and their confidence intervals by exponentiating the confidence intervals from the bootstrapping procedure. To put it all in one table, we use cbind to bind the coefficients and confidence intervals column-wise. Using the code above as a guide, fill in the missing code belof for the odds ratios and the confidence intervals.
+Knowing the estimates in units of log(odds) is not overly informative, so it is also a good idea to also express effects in terms of the odds ratio. This is the increase/decrease in the odds of finding the outcome for every unit increase in the predictor. To do this, we simply  exponentiate (exp) the slope coefficients, and tell R that the object you want to exponentiate is called coefficients and it is part of cowles.model (coef(cowles.model)). We can use the same logic to get odds ratios and their confidence intervals by exponentiating the confidence intervals from the bootstrapping procedure. To put it all in one table, we use cbind to bind the coefficients and confidence intervals column wise. Using the code above as a guide, fill in the missing code belof for the odds ratios and the confidence intervals.
 
-```{r}
+```{r eval = FALSE}
 exp(coef(??)
 
 exp(cbind(OR = coef(??), confint(??)))
@@ -495,7 +497,7 @@ What is the effect of neuroticism on volunteering expressed in units of odds rat
 
 Use anova() to calcualte the chi-sqaure for the overall model fit
 
-```{r}
+```{r eval = FALSE}
 anova(??, test="Chisq")
 ```
 

@@ -1,6 +1,8 @@
 ---
-title: "LT5 Notebook: Factorial ANOVA"
-output: html_notebook
+title: 'LT5 Notebook: Factorial ANOVA'
+output:
+  html_document:
+    df_print: paged
 ---
 # Learning Outcomes  
 
@@ -14,7 +16,7 @@ By the end of this workshop, you should be able to:
 
 # Install required packages
 
-```{r}
+```{r eval = FALSE}
 install.packages("probemod")
 install.packages("tidyverse")
 install.packages("ggplot2")
@@ -31,7 +33,7 @@ install.packages("psych")
 
 The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
 
-```{r}
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library(probemod)
 library(tidyverse)
 library(ggplot2)
@@ -55,7 +57,7 @@ To demonstrate a 2 x 2 between-subjects ANOVA we are going to use the student da
 Lets load the rtfm.rdata file into our R studio session. To do so, find the rtfm.Rdata file in the LT5 workshop folder, click on it, and then click yes to load it into the global environment. Altenratively, you might be able to run the code below (if neither of these methods work, put your hand up)
 
 ```{r}
-load("/LT5/Workshop/rtfm.Rdata")
+load("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT5/Workshop/rtfm.Rdata")
 ```
 
 When you load this file you will find two data objects in the environment; rtfm.1 and rtfm.2. The details for these files are listed above. First, we are going to use the rtfm.1 dataframe to conduct the 2x2 ANOVA with the linear model and then we will see the equivalence of the linear model with aov() using the rtfm.2 dataframe. As we saw in the lecture, ANOVA is just a special case of the linear model.
@@ -203,7 +205,7 @@ I have created one dataset for this task - clin.trial - which is contained in th
 Lets load the clinicaltrial.rdata file into our R studio session. To do so, find the rtfm.Rdata file in the LT5 workshop folder, click on it, and then click yes to load it into the global environment. Altenratively, you might be able to run the code below (if neither of these methods work, put your hand up)
 
 ```{r}
-load("/LT5/Workshop/clinicaltrial.Rdata")
+load("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT5/Workshop/clinicaltrial.Rdata")
 ```
 
 The model we are testing for the 2 x 3 between-subjects factoral ANOVA is exactly the same as the 2 x 2 between-subjects factoral ANOVA above except that one of the factors has 2 groups (therapy) and one has 3 groups (drug). The aim here is to compare the means within the groups (i.e., main effects of therapy and drug on mood gain) plus these group means multiplied across the factors (interaction effects). As we have just seen, the main effects are exactly the same as one-way ANOVAs that we tested in LT9, though in the context of a larger model that tests unique effects (i.e., 2 predictors rather than 1 predictor). The interaction effect in a 2 x 3 factoral ANOVA is a little harder to explain in the abstract than the 2 x 2 model, but stick with me because its really just a few numbers multiplied with each other.
@@ -347,7 +349,7 @@ The difference in reaction time between standing up and sitting down will be zer
 Lets first load this data. Go to the LT3 folder, and then to the workshop folder, and find the "stroop.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
 ```{r}
-stroop <- read_csv("LT5/Workshop/stroop.csv")
+stroop <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT5/Workshop/stroop.csv")
 stroop
 ```
 
@@ -424,7 +426,7 @@ aov(RT ~ Congruency + Posture + Congruency*Posture + Error(Subject/(Congruency +
 
 Go ahead and write that code and request the summary:
 
-```{r}
+```{r eval = FALSE}
 anova.model4 <- aov(?? ~ ?? + ?? + C?? + Error(as.factor(ID)/(Congruency + Posture + Congruency*Posture)), data = ??)
 summary(??) 
 ```
@@ -445,7 +447,7 @@ We can also request the means for the conditions and the paired contrasts. Remem
 
 We do these comparisons using emmeans.
 
-```{r}
+```{r eval = FALSE}
 emmeans(anova.model4, pairwise ~ Congruency, adjust='bonferroni')
 emmeans(anova.model4, pairwise ~ Posture, adjust='bonferroni')
 emmeans(anova.model4, pairwise ~ Congruency|Posture, adjust='bonferroni')
@@ -488,7 +490,7 @@ Becasue of the mixed nature of this design, the data is structured slightly diff
 Go to the LT3 folder, and then to the workshop folder, and find the "extraordinary.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
 ```{r}
-extraordinary <- read_csv("LT5/Workshop/extraordinary.csv")
+extraordinary <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT5/Workshop/extraordinary.csv")
 View(extraordinary)
 ```
 
@@ -582,11 +584,11 @@ The way these contrasts are calcualated is pre-post and therefore the estimates 
 
 We submitted the extrodinariness scores at each time point across each group to a 2 (time: pre vs. post) x 2 (group: ordinary vs extraordinary) mixed factorial ANOVA.
 
-There was a main effect of time, F (1, 8) = 8.89, MSE = 14.45, p < 0.05, 〖"pη" 〗^(2 )= .53. More differences were observed post-intervention than pre-intervention (mean diff = 1.7,  SE = .57, t = 2.98, p < .05).
+There was a main effect of time, F (1, 8) = 8.89, MSE = 14.45, p < 0.05, pn^2 = .53. More differences were observed post-intervention than pre-intervention (mean diff = 1.7,  SE = .57, t = 2.98, p < .05).
 
-The main effect of condition was also significant; F (1, 8) = 70.10, MSE = 110.45, p < .01, 〖"pη" 〗^(2 )= .90. Less differences were observed in the control condition versus the experimental condition (diff = -4.7, SE = .56, t = -8.37, p < .05).
+The main effect of condition was also significant; F (1, 8) = 70.10, MSE = 110.45, p < .01, pn^2 = .90. Less differences were observed in the control condition versus the experimental condition (diff = -4.7, SE = .56, t = -8.37, p < .05).
 
-The two-way interaction between time and condition was significant, F (1, 8) = 58.70, MSE = 92.45, p < 0.01, 〖"pη" 〗^(2 )= .88. The main effect of time on differences spotted was positive in the experimental condition (pre-post diff = 6.0, SE=0.80, t=7.5, p <.01) but negative in the control condition (pre-post diff = -2.6, SE=0.80, t=-3.25, p <.05).
+The two-way interaction between time and condition was significant, F (1, 8) = 58.70, MSE = 92.45, p < 0.01, pn^2= .88. The main effect of time on differences spotted was positive in the experimental condition (pre-post diff = 6.0, SE=0.80, t=7.5, p <.01) but negative in the control condition (pre-post diff = -2.6, SE=0.80, t=-3.25, p <.05).
 
 
 

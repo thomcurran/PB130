@@ -1,6 +1,8 @@
 ---
-title: "MT11: Hypothesis Testing and Causal Inference"
-output: html_notebook
+title: 'MT11: Hypothesis Testing and Causal Inference'
+output:
+  html_document:
+    df_print: paged
 ---
 
 ## Learning outcomes 
@@ -15,7 +17,7 @@ At the end of today’s workshop you should be able to do the following:
 
 ## Install required packages
 
-```{r}
+```{r eval=FALSE}
 install.packages("supernova")
 install.packages("readr")
 install.packages("sjlabelled")
@@ -37,7 +39,7 @@ install.packages("plyr")
 The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
 
 
-```{r}
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library(sjlabelled)
 library(supernova)
 library(readr)
@@ -65,7 +67,7 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 
 
 ```{r}
-WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT11/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT11/Workshop/WV6_Data_R_v20180912.rds")
 
 WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
 ```
@@ -318,7 +320,7 @@ Before we delve into this topic, lets just clarify the research question and nul
 I looked in the codebook and the satisfaction with financial situation of household is listed as V59. We know that the life satisfaction variable is V23. And we also need the country variable V2A to filter for United States. So lets first select those variables out of the WVS dataframe and save it as a new dataframe called WVSfinace.
 
 
-```{r}
+```{r eval=FALSE}
 WVSfinance <- 
   WVS %>% 
   select(??) # SELECT THE VARIABLES OF INTEREST HERE
@@ -330,7 +332,7 @@ WVSfinance
 
 Just like other variables in this dataset, we need to edit the dataframe since the variables have values we can’t interpret like -5. Do that by using the filter() function. Also filter data from the United States in this code.
 
-```{r}
+```{r eval=FALSE}
 WVSfinance <- 
 WVSfinance %>% 
 filter(??) 
@@ -433,7 +435,7 @@ What do we conclude in relation to our research question?
 
 Okay, so we have a significnant positve relationship and we also know that the finance satisfaction model exlains a significnant portion of life satisfaction variance. Lets now calcualte the normal theory 95% confidence interval for our model estimates using the confint() function.
 
-```{r}
+```{r eval=FALSE}
 confint(??) # add the finalnce model to the confint() function
 ```
 
@@ -451,7 +453,7 @@ We can see that the normal theory confidence interval supports our conclusions f
 
 So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called finance.boot. Note that we are going to request 5000 resamples so that might take a little time to run!
 
-```{r}
+```{r eval=FALSE}
 finance.boot <- Boot(??, f=coef, R = ??) 
 summary(finance.boot) ## add the finance model and stipulate how many resamples you want to run (typically 5,000)
 ```
@@ -466,7 +468,7 @@ Are these similar?
 
 Lets go ahead and call the bootsrap 95% confidence interval using the confint() function.
 
-```{r}
+```{r eval=FALSE}
 confint(??, level = .95, type = "norm") # add the bootstrap model you just created to this code
 ```
 

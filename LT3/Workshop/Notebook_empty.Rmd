@@ -1,6 +1,8 @@
 ---
-title: "LT3: Mediation and Moderation"
-output: html_notebook
+title: 'LT3: Mediation and Moderation'
+output:
+  html_document:
+    df_print: paged
 ---
 
 ## Learning Outcomes  
@@ -15,7 +17,7 @@ By the end of this workshop, you should be able to:
 
 ## Install required packages
 
-```{r}
+```{r eval = FALSE}
 install.packages("probemod")
 install.packages("readr")
 install.packages("tidyverse")
@@ -34,7 +36,7 @@ install.packages("car")
 
 The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
 
-```{r}
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library(probemod)
 library(readr)
 library(tidyverse)
@@ -74,7 +76,7 @@ First, lets load this data into our R environment. Go to the LT3 folder, and the
 
 
 ```{r}
-employee <- read_csv("LT3/Workshop/employee.csv")
+employee <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT3/Workshop/employee.csv")
 employee
 ```
 
@@ -262,7 +264,7 @@ Before we delve into this topic, lets just clarify the research question and nul
 
 As we are dealing with a categorical moderator, it is always a good idea to create our dummy variable for gender - just like we did for group comparisons in MT8. Here I will write the code for you as that session is a while back, but we use the ifelse() function to create a new variable "dummy" that codes 1 for when Gender=Male and 0 for all else (i.e., Females).
 
-```{r}
+```{r eval = FALSE}
 employee$dummy <- ifelse(employee$Gender == c("Male"), 1, 0)
 employee
 ```
@@ -271,7 +273,7 @@ employee
 
 Now we have dummy coded the gender variable, lets build the linear model with our predictor (control), our moderator (dummy), and the predictor*moderator interaction and create a new R object called mod.model2.
 
-```{r}
+```{r eval = FALSE}
 mod.model2 <- lm(?? ~ 1 + ?? + ?? + ??, data=employee) ## Build the linear model using the variables of interest for moderation analysis - don't forget the interaction term
 summary(mod.model2)
 ```
@@ -290,7 +292,7 @@ Is the interaction term statistically significant?
 
 We have a significant interaction term, but what is the nature of this moderation - to understadn this we need to probe it. When we had a continuous predictor, we used pick a point and the JN technique to calcuate conditonal effects at various values of the moderator. However, with a categorical variable there are only two values of the moderator; 0 and 1 or Females and Males. Therefore, there are only 2 conditional effects to calculate. The first is when the moderator = zero and the second when the moderator = 1. We already know the condtional effect when the moderator = 0 becuase it is the b1 estimate in the multiple regression (i.e., -.41). So the female slope estimate for the relationship between manager control and exhaustion is -.41. Among females, manager control appears to lower exhaustion. But what about when the moderator = 1 (i.e., for males)? R is cleaver enough to detect a dummy categorical variable so when we run the pickapoint() function it will return the conditional effects at 0 and 1 (i.e., not +1SD, mean, and -1SD). 
 
-```{r}
+```{r eval = FALSE}
 pickapoint(??, dv='??', iv='??', mod='??') ## enter the iv, dv, and dummy variables here
 ```
 
@@ -304,7 +306,7 @@ Are the conditional effects statistically significant?
 
 Like above, we can plot this interaction. Given the moderator is categorical and only has two levels, we don't need the JN technique - we can just examine the simple slopes for males and females. To do this, we can use the interact_plot() function
 
-```{r}
+```{r eval = FALSE}
 interact_plot(mod.model2, pred = Control, modx = dummy) + theme_classic(base_size = 8) ## This function takes a lm object and the predictor (pred=) and moderator (modx=) to plot the simple slopes of control on exhaustion for males and females.
 ```
 
