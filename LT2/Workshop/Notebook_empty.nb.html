@@ -278,20 +278,18 @@ install.packages(&quot;plyr&quot;)</code></pre>
 <p>First, lets load this data into our R environment. Go to the LT2 folder, and then to the workshop folder, and find the “WHR.csv” file. Click on it and then select “import dataset”. In the new window that appears, click “update” and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuV0hSIDwtIHJlYWRfY3N2KFwiQzovVXNlcnMvY3VycmFudC9Ecm9wYm94L1dvcmsvTFNFL1BCMTMwL0xUMi9Xb3Jrc2hvcC9XSFIuY3N2XCIpXG5XSFJcbmBgYCJ9 -->
-<pre class="r"><code>WHR &lt;- read_csv(&quot;C:/Users/currant/Dropbox/Work/LSE/PB130/LT2/Workshop/WHR.csv&quot;)
-WHR</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuV0hSIDwtIHJlYWRfY3N2KFxcQzovVXNlcnMvY3VycmFudC9Ecm9wYm94L1dvcmsvTFNFL1BCMTMwL0xUMi9Xb3Jrc2hvcC9XSFIuY3N2XFwpXG5XSFJcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r WHR &lt;- read_csv(:/Users/currant/Dropbox/Work/LSE/PB130/LT2/Workshop/WHR.csv) WHR</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Before we begin analysing, recall that we there are missing values in the GDP and gini variables, so they will need to be dealt with. Lets filter the GDP and gini variables to get rid of the cases with missing values.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuV0hSIDwtICMgaW50byBleGlzdGluZyBkYXRhZnJhbWVcbldIUiAlPiUgIyBmcm9tIGV4aXN0aW5nIGRhcmFmcmFtZVxuZmlsdGVyKEdEUCA+PSBcIjFcIiAmIEdJTkkgPj1cIjBcIikgIyBGaWx0ZXIgR0RQIGF0IGEgdmFsdWUgb2YgMSBhbmQgYWJvdmUgYW5kIGdpbmkgYXQgdmFsdWVzIDAgYW5kIGFib3ZlIChpLmUuLCByaWQgdGhlIGRhdGFmcmFtZSBvZiBhbnkgbm9uLW51bWVyaWMgY2FzZXMpXG5XSFJcbmBgYCJ9 -->
-<pre class="r"><code>WHR &lt;- # into existing dataframe
-WHR %&gt;% # from existing daraframe
-filter(GDP &gt;= &quot;1&quot; &amp; GINI &gt;=&quot;0&quot;) # Filter GDP at a value of 1 and above and gini at values 0 and above (i.e., rid the dataframe of any non-numeric cases)
-WHR</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuV0hSIDwtICMgaW50byBleGlzdGluZyBkYXRhZnJhbWVcbldIUiAlPiUgIyBmcm9tIGV4aXN0aW5nIGRhcmFmcmFtZVxuZmlsdGVyKEdEUCA+PSBcXDFcXCAmIEdJTkkgPj1cXDBcXCkgIyBGaWx0ZXIgR0RQIGF0IGEgdmFsdWUgb2YgMSBhbmQgYWJvdmUgYW5kIGdpbmkgYXQgdmFsdWVzIDAgYW5kIGFib3ZlIChpLmUuLCByaWQgdGhlIGRhdGFmcmFtZSBvZiBhbnkgbm9uLW51bWVyaWMgY2FzZXMpXG5XSFJcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r WHR &lt;- # into existing dataframe WHR %&gt;% # from existing daraframe filter(GDP &gt;=  &amp; GINI &gt;=) # Filter GDP at a value of 1 and above and gini at values 0 and above (i.e., rid the dataframe of any non-numeric cases) WHR</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -309,8 +307,9 @@ WHR</code></pre>
 <p>An initial step in any test of relationships is to inspect the extent to which our variables co-vary. That is, their correlation. To do so, we can compute a the correlation coefficient or Pearson’s r. Pearson’s r is a standardized metric and runs between -1 and +1. The closer Pearson’s r is to +/-1, the larger the relationship. The rcorr() function computes Pearson’s r and its associated p value.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmNvcnIoYXMubWF0cml4KFdIUlssYyhcIkdEUFwiLFwiSGFwcGluZXNzXCIpXSwgdHlwZT1cInBlYXJzb25cIikpXG5gYGAifQ== -->
-<pre class="r"><code>rcorr(as.matrix(WHR[,c(&quot;GDP&quot;,&quot;Happiness&quot;)], type=&quot;pearson&quot;))</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmNvcnIoYXMubWF0cml4KFdIUlssYyhcXEdEUFxcLFxcSGFwcGluZXNzXFwpXSwgdHlwZT1cXHBlYXJzb25cXCkpXG5gYGBcbmBgYCJ9 -->
+<p><code>r</code>r rcorr(as.matrix(WHR[,c(,)], type=))</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -318,15 +317,9 @@ WHR</code></pre>
 <p>We can visualise this relationiship using a scatterplot with ggplot(), whereby datapoints are plotted for happiness against GDP. We can also draw the best-fitting regression line, which represents the Happiness model, over the same WHR data points</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuV0hSICU+JVxuZ2dwbG90KGFlcyh4ID0gR0RQLCB5ID0gSGFwcGluZXNzKSkgKyAjIFRoaXMgaXMgdGhlIHNhbWUgYXMgaW4gdGhlIHZpc3VhbGlzYXRpb24gc2Vzc2lvbiBleGNlcHQgd2UgaGF2ZSB0d28gdmFyaWFibGVzIGZvciB0aGUgYWVzKCkgZnVuY3Rpb24gLSBHRFAgYW5kIEhhcHBpbmVzcyBsYWJlbGVkIHggZm9yIHRoZSBleHBsYW5hdG9yeSB2YXJpYWJsZSBhbmQgeSBmb3IgdGhlIG91dGNvbWVcbiAgICBnZW9tX3BvaW50KCkgKyAjIHRoaXMgaXMganVzdCBhIHJlcXVlcyB0byBwbG90IHRoZSBwb2ludHNcbiAgICBzdGF0X3Ntb290aChtZXRob2QgPSBcImxtXCIsXG4gICAgICAgIGNvbCA9IFwicmVkXCIsXG4gICAgICAgIHNlID0gRkFMU0UsXG4gICAgICAgIHNpemUgPSAxKSArICMgdGhpcyBpcyBhIHJlcXVlc3QgZm9yIHRoZSBiZXN0IGZpdHRpbmcgcmVncmVzc2lvbiBsaW5lIGZyb20gdGhlIGxpbmVhciBtb2RlbCAoXCJsbVwiKSwgY29sb3IgcmVkIGFuZCBzaXplIDEuXG4gIHRoZW1lX2NsYXNzaWMoYmFzZV9zaXplID0gOCkgIyBJIHByZWZlciB0aGUgY2xhc3NpYyB0aGVtZSBmb3Igc2NhdHRlciBwbG90cywgYnV0IGZlZWwgZnJlZSB0byBleHBlcmltZW50XG5gYGAifQ== -->
-<pre class="r"><code>WHR %&gt;%
-ggplot(aes(x = GDP, y = Happiness)) + # This is the same as in the visualisation session except we have two variables for the aes() function - GDP and Happiness labeled x for the explanatory variable and y for the outcome
-    geom_point() + # this is just a reques to plot the points
-    stat_smooth(method = &quot;lm&quot;,
-        col = &quot;red&quot;,
-        se = FALSE,
-        size = 1) + # this is a request for the best fitting regression line from the linear model (&quot;lm&quot;), color red and size 1.
-  theme_classic(base_size = 8) # I prefer the classic theme for scatter plots, but feel free to experiment</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuV0hSICU+JVxuZ2dwbG90KGFlcyh4ID0gR0RQLCB5ID0gSGFwcGluZXNzKSkgKyAjIFRoaXMgaXMgdGhlIHNhbWUgYXMgaW4gdGhlIHZpc3VhbGlzYXRpb24gc2Vzc2lvbiBleGNlcHQgd2UgaGF2ZSB0d28gdmFyaWFibGVzIGZvciB0aGUgYWVzKCkgZnVuY3Rpb24gLSBHRFAgYW5kIEhhcHBpbmVzcyBsYWJlbGVkIHggZm9yIHRoZSBleHBsYW5hdG9yeSB2YXJpYWJsZSBhbmQgeSBmb3IgdGhlIG91dGNvbWVcbiAgICBnZW9tX3BvaW50KCkgKyAjIHRoaXMgaXMganVzdCBhIHJlcXVlcyB0byBwbG90IHRoZSBwb2ludHNcbiAgICBzdGF0X3Ntb290aChtZXRob2QgPSBcXGxtXFwsXG4gICAgICAgIGNvbCA9IFxccmVkXFwsXG4gICAgICAgIHNlID0gRkFMU0UsXG4gICAgICAgIHNpemUgPSAxKSArICMgdGhpcyBpcyBhIHJlcXVlc3QgZm9yIHRoZSBiZXN0IGZpdHRpbmcgcmVncmVzc2lvbiBsaW5lIGZyb20gdGhlIGxpbmVhciBtb2RlbCAoXFxsbVxcKSwgY29sb3IgcmVkIGFuZCBzaXplIDEuXG4gIHRoZW1lX2NsYXNzaWMoYmFzZV9zaXplID0gOCkgIyBJIHByZWZlciB0aGUgY2xhc3NpYyB0aGVtZSBmb3Igc2NhdHRlciBwbG90cywgYnV0IGZlZWwgZnJlZSB0byBleHBlcmltZW50XG5gYGBcbmBgYCJ9 -->
+<p><code>r</code>r WHR %&gt;% ggplot(aes(x = GDP, y = Happiness)) + # This is the same as in the visualisation session except we have two variables for the aes() function - GDP and Happiness labeled x for the explanatory variable and y for the outcome geom_point() + # this is just a reques to plot the points stat_smooth(method = , col = , se = FALSE, size = 1) + # this is a request for the best fitting regression line from the linear model (), color red and size 1. theme_classic(base_size = 8) # I prefer the classic theme for scatter plots, but feel free to experiment</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -339,9 +332,9 @@ ggplot(aes(x = GDP, y = Happiness)) + # This is the same as in the visualisation
 <p>As with last few weeks, we are going to use the lm() to set up and test the linear model of happiness. The lm() function can detect whether the explanatory variable is continuous (as is the case here), and will by default fit the linear regression model. If the explanatory variable is categorical, lm() will fit a group model. Let’s go ahead and fit the linear regression model for our data and save it in an R object called simple.model.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2ltcGxlLm1vZGVsIDwtIGxtKEhhcHBpbmVzcyB+IDEgKyBHRFAsIGRhdGEgPSBXSFIpXG5zdW1tYXJ5KHNpbXBsZS5tb2RlbClcbmBgYCJ9 -->
-<pre class="r"><code>simple.model &lt;- lm(Happiness ~ 1 + GDP, data = WHR)
-summary(simple.model)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc2ltcGxlLm1vZGVsIDwtIGxtKEhhcHBpbmVzcyB+IDEgKyBHRFAsIGRhdGEgPSBXSFIpXG5zdW1tYXJ5KHNpbXBsZS5tb2RlbClcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r simple.model &lt;- lm(Happiness ~ 1 + GDP, data = WHR) summary(simple.model)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -350,8 +343,9 @@ summary(simple.model)</code></pre>
 <p>While we are at it, lets also have R call the standardized estimates by using the lm.beta() function.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG0uYmV0YShzaW1wbGUubW9kZWwpXG5gYGAifQ== -->
-<pre class="r"><code>lm.beta(simple.model)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubG0uYmV0YShzaW1wbGUubW9kZWwpXG5gYGBcbmBgYCJ9 -->
+<p><code>r</code>r lm.beta(simple.model)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -365,9 +359,9 @@ summary(simple.model)</code></pre>
 <p>So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called simple.boot. Note that we are going to request 5000 resamples so that might take a little time to run!</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2ltcGxlLmJvb3QgPC0gQm9vdChzaW1wbGUubW9kZWwsIGY9Y29lZiwgUiA9IDUwMDApICMgdGhpcyBmdW5jdGlvbiB0YWtlcyB0aGUgbGluZWFyIG1vZGVsIHdlIGJ1aWx0IGVhcmxpZXIgYW5kIGFza3MgZm9yIHRoZSBjb2VmZmllbmN0cyB0byBiZSBjYWxjdWF0ZWQgaW4gNTAwMCByZXNhbXBsZXMgd2l0aCByZXBsYWNlbWVudCBmcm9tIHRoZSBvcmlnaW5hbCBzYW1wbGUgKFI9NTAwMClcbnN1bW1hcnkoc2ltcGxlLmJvb3QpICMganVzdCBsaWtlIHRoZSBsaW5lYXIgbW9kZWwsIHRoZSBzdW1tYXJ5IGZ1bmN0aW9uIG91dHB1dHMgdGhlIHN1bW1hcnkgb2YgdGhpcyBhbmFseXNpc1xuYGBgIn0= -->
-<pre class="r"><code>simple.boot &lt;- Boot(simple.model, f=coef, R = 5000) # this function takes the linear model we built earlier and asks for the coeffiencts to be calcuated in 5000 resamples with replacement from the original sample (R=5000)
-summary(simple.boot) # just like the linear model, the summary function outputs the summary of this analysis</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc2ltcGxlLmJvb3QgPC0gQm9vdChzaW1wbGUubW9kZWwsIGY9Y29lZiwgUiA9IDUwMDApICMgdGhpcyBmdW5jdGlvbiB0YWtlcyB0aGUgbGluZWFyIG1vZGVsIHdlIGJ1aWx0IGVhcmxpZXIgYW5kIGFza3MgZm9yIHRoZSBjb2VmZmllbmN0cyB0byBiZSBjYWxjdWF0ZWQgaW4gNTAwMCByZXNhbXBsZXMgd2l0aCByZXBsYWNlbWVudCBmcm9tIHRoZSBvcmlnaW5hbCBzYW1wbGUgKFI9NTAwMClcbnN1bW1hcnkoc2ltcGxlLmJvb3QpICMganVzdCBsaWtlIHRoZSBsaW5lYXIgbW9kZWwsIHRoZSBzdW1tYXJ5IGZ1bmN0aW9uIG91dHB1dHMgdGhlIHN1bW1hcnkgb2YgdGhpcyBhbmFseXNpc1xuYGBgXG5gYGAifQ== -->
+<p><code>r</code>r simple.boot &lt;- Boot(simple.model, f=coef, R = 5000) # this function takes the linear model we built earlier and asks for the coeffiencts to be calcuated in 5000 resamples with replacement from the original sample (R=5000) summary(simple.boot) # just like the linear model, the summary function outputs the summary of this analysis</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -379,8 +373,9 @@ summary(simple.boot) # just like the linear model, the summary function outputs 
 <p>Lets go ahead and call the bootsrap 95% confidence interval using the confint() function.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uZmludChzaW1wbGUuYm9vdCwgbGV2ZWwgPSAuOTUsIHR5cGUgPSBcIm5vcm1cIikgIyB0aGlzIGZ1bmN0aW9uIHJlcXVlc3QgdGhlIGNvbmZpZGVuY2UgaW50ZXJ2YWxzIGZyb20gdGhlIGltbWlncmFudC5ib290IG9iamVjdC4gVGhlIGxldmVsIGlzIC45NSBiZWN1YXNlIHdlIHdhbnQgdGhlIDk1JSBjb25maWRlbmNlIGludGVydmFscy4gVGhlIHR5cGUgaXMgbm9ybSBiZWN1YXNlIHdlIGRvbnQgd2FudCB0byBjb3JyZWN0IHRoZW0gaW4gYW55IHdheS5cbmBgYCJ9 -->
-<pre class="r"><code>confint(simple.boot, level = .95, type = &quot;norm&quot;) # this function request the confidence intervals from the immigrant.boot object. The level is .95 becuase we want the 95% confidence intervals. The type is norm becuase we dont want to correct them in any way.</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY29uZmludChzaW1wbGUuYm9vdCwgbGV2ZWwgPSAuOTUsIHR5cGUgPSBcXG5vcm1cXCkgIyB0aGlzIGZ1bmN0aW9uIHJlcXVlc3QgdGhlIGNvbmZpZGVuY2UgaW50ZXJ2YWxzIGZyb20gdGhlIGltbWlncmFudC5ib290IG9iamVjdC4gVGhlIGxldmVsIGlzIC45NSBiZWN1YXNlIHdlIHdhbnQgdGhlIDk1JSBjb25maWRlbmNlIGludGVydmFscy4gVGhlIHR5cGUgaXMgbm9ybSBiZWN1YXNlIHdlIGRvbnQgd2FudCB0byBjb3JyZWN0IHRoZW0gaW4gYW55IHdheS5cbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r confint(simple.boot, level = .95, type = ) # this function request the confidence intervals from the immigrant.boot object. The level is .95 becuase we want the 95% confidence intervals. The type is norm becuase we dont want to correct them in any way.</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -391,8 +386,9 @@ summary(simple.boot) # just like the linear model, the summary function outputs 
 <p>As we have been doing every week, lets finally partition the variance in our simple regression model between that expalined by the model and that left over(i.e., error). We will use supernova() to do this.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VwZXJhbm92YShzaW1wbGUubW9kZWwpXG5gYGAifQ== -->
-<pre class="r"><code>superanova(simple.model)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc3VwZXJhbm92YShzaW1wbGUubW9kZWwpXG5gYGBcbmBgYCJ9 -->
+<p><code>r</code>r superanova(simple.model)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -412,8 +408,9 @@ summary(simple.boot) # just like the linear model, the summary function outputs 
 <p>The first step in any test of relationships is to inspect the extent to which our variables co-vary. This is especially important for multiple regression because, as we saw in the lecture, the correlations between the predictor variables are removed from the linear model to yield unique effects of the predictor on the outcome (more below). Lets therefore compute the correlation matrix for our variables using the rcorr() function.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmNvcnIoYXMubWF0cml4KFdIUlssYyhcIkdEUFwiLFwiSGFwcGluZXNzXCIsIFwiR0lOSVwiKV0sIHR5cGU9XCJwZWFyc29uXCIpKSAjIG5vdGUgaG93IHRoaXMgY29kZSBpcyB0aGUgc2FtZSBhcyB0aGUgcmNvcnIgY29kZSBhYm92ZSBidXQgaW5jbHVkZSBvdXIgYWRkaXRpb25hbCBwcmVkaWN0b3I7IEdJTklcbmBgYCJ9 -->
-<pre class="r"><code>rcorr(as.matrix(WHR[,c(&quot;GDP&quot;,&quot;Happiness&quot;, &quot;GINI&quot;)], type=&quot;pearson&quot;)) # note how this code is the same as the rcorr code above but include our additional predictor; GINI</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmNvcnIoYXMubWF0cml4KFdIUlssYyhcXEdEUFxcLFxcSGFwcGluZXNzXFwsIFxcR0lOSVxcKV0sIHR5cGU9XFxwZWFyc29uXFwpKSAjIG5vdGUgaG93IHRoaXMgY29kZSBpcyB0aGUgc2FtZSBhcyB0aGUgcmNvcnIgY29kZSBhYm92ZSBidXQgaW5jbHVkZSBvdXIgYWRkaXRpb25hbCBwcmVkaWN0b3I7IEdJTklcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r rcorr(as.matrix(WHR[,c(,, )], type=)) # note how this code is the same as the rcorr code above but include our additional predictor; GINI</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -430,9 +427,9 @@ summary(simple.boot) # just like the linear model, the summary function outputs 
 <p>As with all our anayses to date, we are going to use the lm() to build and test the multiple regression model of happiness. The lm() function can detect whether the predictor variables are continuous (as is the case here), and will by default fit the linear regression model. Let’s go ahead and fit the linear regression model for our data and save it in an R object called multiple.model.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubXVsdGlwbGUubW9kZWwgPC0gbG0oSGFwcGluZXNzIH4gMSArIEdEUCArIEdJTkksIGRhdGEgPSBXSFIpICMgbm90aWNlIHRoYXQgYWxsIEkgaGF2ZSBkb25lIGhlcmUgaXMgYWRkIGFuIGFkZGl0aW9uYWwgdmFyaWFibGUgdG8gdGhlIG1vZGVsLiBUaGlzIGlzIGEgZ29vZCBleGFtcGxlIG9mIHdoYXQgaXMgaGFwcGVuaW5nIHdoZW4gd2UgcnVuIGEgbXVsdGlwbGUgcmVncmVzc2lvbiwgd2UgYXJlIGp1c3QgYWRkaW5nIGFuIGFkZGl0aW9uYWwgdmFyaWFibGUgdG8gdGhlIGV4aXN0aW5nIG1vZGVsLlxuc3VtbWFyeShtdWx0aXBsZS5tb2RlbClcbmBgYCJ9 -->
-<pre class="r"><code>multiple.model &lt;- lm(Happiness ~ 1 + GDP + GINI, data = WHR) # notice that all I have done here is add an additional variable to the model. This is a good example of what is happening when we run a multiple regression, we are just adding an additional variable to the existing model.
-summary(multiple.model)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubXVsdGlwbGUubW9kZWwgPC0gbG0oSGFwcGluZXNzIH4gMSArIEdEUCArIEdJTkksIGRhdGEgPSBXSFIpICMgbm90aWNlIHRoYXQgYWxsIEkgaGF2ZSBkb25lIGhlcmUgaXMgYWRkIGFuIGFkZGl0aW9uYWwgdmFyaWFibGUgdG8gdGhlIG1vZGVsLiBUaGlzIGlzIGEgZ29vZCBleGFtcGxlIG9mIHdoYXQgaXMgaGFwcGVuaW5nIHdoZW4gd2UgcnVuIGEgbXVsdGlwbGUgcmVncmVzc2lvbiwgd2UgYXJlIGp1c3QgYWRkaW5nIGFuIGFkZGl0aW9uYWwgdmFyaWFibGUgdG8gdGhlIGV4aXN0aW5nIG1vZGVsLlxuc3VtbWFyeShtdWx0aXBsZS5tb2RlbClcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r multiple.model &lt;- lm(Happiness ~ 1 + GDP + GINI, data = WHR) # notice that all I have done here is add an additional variable to the model. This is a good example of what is happening when we run a multiple regression, we are just adding an additional variable to the existing model. summary(multiple.model)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -445,9 +442,9 @@ summary(multiple.model)</code></pre>
 <p>If we were to use this formula to caluate each persons model implied Happiness score, we would end up with a set of predicted estimates. To do this, we can use the predict() function to calcuate the predicted scores and save them in a new variable called predicted (much like we have been doing in previous weeks)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuV0hSJHByZWRpY3RlZCA8LSBwcmVkaWN0KG11bHRpcGxlLm1vZGVsKVxuV0hSXG5gYGAifQ== -->
-<pre class="r"><code>WHR$predicted &lt;- predict(multiple.model)
-WHR</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuV0hSJHByZWRpY3RlZCA8LSBwcmVkaWN0KG11bHRpcGxlLm1vZGVsKVxuV0hSXG5gYGBcbmBgYCJ9 -->
+<p><code>r</code>r WHR$predicted &lt;- predict(multiple.model) WHR</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -455,42 +452,18 @@ WHR</code></pre>
 <p>Error or the residuals are calcuated in the same way as in the other linear models we have tested. That is, the difference between the model predicted happiness score and the observed happiness score. We can use the resid() function to calculate the residuals and save these as a new variable called residuals in the dataframe</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuV0hSJHJlc2lkdWFscyA8LSByZXNpZChtdWx0aXBsZS5tb2RlbClcbldIUlxuYGBgIn0= -->
-<pre class="r"><code>WHR$residuals &lt;- resid(multiple.model)
-WHR</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuV0hSJHJlc2lkdWFscyA8LSByZXNpZChtdWx0aXBsZS5tb2RlbClcbldIUlxuYGBgXG5gYGAifQ== -->
+<p><code>r</code>r WHR$residuals &lt;- resid(multiple.model) WHR</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>In multiple regression, whats awesome about the predcited values is that they not only give us a means of calcuating the error left over in the model (i.e., residuals), but they also give us a means of plotting the line that best fits our multiple regression model. That is, the one that reflects the relationship between the outcome and the optimally weighted combination of predictor variables. To visualise this, lets create 2 plots - one that shows the simple relationship between happiness and GDP and one that shows the multiple relationship between happiness and a combination of GDP and gini. In both plots, we will demarcate the empty model (i.e., the mean of happiness) with a blue line.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBwbG90IDEsIHNpbXBsZSByZWdyZXNzaW9uIG1vZGVsXG5XSFIgJT4lXG5nZ3Bsb3QoYWVzKHggPSBHRFAsIHkgPSBIYXBwaW5lc3MpKSArIFxuICAgIGdlb21fcG9pbnQoKSArIFxuICBnZW9tX2hsaW5lKGFlcyh5aW50ZXJjZXB0PW1lYW4oSGFwcGluZXNzKSksIGNvbD1cImJsdWVcIiwgc2l6ZT0xKSArXG4gICAgc3RhdF9zbW9vdGgobWV0aG9kID0gXCJsbVwiLFxuICAgICAgICBjb2wgPSBcInJlZFwiLFxuICAgICAgICBzZSA9IEZBTFNFLFxuICAgICAgICBzaXplID0gMSkgKyBcbiAgZ2d0aXRsZShcIlNpbXBsZSBSZWdyZXNzaW9uIE1vZGVsXCIpICtcbiAgc3RhdF9jb3IoKSArICMgdGhlIHJldHJ1bnMgdGhlIGNvcnJlbGF0aW9uIGNvZWZmaWNpZW50IFxuICBzdGF0X3JlZ2xpbmVfZXF1YXRpb24obGFiZWwueSA9IDcpICsgIyB0aGlzIHJldHVybnMgdGhlIEdMTSBlcXVhdGlvblxuICB0aGVtZV9jbGFzc2ljKGJhc2Vfc2l6ZSA9IDgpXG4jIHBsb3QgMiwgbXVsdGlwbGUgcmVncmVzc2lvbiBtb2RlbFxuV0hSICU+JVxuZ2dwbG90KGFlcyh4ID0gcHJlZGljdGVkLCB5ID0gSGFwcGluZXNzKSkgKyBcbiAgICBnZW9tX3BvaW50KCkgKyBcbiAgZ2VvbV9obGluZShhZXMoeWludGVyY2VwdD1tZWFuKEhhcHBpbmVzcykpLCBjb2w9XCJibHVlXCIsIHNpemU9MSkgK1xuICAgIHN0YXRfc21vb3RoKG1ldGhvZCA9IFwibG1cIixcbiAgICAgICAgY29sID0gXCJyZWRcIixcbiAgICAgICAgc2UgPSBGQUxTRSxcbiAgICAgICAgc2l6ZSA9IDEpICsgXG4gIGdndGl0bGUoXCJNdWx0aXBsZSBSZWdyZXNzaW9uIE1vZGVsXCIpICtcbiAgc3RhdF9jb3IoKSArICMgdGhlIHJldHJ1bnMgdGhlIGNvcnJlbGF0aW9uIGNvZWZmaWNpZW50IFxuICBzdGF0X3JlZ2xpbmVfZXF1YXRpb24obGFiZWwueSA9IDcpICsgIyB0aGlzIHJldHVybnMgdGhlIEdMTSBlcXVhdGlvblxuICB0aGVtZV9jbGFzc2ljKGJhc2Vfc2l6ZSA9IDgpXG5gYGAifQ== -->
-<pre class="r"><code># plot 1, simple regression model
-WHR %&gt;%
-ggplot(aes(x = GDP, y = Happiness)) + 
-    geom_point() + 
-  geom_hline(aes(yintercept=mean(Happiness)), col=&quot;blue&quot;, size=1) +
-    stat_smooth(method = &quot;lm&quot;,
-        col = &quot;red&quot;,
-        se = FALSE,
-        size = 1) + 
-  ggtitle(&quot;Simple Regression Model&quot;) +
-  stat_cor() + # the retruns the correlation coefficient 
-  stat_regline_equation(label.y = 7) + # this returns the GLM equation
-  theme_classic(base_size = 8)
-# plot 2, multiple regression model
-WHR %&gt;%
-ggplot(aes(x = predicted, y = Happiness)) + 
-    geom_point() + 
-  geom_hline(aes(yintercept=mean(Happiness)), col=&quot;blue&quot;, size=1) +
-    stat_smooth(method = &quot;lm&quot;,
-        col = &quot;red&quot;,
-        se = FALSE,
-        size = 1) + 
-  ggtitle(&quot;Multiple Regression Model&quot;) +
-  stat_cor() + # the retruns the correlation coefficient 
-  stat_regline_equation(label.y = 7) + # this returns the GLM equation
-  theme_classic(base_size = 8)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBwbG90IDEsIHNpbXBsZSByZWdyZXNzaW9uIG1vZGVsXG5XSFIgJT4lXG5nZ3Bsb3QoYWVzKHggPSBHRFAsIHkgPSBIYXBwaW5lc3MpKSArIFxuICAgIGdlb21fcG9pbnQoKSArIFxuICBnZW9tX2hsaW5lKGFlcyh5aW50ZXJjZXB0PW1lYW4oSGFwcGluZXNzKSksIGNvbD1cXGJsdWVcXCwgc2l6ZT0xKSArXG4gICAgc3RhdF9zbW9vdGgobWV0aG9kID0gXFxsbVxcLFxuICAgICAgICBjb2wgPSBcXHJlZFxcLFxuICAgICAgICBzZSA9IEZBTFNFLFxuICAgICAgICBzaXplID0gMSkgKyBcbiAgZ2d0aXRsZShcXFNpbXBsZSBSZWdyZXNzaW9uIE1vZGVsXFwpICtcbiAgc3RhdF9jb3IoKSArICMgdGhlIHJldHJ1bnMgdGhlIGNvcnJlbGF0aW9uIGNvZWZmaWNpZW50IFxuICBzdGF0X3JlZ2xpbmVfZXF1YXRpb24obGFiZWwueSA9IDcpICsgIyB0aGlzIHJldHVybnMgdGhlIEdMTSBlcXVhdGlvblxuICB0aGVtZV9jbGFzc2ljKGJhc2Vfc2l6ZSA9IDgpXG4jIHBsb3QgMiwgbXVsdGlwbGUgcmVncmVzc2lvbiBtb2RlbFxuV0hSICU+JVxuZ2dwbG90KGFlcyh4ID0gcHJlZGljdGVkLCB5ID0gSGFwcGluZXNzKSkgKyBcbiAgICBnZW9tX3BvaW50KCkgKyBcbiAgZ2VvbV9obGluZShhZXMoeWludGVyY2VwdD1tZWFuKEhhcHBpbmVzcykpLCBjb2w9XFxibHVlXFwsIHNpemU9MSkgK1xuICAgIHN0YXRfc21vb3RoKG1ldGhvZCA9IFxcbG1cXCxcbiAgICAgICAgY29sID0gXFxyZWRcXCxcbiAgICAgICAgc2UgPSBGQUxTRSxcbiAgICAgICAgc2l6ZSA9IDEpICsgXG4gIGdndGl0bGUoXFxNdWx0aXBsZSBSZWdyZXNzaW9uIE1vZGVsXFwpICtcbiAgc3RhdF9jb3IoKSArICMgdGhlIHJldHJ1bnMgdGhlIGNvcnJlbGF0aW9uIGNvZWZmaWNpZW50IFxuICBzdGF0X3JlZ2xpbmVfZXF1YXRpb24obGFiZWwueSA9IDcpICsgIyB0aGlzIHJldHVybnMgdGhlIEdMTSBlcXVhdGlvblxuICB0aGVtZV9jbGFzc2ljKGJhc2Vfc2l6ZSA9IDgpXG5gYGBcbmBgYCJ9 -->
+<p><code>r</code>r # plot 1, simple regression model WHR %&gt;% ggplot(aes(x = GDP, y = Happiness)) + geom_point() + geom_hline(aes(yintercept=mean(Happiness)), col=, size=1) + stat_smooth(method = , col = , se = FALSE, size = 1) + ggtitle(Regression Model) + stat_cor() + # the retruns the correlation coefficient stat_regline_equation(label.y = 7) + # this returns the GLM equation theme_classic(base_size = 8) # plot 2, multiple regression model WHR %&gt;% ggplot(aes(x = predicted, y = Happiness)) + geom_point() + geom_hline(aes(yintercept=mean(Happiness)), col=, size=1) + stat_smooth(method = , col = , se = FALSE, size = 1) + ggtitle(Regression Model) + stat_cor() + # the retruns the correlation coefficient stat_regline_equation(label.y = 7) + # this returns the GLM equation theme_classic(base_size = 8)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -498,8 +471,9 @@ ggplot(aes(x = predicted, y = Happiness)) +
 <p>Finally, lets also have R call the standardized estimates by using the lm.beta() function. Standardised estiamstes are really important in multiple regression becuase they allow us to directly compare estimates.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG0uYmV0YShtdWx0aXBsZS5tb2RlbClcbmBgYCJ9 -->
-<pre class="r"><code>lm.beta(multiple.model)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubG0uYmV0YShtdWx0aXBsZS5tb2RlbClcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r lm.beta(multiple.model)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -510,9 +484,9 @@ ggplot(aes(x = predicted, y = Happiness)) +
 <p>By now, we know that the sampling distribution (i.e., t-ratio) is not the most optimal way to conduct null hypothesis testing. As we have seen, bootstrapping is the most satisfactory method that provides a confidence interval for the estimates without making restrictive assumptions regarding the distribution of varaiables and estimates. So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called multiple.boot. Note that we are going to request 5000 resamples so that might take a little time to run!</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubXVsdGlwbGUuYm9vdCA8LSBCb290KG11bHRpcGxlLm1vZGVsLCBmPWNvZWYsIFIgPSA1MDAwKSBcbnN1bW1hcnkobXVsdGlwbGUuYm9vdCkgXG5gYGAifQ== -->
-<pre class="r"><code>multiple.boot &lt;- Boot(multiple.model, f=coef, R = 5000) 
-summary(multiple.boot) </code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubXVsdGlwbGUuYm9vdCA8LSBCb290KG11bHRpcGxlLm1vZGVsLCBmPWNvZWYsIFIgPSA1MDAwKSBcbnN1bW1hcnkobXVsdGlwbGUuYm9vdCkgXG5gYGBcbmBgYCJ9 -->
+<p><code>r</code>r multiple.boot &lt;- Boot(multiple.model, f=coef, R = 5000) summary(multiple.boot)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -520,8 +494,9 @@ summary(multiple.boot) </code></pre>
 <p>Lets go ahead and call the bootsrap 95% confidence interval using the confint() function.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29uZmludChtdWx0aXBsZS5ib290LCBsZXZlbCA9IC45NSwgdHlwZSA9IFwibm9ybVwiKSBcbmBgYCJ9 -->
-<pre class="r"><code>confint(multiple.boot, level = .95, type = &quot;norm&quot;) </code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY29uZmludChtdWx0aXBsZS5ib290LCBsZXZlbCA9IC45NSwgdHlwZSA9IFxcbm9ybVxcKSBcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r confint(multiple.boot, level = .95, type = )</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -532,8 +507,9 @@ summary(multiple.boot) </code></pre>
 <p>As we did with the simple regression model, lets partition the variance in our simple regression model between that expalined by the model and that left over (i.e., error). We will use supernova() to do this.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VwZXJhbm92YShtdWx0aXBsZS5tb2RlbClcbmBgYCJ9 -->
-<pre class="r"><code>superanova(multiple.model)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc3VwZXJhbm92YShtdWx0aXBsZS5tb2RlbClcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r superanova(multiple.model)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -547,6 +523,9 @@ summary(multiple.boot) </code></pre>
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuKCguNjA0MC0uNjAwOCkvKDItMSkpLygoMS0uNjA0MCkvMTQ5MilcbmBgYCJ9 -->
 <pre class="r"><code>((.6040-.6008)/(2-1))/((1-.6040)/1492)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDEyLjA1NjU3XG4ifQ== -->
+<pre><code>[1] 12.05657</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>We have a F ratio of 12.06. F is a standardized metric with a smoothed distribution that can be used for Null Hypothesis Significance Testing. In order to know whether an F of 12.06 is large enough to be considered statistically significant we need to inspect a table of F distributions and find the critical value of F with 1,1492 degrees of freedom that cuts off 95% of the distribution. F tables are freely avaliable online, one of them can be accessed here: <a href="https://web.stanford.edu/dept/radiology/cgi-bin/classes/stats_data_analysis/lesson_5/234_7_n.html" class="uri">https://web.stanford.edu/dept/radiology/cgi-bin/classes/stats_data_analysis/lesson_5/234_7_n.html</a></p>
@@ -563,9 +542,9 @@ summary(multiple.boot) </code></pre>
 <p>Before we start, lets load the goals dataframe to the R environment. Go to the LT2 folder, and then to the workshop folder, and find the “goals.csv” file. Click on it aand then select “import dataset”. In the new window that appears, click “update” and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ29hbHMgPC0gcmVhZF9jc3YoXCJDOi9Vc2Vycy9jdXJyYW50L0Ryb3Bib3gvV29yay9MU0UvUEIxMzAvTFQyL1dvcmtzaG9wL2dvYWxzLmNzdlwiKVxuZ29hbHNcbmBgYCJ9 -->
-<pre class="r"><code>goals &lt;- read_csv(&quot;C:/Users/currant/Dropbox/Work/LSE/PB130/LT2/Workshop/goals.csv&quot;)
-goals</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZ29hbHMgPC0gcmVhZF9jc3YoXFxDOi9Vc2Vycy9jdXJyYW50L0Ryb3Bib3gvV29yay9MU0UvUEIxMzAvTFQyL1dvcmtzaG9wL2dvYWxzLmNzdlxcKVxuZ29hbHNcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r goals &lt;- read_csv(:/Users/currant/Dropbox/Work/LSE/PB130/LT2/Workshop/goals.csv) goals</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -575,8 +554,9 @@ goals</code></pre>
 <p>Now use the rcorr() function to call the correlation coefficient - or Pearson’s r - for the relationship between GINI and happiness.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmNvcnIoYXMubWF0cml4KGdvYWxzWyxjKFwiVGFza1wiLFwiRWdvXCIsIFwiRW50aHVzaWFzbVwiKV0sIHR5cGU9XCI/P1wiKSkgIyBmaWxsIGluIHRoZSA/PyBnYXAgaGVyZSBmb3IgdGhlIGV4cGxhbmF0b3J5IHZhcmlhYmxlIGFuZCB0aGUgY29ycmVsYXRpb24gdHlwZSAocGVhcnNvbilcbmBgYCJ9 -->
-<pre class="r"><code>rcorr(as.matrix(goals[,c(&quot;Task&quot;,&quot;Ego&quot;, &quot;Enthusiasm&quot;)], type=&quot;??&quot;)) # fill in the ?? gap here for the explanatory variable and the correlation type (pearson)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmNvcnIoYXMubWF0cml4KGdvYWxzWyxjKFxcVGFza1xcLFxcRWdvXFwsIFxcRW50aHVzaWFzbVxcKV0sIHR5cGU9XFw/P1xcKSkgIyBmaWxsIGluIHRoZSA/PyBnYXAgaGVyZSBmb3IgdGhlIGV4cGxhbmF0b3J5IHZhcmlhYmxlIGFuZCB0aGUgY29ycmVsYXRpb24gdHlwZSAocGVhcnNvbilcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r rcorr(as.matrix(goals[,c(,, )], type=??)) # fill in the ?? gap here for the explanatory variable and the correlation type (pearson)</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -592,9 +572,9 @@ goals</code></pre>
 <p>Now lets set our up our linear multiple regression model to examine the coeffienct estimates. Remeber that Enthusiasm is our outcome variable and Task and Ego are our predictors. Don’t forget to save the linear model in a new R object. I suggest goals.model</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ29hbHMubW9kZWwgPC0gbG0oPz8gfiAxICsgPz8gKyA/PywgZGF0YT1nb2FscykgIyBhZGQgPz8gdmFyaWFibGVzIHRvIHRoZSBsaW5lYXIgbW9kZWwgY29kZVxuc3VtbWFyeShnb2Fscy5tb2RlbCkgIyBhZGQgdGhlIG5ldyBSIG9iamVjdCB0byB0aGUgc3VtbWFyeSBmdW5jdGlvblxuYGBgIn0= -->
-<pre class="r"><code>goals.model &lt;- lm(?? ~ 1 + ?? + ??, data=goals) # add ?? variables to the linear model code
-summary(goals.model) # add the new R object to the summary function</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZ29hbHMubW9kZWwgPC0gbG0oPz8gfiAxICsgPz8gKyA/PywgZGF0YT1nb2FscykgIyBhZGQgPz8gdmFyaWFibGVzIHRvIHRoZSBsaW5lYXIgbW9kZWwgY29kZVxuc3VtbWFyeShnb2Fscy5tb2RlbCkgIyBhZGQgdGhlIG5ldyBSIG9iamVjdCB0byB0aGUgc3VtbWFyeSBmdW5jdGlvblxuYGBgXG5gYGAifQ== -->
+<p><code>r</code>r goals.model &lt;- lm(?? ~ 1 + ?? + ??, data=goals) # add ?? variables to the linear model code summary(goals.model) # add the new R object to the summary function</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -615,8 +595,9 @@ summary(goals.model) # add the new R object to the summary function</code></pre>
 <p>In the below chunk, use the lm.beta() function to calcuate the standardized estimate for the slopes of taks and ego.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG0uYmV0YSg/PykgIyBhZGQgZ29hbHMubW9kZWwgdG8gdGhlIGxtLmJldGEgZnVuY3Rpb25cbmBgYCJ9 -->
-<pre class="r"><code>lm.beta(??) # add goals.model to the lm.beta function</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubG0uYmV0YSg/PykgIyBhZGQgZ29hbHMubW9kZWwgdG8gdGhlIGxtLmJldGEgZnVuY3Rpb25cbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r lm.beta(??) # add goals.model to the lm.beta function</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -630,11 +611,10 @@ summary(goals.model) # add the new R object to the summary function</code></pre>
 <p>Lets go ahead generate a bootstrap sampling distribution of the estimates and use it to call the bootsrap 95% confidence interval using the confint() function.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ29hbHMuYm9vdCA8LSBCb290KD8/LCBmPWNvZWYsIFIgPSA/PykgXG5zdW1tYXJ5KGdvYWxzLmJvb3QpICMjIGFkZCB0aGUgZ29hbHMubW9kZWwgYW5kIHN0aXB1bGF0ZSBob3cgbWFueSByZXNhbXBsZXMgeW91IHdhbnQgdG8gcnVuICh0eXBpY2FsbHkgNSwwMDApXG5cbmNvbmZpbnQoPz8sIGxldmVsID0gLjk1LCB0eXBlID0gXCJub3JtXCIpICMgYWRkIHRoZSBib290c3RyYXAgbW9kZWwgeW91IGp1c3QgY3JlYXRlZCB0byB0aGlzIGNvZGVcbmBgYCJ9 -->
-<pre class="r"><code>goals.boot &lt;- Boot(??, f=coef, R = ??) 
-summary(goals.boot) ## add the goals.model and stipulate how many resamples you want to run (typically 5,000)
-
-confint(??, level = .95, type = &quot;norm&quot;) # add the bootstrap model you just created to this code</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZ29hbHMuYm9vdCA8LSBCb290KD8/LCBmPWNvZWYsIFIgPSA/PykgXG5zdW1tYXJ5KGdvYWxzLmJvb3QpICMjIGFkZCB0aGUgZ29hbHMubW9kZWwgYW5kIHN0aXB1bGF0ZSBob3cgbWFueSByZXNhbXBsZXMgeW91IHdhbnQgdG8gcnVuICh0eXBpY2FsbHkgNSwwMDApXG5cbmNvbmZpbnQoPz8sIGxldmVsID0gLjk1LCB0eXBlID0gXFxub3JtXFwpICMgYWRkIHRoZSBib290c3RyYXAgbW9kZWwgeW91IGp1c3QgY3JlYXRlZCB0byB0aGlzIGNvZGVcbmBgYFxuYGBgIn0= -->
+<p><code>r</code>r goals.boot &lt;- Boot(??, f=coef, R = ??) summary(goals.boot) ## add the goals.model and stipulate how many resamples you want to run (typically 5,000)</p>
+<p>confint(??, level = .95, type = ) # add the bootstrap model you just created to this code</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -648,8 +628,9 @@ confint(??, level = .95, type = &quot;norm&quot;) # add the bootstrap model you 
 <p>We’ve established whether there is a statistically significant relationship between or variables and set up the linear model. Lastly, how much variance in enthusiasm explained by a combination of task and ego? We can answer this question using the supernova() function in R, which breaks down the variance in enthusiasm due to the model (ie., task and ego) and error (i.e., variance left over once we’ve subtracted out the model).</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VwZXJub3ZhKD8/KSAjIGFkZCBnb2Fscy5tb2RlbCB0byB0aGUgc3VwZXJub3ZhIGZ1bmN0aW9uXG5gYGAifQ== -->
-<pre class="r"><code>supernova(??) # add goals.model to the supernova function</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc3VwZXJub3ZhKD8/KSAjIGFkZCBnb2Fscy5tb2RlbCB0byB0aGUgc3VwZXJub3ZhIGZ1bmN0aW9uXG5gYGBcbmBgYCJ9 -->
+<p><code>r</code>r supernova(??) # add goals.model to the supernova function</p>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->

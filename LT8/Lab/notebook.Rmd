@@ -62,7 +62,7 @@ bigfive <- select(bigfive, e1, e2, e3, e4, e5, e6, e7, e8, c1, c2, c3, c4, c5, c
 
 ## Cleaning: Reliability analysis
 
-The net step after we have recoded the items is to check the scales are reliable. As we saw in the lecture, we can calculate the reilaibility of the Big 5 scales using the Cronbach's alpha, which is the ratio of variance in the true score to error variance. We saw in the lecture tha tit is calculated as:
+The next step after we have recoded the items is to check the scales are reliable. As we saw in the lecture, we can calculate the reilaibility of the Big 5 scales using the Cronbach's alpha, which is the ratio of variance in the true score to error variance. We saw in the lecture tha tit is calculated as:
 
 r = Vt/V
 
