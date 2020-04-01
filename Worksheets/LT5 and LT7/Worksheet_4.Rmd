@@ -103,13 +103,13 @@ To work on testing and interpeting logistic regression, we are going to use data
 As a first step in the analysis, download the file and save it to a **logical** place where it can be eaisly located. I would recommend that you save it in your PBS folder under a subfolder called Worksheets. Now load the file by clicking on the dataframe name in the files window where you saved the protest data and click import data". A new screen will appear with the dataframe. Press "update" in the top right corner and then when it loads click import.You can also copy the R code produced in the bottom right corner and paste that code in an R chunk on your worksheet. For example:
 
 ```{r eval=FALSE}
-protest <- read_csv("Worksheet 4/penalty.csv")
-protest
+penalty <- read_csv("Worksheet 4/penalty.csv")
+penalty
 ```
 
 ## Data Description
 
-In this data are 439 penalties awared to teams in the Premier League. The data frame contains a variable called scored, which is a categorical variable that measures whether the penalty was scored or not scored (scored = 1, not scored = 0). The data frame also includes a variables called time, which is a continuous predictor measuring the time in the game that the penalty was awared. The Premier League want to know if there is a relationship between the time a penulty was awared and whether it was scored or not. They suspect that penalties awared later in games would be scored less often that those awared earlier in games, but they do not know. This type of research question requires simple logistic regression as there is one categorical outcome variable - 'scored' - and one continuous predictor variable - 'time'.
+In this data are 439 penalties awared to teams in the Premier League. The data frame contains a variable called scored, which is a categorical variable that measures whether the penalty was scored or not scored (scored = 1, not scored = 0). The data frame also includes a variables called time, which is a continuous predictor measuring the time in the game that the penalty was awared. The Premier League want to know if there is a relationship between the time a penalty was awared and whether it was scored or not. They suspect that penalties awared later in games would be scored less often than those awared earlier in games, but they do not know. This type of research question requires simple logistic regression as there is one categorical outcome variable - 'scored' - and one continuous predictor variable - 'time'.
 
 Before we investigate this relationship, though, lets just clarify the research question and null hypothesis you will be testing:
 
