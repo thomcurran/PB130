@@ -130,13 +130,13 @@ The output presents the two main effects for each of attendance and reading on g
 
 ## Post-hoc testing
 
-However, as the number of categories per predictor increases, comparing the means becomes alot more complicated becuase of the sheer number of group comparisons. Within the factoral anova model, we can conduct post-hoc analyses that examine all possible group comparisons being tested using something called pairwise differences. These kinds of comparisons are often called simple effects, apparently referring to the fact they are just comparing means in a straight forward way. To give you an example of this, in the anonva.model1 there are two specific mean comparisons are being tested:
+However, as the number of categories per predictor increases, comparing the means becomes alot more complicated becuase of the sheer number of group comparisons. Within the factoral anova model, just like the one-way ANOVA model, we can conduct post-hoc analyses that examine all possible group comparisons being tested using something called pairwise differences. These kinds of comparisons are often called simple effects, apparently referring to the fact they are just comparing means in a straight forward way. To give you an example of this, in the anonva.model1 there are two specific mean comparisons are being tested:
 
 1. The difference in grades between those who attended class and those who did not
 
 2. The difference in grades between those who did the readings and those who did not
 
-A tool called Tukey's "Honestly Significant Difference" (or Tukey's HSD for short) makes these comparisons from the factoral ANOVA model. It constructs 95% simulataneous confidence intervals around each specific mean comparison. Simultaneous just means that there is a 95% probability *all* of these confidence intervals include the true value in the population. To all intents and purposes, it is interpreted in the same way we have been interpreting 95% confidence intervals to date. Lets go ahead and request Tukey's HSD using the TukeyHSD() function from the anova.model1 object.
+A tool called Tukey's "Honestly Significant Difference" (or Tukey's HSD for short) makes these comparisons from the factoral ANOVA model. It constructs 95% simulataneous confidence intervals around each specific mean comparison. Simultaneous just means that there is a 95% probability *all* of these confidence intervals including the true difference in the population. To all intents and purposes, it is interpreted in the same way we have been interpreting 95% confidence intervals to date. Lets go ahead and request Tukey's HSD using the TukeyHSD() function from the anova.model1 object.
 
 ```{r}
 TukeyHSD(anova.model1)

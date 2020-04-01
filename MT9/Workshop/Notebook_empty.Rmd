@@ -1,6 +1,8 @@
 ---
-title: "MT9: Comparing Groups"
-output: html_notebook
+title: 'MT9: Comparing Groups'
+output:
+  html_document:
+    df_print: paged
 ---
 
 ## Learning outcomes 
@@ -17,7 +19,7 @@ At the end of today’s workshop you should be able to do the following:
 
 ## Install required packages
 
-```{r}
+```{r eval = FALSE}
 install.packages("supernova")
 install.packages("readr")
 install.packages("sjlabelled")
@@ -30,7 +32,7 @@ install.packages("fastDummies")
 The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
 
 
-```{r}
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library("mosaic")
 library("sjlabelled")
 library("fastDummies")
@@ -52,7 +54,7 @@ First, lets load this data into our R environment. Go to the MT9 folder, and the
 
 
 ```{r}
-anorexia <- read_csv("C:/Users/currant/Dropbox/Work/LSE/PB130/MT9/Workshop/anorexia.csv")
+anorexia <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT9/Workshop/anorexia.csv")
 anorexia
 ```
 
@@ -160,7 +162,7 @@ First, lets load this data into our R environment. Go to the MT9 folder, and the
 
 
 ```{r}
-perfectionism <- read_csv("C:/Users/currant/Dropbox/Work/LSE/PB130/MT9/Workshop/perfectionism.csv")
+perfectionism <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT9/Workshop/perfectionism.csv")
 perfectionism
 ```
 
@@ -342,7 +344,7 @@ In this case, we see an F ratio associated with the model of 4.82 and a p value 
 
 ## Equivalence to ANOVA
 
-Just to show you that the between groups one-way ANOVA is equivalent to a linear model, lets do the same analysis using the anova fucntion.
+Just to show you that the between groups one-way between-person (independent) ANOVA is equivalent to a linear model, lets do the same analysis using the anova fucntion.
 
 
 ```{r}
@@ -352,11 +354,13 @@ summary(perfectionism.ANOVA)
 
 See how the F ratio and mean differences are the same as the linear model we tested? Thats becuase the analyses are exactly the same! Students are often taught one-way ANOVA as a seperate statistical test to paired t-test, independent t-test, and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model! 
 
+## Post-hoc testing with Bonferroni adjustment
+
 One of the advantages of aov() over the lm() when testing one-way ANOVA, however, is that we can use it to generate specifc comparisons for of the multiple grous. For example, we have 3 comparisons in this model we need to test (i.e., UK vs USA, USA vs Canada, and Canada vs USA). The first idea that might come to mind is to just test each comparison separately with a simple t-test, using an significance level of .05. At first glance, this doesn’t seem like a bad idea. However, consider a case where you dont have 2 comparisons but you have 20 comparisons to test, and a significance level of 0.05. What’s the probability of observing at least one significant result in those 20 tests just due to chance? High! Specifcally, with 20 comparisons being made, we have a 64% chance of observing at least one significant difference, even if all of the differences are actually zero. In psychology, it’s not unusual for the number of simultaneous comparisons to be quite a bit larger than 2... and the probability of getting a significant result simply due to chance keeps going up as we add more comparisons.
 
-Methods for dealing with multiple testing frequently call for adjusting the significance level in some way, so that the probability of observing at least one significant result due to chance remains below your desired significance level. The Bonferroni correction does just this, and sets the significance cut-off at α/n. For example, in the example above, with 20 comparisons and significance level of = 0.05, you’d only reject a null hypothesis if the p-value is less than 0.0025 (i.e., .05/20). In our example, we have 3 comparisons, so our p value cut-off will be .05/3 = .017. Accordingly, for each comparison, we are looking for a t ratio that is large enough to be considered statistically significant at the .017 level.
+Methods for dealing with multiple testing frequently call for adjusting the significance level in some way, so that the probability of observing at least one significant result due to chance remains below your desired significance level. The Bonferroni correction does just this, and sets the significance cut-off at α/n. For example, in the example above, with 20 comparisons and significance level of = 0.05, you’d only reject a null hypothesis if the p-value is less than 0.0025 (i.e., .05/20). In our example, we have 3 comparisons, so our p value cut-off will be .05/3 = .017. Accordingly, for each comparison, we are looking for a t ratio that is large enough to be considered statistically significant at the .017 level. In other words, if we ran the three groups comparsions as independent t-tests (like above) we would need to adjust the critical value of p to .017.
 
-Lets go ahead and request the pairwise comparisons from the ANOVA model of perfectionism and use the Bonferroni ajustment to the p value to adjudicate statistical significance.
+Luckly, the pairwise.t.test() function in R makes this correction for us on each of the p vlaues for each of the comparisons. Lets go ahead and request the pairwise comparisons from the ANOVA model of perfectionism using this function and use the Bonferroni ajustment to the p value to adjudicate statistical significance.
 
 
 ```{r}
@@ -364,6 +368,21 @@ pairwise.t.test(perfectionism$SOP, perfectionism$Country, p.adj="bonf") # this f
 ```
 
 The code outputs the bonferroni adjusted p values, which are more conservative than simple t-test comparisons of 2 group means (becuase we are testing 3 group means). Using the Bonferroni adjustment, only the UK-USA comparison is statistically significant. This suggests that SOP is higher in the US than the UK, but that there is insufficient statistical support to distinguish between the the UK and Canada and the US and Canada.
+
+## Post-hoc testing with Tukey's HSD (more on this method next term)
+
+Another tool for post-hoc comparisons, which is not as conservastive as the Bonferroni adjustment, is Tukey's "Honestly Significant Difference" (or Tukey's HSD for short). It constructs a critical HSD value from the studentized range (see here: http://www.real-statistics.com/statistics-tables/studentized-range-q-table/) that the paired means must differ by to be considered honestly significantly different. To all intents and purposes, it is interpreted in the same way we have been interpreting p values to date but it has been adjusted to account for the increased false positive rate that is present when making multiple comparisons. Lets go ahead and request Tukey's HSD using the TukeyHSD() function from the perfectionism.ANOVA object.
+
+
+```{r}
+TukeyHSD(perfectionism.ANOVA)# Now we have to use the perfectionism.ANOVA model to find out the pair of countries which differ. For this you may use the Tukey’s HSD test. Don;t worry too much about what this means for now, the output will be the same as the lm() and that is the key learning outcome.
+```
+
+Using the Tukey's HSD adjustment, only the UK-USA comparison is statistically significant (i.e., p < .05). This suggests that SOP is higher in the US than the UK, but that there is insufficient statistical support to distinguish between the the UK and Canada and the US and Canada. Exactly the same as the Bonferroni adjustment but note that the p-values are slightly less conservative (i.e., lower).
+
+## How its written
+
+A one-way between-subjects ANOVA was conducted to compare the effect of country on levels of perfectionism. There was a significant effect of country on perfectionism at the p<.05 level for the three conditions [F(2, 136) = 4.82, p = 0.01]. Post hoc comparisons using the Tukey HSD test indicated that the mean perfectionism score for the US (M = 4.67, SD = 0.16) was significantly larger than the mean perfectionism score for the UK (M = 4.50, SD = 0.35). However, the mean perfectionism score for Canada  (M = 4.58, SD = 0.20) did not significantly differ from the mean perfectionism scores for the US and the UK. 
 
 ## Exercise
 
