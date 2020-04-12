@@ -271,7 +271,7 @@ When we do so we get an unrestricted mean age of 31. Still a slight underestimat
 
 ## Correcting the correlation
 
-Now we have an estimated population SD of 2.27, lets now correct our correlation of -0.08 for range restriction. To do so, we can use the psych package, which implements Thorndike's case 2 using the rangeCorrection() fucntion.
+Now we have an estimated population SD of 2.36, lets now correct our correlation of -0.08 for range restriction. To do so, we can use the psych package, which implements Thorndike's case 2 using the rangeCorrection() fucntion.
 
 ```{r}
 rangeCorrection(-0.08,2.358381,2.271121,case=2) # this function takes the correlation, followed by the population SD, followed by the sample SD, and then stipualtes case 2 for Thorndike's case 2 correction

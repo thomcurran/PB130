@@ -6,5 +6,5 @@ server: rpubs.com
 hostUrl: rpubs.com
 appId: https://api.rpubs.com/api/v1/document/593088/26d13ff306dc479a8a889f107634ff5b
 bundleId: https://api.rpubs.com/api/v1/document/593088/26d13ff306dc479a8a889f107634ff5b
-url: http://rpubs.com/thomcurran/593088/edit
-when: 1585753839.31843
+url: http://rpubs.com/thomcurran/593088
+when: 1586545831.93364
