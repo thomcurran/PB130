@@ -366,7 +366,7 @@ We will find out more about the omnibus F-test next semseter when we look at fac
 
 ## Post-hoc testing with Bonferroni adjustment
 
-OF course, the drawback of aov() is that while the omnibus test tells that there is a difference between the countries, it doesn't tell of where those differences are. So we must use the perfectionism.ANOVA model to generate specifc comparisons for of the multiple groups. 
+Of course, the drawback of aov() is that while the omnibus test tells that there is a difference between the countries, it doesn't tell of where those differences are. So we must use the perfectionism.ANOVA model to generate specifc comparisons for of the multiple groups. 
 
 We have 3 comparisons in this model we need to test (i.e., UK vs USA, USA vs Canada, and Canada vs USA). The first idea that might come to mind is to just test each comparison separately with an independent t-test, using an significance level of .05. At first glance, this doesn’t seem like a bad idea. However, consider a case where you dont have 2 comparisons but you have 20 comparisons to test, and a significance level of 0.05. What’s the probability of observing at least one significant result in those 20 tests just due to chance? High! Specifcally, with 20 comparisons being made, we have a 64% chance of observing at least one significant difference, even if all of the differences are actually zero. In psychology, it’s not unusual for the number of simultaneous comparisons to be quite a bit larger than 2... and the probability of getting a significant result simply due to chance keeps going up as we add more comparisons.
 

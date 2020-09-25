@@ -402,11 +402,19 @@ Before we look at this relationship, we must center the predictor (year) at the 
 ```{r eval = FALSE}
 mean(perfectionism$year)
 ```
+
 And then subtract this mean from the observed year..
 
 ```{r eval = FALSE}
 perfectionism$year <- (perfectionism$year-??)
 perfectionism
+```
+
+Finally, lets now plot the relationship with the centered year variable to make sure it hasn't altered any other charecteristics of the data
+
+```{r eval = FALSE}
+plot2 <- ggplot(perfectionism, aes(x = year, y = spp)) + geom_point() + theme_classic()
+plot2
 ```
 
 ## Task 3 - Test the linear model
@@ -431,7 +439,7 @@ Next we need to test the quadratic model, with year raised to the 2nd power. To 
 
 ```{r eval = FALSE}
 per2 <- lm(spp ~ ??, data = perfectionism)
-summary(per1)
+summary(per2)
 ```
 
 What is the R2 assoaicted with this model?
@@ -443,7 +451,7 @@ Is the beta significant?
 Now let's see whether the introduction of the quadratic term improves the linear model using anova()..
 
 ```{r eval = FALSE}
-anova(??)
+anova(??, ??)
 ```
 
 Does the addition of the quadratic term improve the model?
@@ -481,6 +489,6 @@ Why?
 To visulaise this relationship draw a figure that fits the best fitting shape to the data (i.e., linear, quadratic, or cubic). You can use the origional plot1 from task 1 and add the stat_smooth layer with the best fitting polynomial model in the formula.
 
 ```{r eval = FALSE}
-plot1 + stat_smooth(method = "lm", formula = y ~ x + ?? + ??, size = 1)
+plot2 + stat_smooth(method = "lm", formula = y ~ x + ?? + ??, size = 1)
 ```
 

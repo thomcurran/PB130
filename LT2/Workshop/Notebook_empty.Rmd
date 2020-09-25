@@ -32,7 +32,7 @@ install.packages("plyr")
 
 ## Load required packages
 
-The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
+The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk..
 
 ```{r loadlib, echo=T, results='hide', message=F, warning=F}
 library(supernova)
