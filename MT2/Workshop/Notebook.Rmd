@@ -44,7 +44,7 @@ This document is based on an R Notebook or R Markdown document. R notebooks are 
 
 1. Using code chunks to perform an activity
 2. Seeing the output of the code chunk, and
-3. Commenting on the code and its ouptut in prose between the code chunks.
+3. Commenting on the code and its output in prose between the code chunks.
 
 R Notebooks are interactive documents. The notebooks can check the code while you write it, suggesting corrections where errors appear and displaying output when you run a code chunk. We shall see this in action several times during the workshops.
 
