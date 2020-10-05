@@ -1,10 +1,9 @@
 ---
 title: "Tomas Curzola, Columbian soccer ace"
-output: html_document
 ---
 
 
-![In my golden days](https://ultrafooty.files.wordpress.com/2016/09/carlos-pibe-valderrama-colombia.jpg?w=660)
+![In my golden days](https://ultrafooty.files.wordpress.com/2016/09/carlos-pibe-valderrama-colombia.jpg)
 
 
 ## Education

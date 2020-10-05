@@ -23,7 +23,7 @@ I *strongly* encourage you to explore beyond what the workshops cover. A willing
 
 ![R Interface](https://github.com/thomcurran/PB130/blob/master/Images/R%20Interface.png?raw=true)
 
-The panel in the upper right contains your workspace as well as a history of the commands that you’ve previously entered. Any plots that you generate will show up in the panel in the lower right corner.
+The panel in the upper right contains your workplace as well as a history of the commands that you’ve previously entered. Any plots that you generate will show up in the panel in the lower right corner.
 
 The panel on the left is where the magic happens. It’s called the console. Every time you launch RStudio, it will have the same text at the top of the console telling you the version of R that you’re running. Below that information is the prompt.
 
@@ -76,12 +76,10 @@ Using the R Markdown quick reference (In R Studio navigate to Help -> Cheatsheet
 
 7. Add a block quote
 
-8. Instert and run two peices of basic R chunk (e.g., sqrt(10))
+8. Insert and run two pieces of basic R chunk (e.g., sqrt(10))
 
-9. Having done this, go to the top of the page where it says ‘Preview’ on the arrow next to knit click on the arrow and select ‘Knit to HTML.’ It will then produce an html document you can compare with other people.
-
-I’ll come around and check what people have done.
+9. Having done this, go to the top of the page where it says ‘Preview’ on the arrow next to knit click on the arrow and select ‘Knit to HTML.’ It will then produce an html document. If you are happy, go ahead and click "open in browser" on the left hand corner of the pop-up. There you can save the webpage as a PDF (using print -> save as pdf) and then upload the pdf of your CV to the PB130 CV forum for feedback (details for how to save the website as a pdf on a Mac can be found here: https://www.lifewire.com/save-web-page-as-pdf-in-safari-4169534).
 
 Here is an example: http://rpubs.com/thomcurran/CV
 
-We will be using notebooks to complete the weekly worksheets. Go away and have a play with this in your own time!
+We will be using notebooks to complete the weekly worksheets. Go away and have a play with this in your own time. After the session please do post your CVs on the PB130 forum so we can see them!
