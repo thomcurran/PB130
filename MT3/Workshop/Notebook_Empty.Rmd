@@ -46,7 +46,7 @@ You can go to the World Value Survey site to see what we’ll be working with. D
 
 You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. This file is also in the MT3 workshop folder. The .rds extension is an R speicifc extension, most commonly we'll work with .csv files. 
 
-Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file. An easy way to do this is to click on the dataframe name in the files window, change the name to WVS and click OK. The code will appears in the console. Just copy and paste that code in your R chunk.
+Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file. An easy way to do this is to click on the dataframe name in the files window, change the name to WVS and click OK. The code will appear in the console. Just copy and paste that code in your R chunk.
 
 
 ```{r eval=FALSE}
@@ -79,7 +79,7 @@ WVS
 ```
 
 
-You should see columns of numbers with each row representing a different respondant. The first entry in each row, corresponding the first column, is simply the row number. The second column is the first variable, the second is the second variable, and so on. You can use the right arrow in the data screen to examine the complete data set.
+You should see columns of numbers with each row representing a different respondent. The first entry in each row, corresponding the first column, is simply the row number. The second column is the first variable, the second is the second variable, and so on. You can use the right arrow in the data screen to examine the complete data set.
 
 Note that the row numbers in the first column are not part of the WVS data. R adds them as part of its printout to help you make visual comparisons. You can think of them as the index that you see on the left side of a spreadsheet. In fact, the comparison to a spreadsheet will generally be helpful. R has stored the WVS data in a kind of spreadsheet or table called a dataframe.
 
@@ -170,7 +170,7 @@ favstats(~V10, data = WVS)
 
 As you can see, we have summary information about people's happiness from wave 6 of the WVS. But can you spot the problem here?
 
-If you said the minimum value -5 is outside of the range of values (1-4) then you are correct! This is becuase in the WVS not everybody answered this question, or responded that they "did not know". So rather than 1-4, the V10 variable ranges from -5 to 4, and includes (see codesheet here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf):
+If you said the minimum value -5 is outside of the range of values (1-4) then you are correct! This is because in the WVS not everybody answered this question, or responded that they "did not know". So rather than 1-4, the V10 variable ranges from -5 to 4, and includes (see codesheet here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf):
 
 -5. HT: Missing-Dropped out survey; RU: Inappropriate response
 
@@ -182,7 +182,7 @@ If you said the minimum value -5 is outside of the range of values (1-4) then yo
 
 -1. Don´t know
 
-All of which are redundant for our interests. This is common when retrieiving large data sets - they are often messy and require manipulating or cleaning! We want tidy data!
+All of which are redundant for our interests. This is common when retrieving large data sets - they are often messy and require manipulating or cleaning! We want tidy data!
 
 ## Data manipulation
 
@@ -206,9 +206,10 @@ During this course, we shall use a variety of data verbs, commands that “do”
 
 Before we do much else, we want to think about how to write good code. One of teh ways of doing that is by using “pipes”. In R, the %>% symbol is called a pipe. You should read the pipe as saying “Then” or “And then”. A pipe “pipes in” an argument so that you are able to use it in a function.
 
-I like the to think of my programs that include the pipe as stories told by a 6-year-old:
+I like the to think of my programs that include the pipe as stories told by a 6-year-old: 
 
 ![*Figure 1. Piping Example*](https://github.com/thomcurran/PB130/blob/master/Images/piping.png?raw=true)
+
 
 That way, I don’t get confused about what it means because I always get the functions in the right sequence.
 
@@ -222,14 +223,14 @@ Let’s start to examine the data a little more closly. Rarely would we be condu
 
 
 ```{r eval=FALSE}
-WVS_short <- # create new data frame WVS_short
+WVS_short <- # create new data frame called WVS_short
   WVS %>% # original dataframe pipe ("and then")
   select(V2, V10, V11) # variables of interest to retain
 head(WVS_short) # inspect new dataframe 
 ```
 
 
-We now have a more managable data frame WVS_short that contians only the variables of interest to our analyses.
+We now have a more manageable data frame WVS_short that contains only the variables of interest to our analyses.
 
 ## Filtering and mutating
 
@@ -278,18 +279,18 @@ Let’s go through a step-by-step interpretation of this code:
 
 ## Mutating
 
-We now have a data file that contains interpretable information on happiness (V10) and subjective health (V11) for Americans contained in the Just_USA dataframe. This is great but there is one more thing we need to do. Remeber that we considered wellbeing as variable that consists of both happiness and subjective health. Well, we need to create that welbeing variable in the Just_USA dataframe. To do that, we are going to use the mutate() fucntion to add happiness and wellbeing together and create a new variable called "wellbeing".
+We now have a data file that contains interpretable information on happiness (V10) and subjective health (V11) for Americans contained in the Just_USA dataframe. This is great but there is one more thing we need to do. Remeber that we considered wellbeing as variable that consists of both happiness and subjective health. Well, we need to create that wellbeing variable in the Just_USA dataframe. To do that, we are going to use the mutate() fucntion to add happiness and wellbeing together and create a new variable called "wellbeing".
 
 
 ```{r eval=FALSE}
 Just_USA <- # into existing dataframe
   Just_USA %>% # from existing dataframe
-  mutate(wellbeing = V10 + V11) # add up V10 and V10 and asign the sum to a new variable called wellbeing
+  mutate(wellbeing = V10 + V11) # add up V10 and V10 and assign the sum to a new variable called wellbeing
 Just_USA # check dataframe
 ```
 
 
-Notice here that R understands 1 equals sign (e.g., =) as part of a calculation. So when you are calculating something it is =, when you are assigning something it is ==. We could of course do the same for any other calculation. Try for instance using the mutate() fucntion to create a new variable called "product" that contains sum of V10 multiplied by V11.
+Notice here that R understands 1 equals sign (e.g., =) as part of a calculation. So when you are calculating something it is =, when you are assigning something it is ==. We could of course do the same for any other calculation. Try for instance using the mutate() function to create a new variable called "product" that contains sum of V10 multiplied (*) by V11.
 
 
 ```{r}
@@ -330,7 +331,7 @@ Now its your turn to do some data manipulation with the WVS. I want you to creat
 
 ```
 
-4. Calcuate the average wellbeing difference between the USA and Iraq
+4. Calculate the average wellbeing difference between the USA and Iraq
 
 ```{r}
 
