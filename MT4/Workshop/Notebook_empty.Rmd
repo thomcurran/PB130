@@ -27,7 +27,7 @@ install.packages("tidyverse")
 install.packages("mosaic")
 install.packages("ggplot2")
 install.packages("moments")
-install.packages("~/PB130_0.1.0.tar.gz", repos = NULL, type = "source")
+install.packages("~Packages/PB130_0.1.0.tar.gz", repos = NULL, type = "source")
 install.packages("sjlabelled")
 ```
 
@@ -270,7 +270,7 @@ That’s enough of the ggplot2 basics for now. You will discover that many thing
 ## Exercise
 
 
-Now create code to produce the same modifed histogram for health:
+Now create code to produce the same modified histogram for health:
 
 
 ```{r}
@@ -372,7 +372,7 @@ RandomSample <- sample_n(WVStrimmed, 200)
 ```
 
 
-Let's first take a look at Algeria and Australia seperately. Here are the descriptive statistics for each.
+Let's first take a look at Algeria and Australia separately. Here are the descriptive statistics for each.
 
 
 ```{r}
@@ -480,7 +480,7 @@ This looks much more worthwhile and the trend is relevant without the outlier of
 ## Exercise
 
 
-1. Plot mean levels of happiness across countries ordered from low to high (be sure to check it is labelled correctly)
+1. Plot mean levels of happiness across countries ordered from low to high (be sure to check it is labeled correctly)
 
 
 ```{r eval=FALSE}
@@ -489,7 +489,7 @@ This looks much more worthwhile and the trend is relevant without the outlier of
 
 
 
-2. Plot mean levels fo health across countries ordered from low to high (be sure to check it is labelled correctly)
+2. Plot mean levels of health across countries ordered from low to high (be sure to check it is labeled correctly)
 
 
 ```{r eval=FALSE}
@@ -501,10 +501,10 @@ This looks much more worthwhile and the trend is relevant without the outlier of
 
 ## Conclusion
 
-That was an introduction to data visulaization in R. As always, feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
+That was an introduction to data visualization in R. As always, feel free to browse around the websites for R and RStudio if you’re interested in learning more, or find more labs for practice at http://openintro.org.
 
 I would encourage you to continue to work with the WVS data set.Look at the variable Codebook (download from Moodle): https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/F00007761-WV6_Codebook_v20180912.pdf. Find a variable in which you’re interested (really, anything) and have a go graphing the distribution and cross-country differences.
 
-You can also practice data visualisation in R using a Swirl as introduced in the notebook for MT2. In the main menu you should select option "4" (Exploratory Data Analysis: The basics of exploring data in R). Complete lessons 1 through 10.
+You can also practice data visualization in R using a Swirl as introduced in the notebook for MT2. In the main menu you should select option "4" (Exploratory Data Analysis: The basics of exploring data in R). Complete lessons 1 through 10.
 
 Don't also forget to complete the essential readings!
