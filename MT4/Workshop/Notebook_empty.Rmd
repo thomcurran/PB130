@@ -29,6 +29,7 @@ install.packages("ggplot2")
 install.packages("moments")
 install.packages("~Packages/PB130_0.1.0.tar.gz", repos = NULL, type = "source")
 install.packages("sjlabelled")
+install.packages("Hmisc")
 ```
 
 
@@ -42,10 +43,10 @@ library(ggplot2)
 library(moments)
 library(PB130)
 library(sjlabelled)
+library(Hmisc)
 ```
 
-
-## The WVS data
+## The WVS data 
 
 
 If you would like to have a quick recap on the data we will be working with, go to the World Value Survey site. Don’t download anything: http://www.worldvaluessurvey.org/WVSContents.jsp.
@@ -59,10 +60,13 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 
 ```{r}
 WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT4/Workshop/WV6_Data_R_v20180912.rds")
-
-WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
 ```
 
+Now I'm just going to save the country code as character (names) rather than numeric (codes)
+
+```{r}
+WVS$V2A <- as_character(WVS$V2A) # this saves the country variable as a "character" variable (i.e., the names of the countries) rather than its default "numeric" value.
+```
 
 ## Case Study in Visulising Data: Wellbeing
 
