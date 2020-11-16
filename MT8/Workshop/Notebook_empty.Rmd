@@ -8,11 +8,11 @@ output: html_notebook
 At the end of today’s workshop you should be able to do the following:
 
 
-1.Build an empty model by calcuating the predicted values and the residuals
+1. Build an empty model by calculating the predicted values and the residuals
 
-2. Calcuate error using sum of sqaures, variance, and standard deviation
+2. Calculate error using sum of squares, variance, and standard deviation
 
-3. Use lm() and anova() to test our calcaultions
+3. Use lm() and anova() to test our calculations
 
 4. Compare distributions of choice for Australia and Japan using Z-scores
 
@@ -77,7 +77,7 @@ I looked in the codebook and the perceptions of choice variable is listed as V55
 ```{r}
 WVSchoice <- 
   WVS %>% 
-  select(V2A, V55) # SELECT THE VARIABLES OF INTEREST HERE
+  select() # SELECT THE VARIABLES OF INTEREST HERE
 head(WVSchoice)
 ```
 
@@ -171,7 +171,7 @@ Let's check this by using the sum() function to sum the residuals.
 sum(WVSaus$residual_choice)
 ```
 
-Any time you see R return a slightly gibberish value contaning "e-", it means that this is an incredibly small value that, for all intents and purposes, we can interpret as zero. So here we see the value of the mean as a model. It minimises the error. 
+Any time you see R return a slightly gibberish value containing "e-", it means that this is an incredibly small value that, for all intents and purposes, we can interpret as zero. So here we see the value of the mean as a model. It minimizes the error. 
 
 Thinking about the mean in this way also helps us think about DATA = MODEL + ERROR in a more specific way. If the mean is the model, each data point can now be thought of as the sum of the model (7.81 in our WVS data) plus its deviation from the model. So 9 can be decomposed into the model part (7.81) and the error from the model (+1.19).
 
@@ -201,20 +201,20 @@ WVSaus
 ```
 
 
-Notice that the predcited values from the model are the same as the mean that we calculated? Thats because the model we tested is empty and therefore the mean is the best guess or predicted value!
+Notice that the predicted values from the model are the same as the mean that we calculated? Thats because the model we tested is empty and therefore the mean is the best guess or predicted value!
 
-Great so we have the predicted values from the empty model, lets also use the model to calcualte the residuals.
+Great so we have the predicted values from the empty model, lets also use the model to calculate the residuals.
 
 ```{r}
 WVSaus$residuals <- resid(Aus.model) # add to the WVSaus dataframe a new variable called residuals and save the residual values from the Aus.model
 WVSaus
 ```
 
-Again, this output is exactly the same as we calcualted by hand. This is no coincidence, the model is subtracting the mean from the observed data and saving it as the residual or error.
+Again, this output is exactly the same as we calculated by hand. This is no coincidence, the model is subtracting the mean from the observed data and saving it as the residual or error.
 
 ## Error
 
-Back to the model and lets hone in on the error. Remeber when we summed the residuals and were left with a zero value? This highlights the usefulness of the mean in balancing the residuals, but we are left with the problem that the sum of the residuals does not tell us a great deal about the TOTAL amount of error in our model. When the mean is the model, ALL distribututions will have a sum of residual equalling zero irrespective of whether the amount of error is large or small. Can you think how we remedy this?
+Back to the model and lets hone in on the error. Remember when we summed the residuals and were left with a zero value? This highlights the usefulness of the mean in balancing the residuals, but we are left with the problem that the sum of the residuals does not tell us a great deal about the TOTAL amount of error in our model. When the mean is the model, ALL distributions will have a sum of residual equaling zero irrespective of whether the amount of error is large or small. Can you think how we remedy this?
 
 Thats right, we can square the residuals to get rid of the minus values. The sum of squares also has another useful property in that it is minimised at the mean. And this is what we are attempting to do with statistics - minimise the error! 
 
@@ -226,7 +226,7 @@ WVSaus
 ```
 
 
-You will see that this function has now saved the square of the residuals for each data point. From here, it is easy to calcualte the sum of sqaures for our model. That is, the total amount of error in the model. We just use the sum() function to aggregate the squared residual scores.
+You will see that this function has now saved the square of the residuals for each data point. From here, it is easy to calculate the sum of squares for our model. That is, the total amount of error in the model. We just use the sum() function to aggregate the squared residual scores.
 
 ```{r}
 sum(WVSaus$residuals_square)
@@ -241,9 +241,9 @@ anova(Aus.model)
 ```
 
 
-Look at the Sum Sq column and you will see the same value from our calcualtions abouve - 5373.5. Woah! Thats a really large number, there must be loads of error in this model right? Well, maybe but also maybe not. You see, the sum of sqaures for the model is very senstive to sample size. If the sample size is large then the sum of sqaures will be large - irrespective of the amount of error. This is becuase the sum of squares adds together all the squared differences. With a sample size of 1,459, that is almost 1500 squared differences to aggregate. Hence, we have a large number for the sum of squares.
+Look at the Sum Sq column and you will see the same value from our calculations above - 5373.5. Woah! Thats a really large number, there must be loads of error in this model right? Well, maybe but also maybe not. You see, the sum of squares for the model is very sensitive to sample size. If the sample size is large then the sum of squares will be large - irrespective of the amount of error. This is because the sum of squares adds together all the squared differences. With a sample size of 1,459, that is almost 1500 squared differences to aggregate. Hence, we have a large number for the sum of squares.
 
-This problem is solved by variance and standard deviation. To calculate variance, we start with sum of squares and then divide by the degress of freedom to end up with a measure of average error around the mean. In other words, the average of the squared deviations. Lets calcualte the variances using R as a simple calcualtor
+This problem is solved by variance and standard deviation. To calculate variance, we start with sum of squares and then divide by the degress of freedom to end up with a measure of average error around the mean. In other words, the average of the squared deviations. Lets calcualte the variances using R as a simple calculator
 
 
 ```{r}
@@ -255,7 +255,7 @@ You will see this value is the same as the Mean Sq value from the ANOVA output. 
 
 Because it is an average, variance is not impacted by sample size, and thus, can be used to compare the amount of error across two samples of different sizes. 
 
-We can also express error in terms of standard deviation. The standard deviation is simply the square root of the variance. We generally prefer thinking about error in terms of standard deviation because it yields a number that makes sense using the original scale of measurement. So, for example, if you were modeling responses on a 7-point likert scale, variance would express the error in squared points (not something we are used to thinking about), whereas standard deviation would express the error in origional units (i.e., the 7-point scale). Lets again use R as a calcualtor to work out the SD using the sqrt() function:
+We can also express error in terms of standard deviation. The standard deviation is simply the square root of the variance. We generally prefer thinking about error in terms of standard deviation because it yields a number that makes sense using the original scale of measurement. So, for example, if you were modeling responses on a 7-point likert scale, variance would express the error in squared points (not something we are used to thinking about), whereas standard deviation would express the error in original units (i.e., the 7-point scale). Lets again use R as a calculator to work out the SD using the sqrt() function:
 
 ```{r}
 sqrt(3.69)
@@ -273,11 +273,11 @@ These are the same values (1.92) within errors of rounding.
 
 We have looked at the mean as a model and we have learned some ways to quantify total error around the mean, as well as some good reasons for doing so. But there is another reason to look at both mean and error together. Sometimes by putting the two ideas together it can give us a better way of understanding where a particular score falls in a distribution.
 
-Let's say an Australian participant - Jericho - in the WVS has a perception of choice score at one unit above the mid-point; 6. What does this mean? Does this participant have a particuarly high score? How can we know? By now you may be getting the idea that just knowing the score of one person doesn’t tell you very much.
+Let's say an Australian participant - Jericho - in the WVS has a perception of choice score at one unit above the mid-point; 6. What does this mean? Does this participant have a particularly high score? How can we know? By now you may be getting the idea that just knowing the score of one person doesn’t tell you very much.
 
 To interpret the meaning of Jericho's single score, it helps to know something about the distribution the score came from. 
 
-Standard deviation is really useful here. We know that Jericho’s score is about 2 points lower than the average Australain choice score. But now we also know that, on average, choice scores are 1.9 points away from the mean the SD, both above and below. Although Jericho's score is below average, it is definitely not one of the lowest in the distribution. Let's draw another histogram but this time add a layer to it that plots Jericho's score in the distribution of values.
+Standard deviation is really useful here. We know that Jericho’s score is about 2 points lower than the average Australian choice score. But now we also know that, on average, choice scores are 1.9 points away from the mean the SD, both above and below. Although Jericho's score is below average, it is definitely not one of the lowest in the distribution. Let's draw another histogram but this time add a layer to it that plots Jericho's score in the distribution of values.
 
 ```{r}
 WVSaus %>% 
@@ -292,7 +292,7 @@ WVSaus %>%
 ```
 
 
-We can combine information from our model regarding the mean and standardd devaiton to calcualte a Z-Score. A single z score tells us how many standard deviations away this particular score of 6 is from the mean. It is calculated by taking any given residual and dividing it by the standard deviaiton in the sample. We can create Z-scores in our dataframe in two ways. First, we can calcuate it by hand:
+We can combine information from our model regarding the mean and standard deviation to calculate a Z-Score. A single z score tells us how many standard deviations away this particular score of 6 is from the mean. It is calculated by taking any given residual and dividing it by the standard deviation in the sample. We can create Z-scores in our dataframe in two ways. First, we can calcuate it by hand:
 
 
 ```{r}
@@ -300,7 +300,7 @@ WVSaus$Z1 <- WVSaus$residuals/1.92 # remeber the Z score is the residual divided
 WVSaus
 ```
 
-R can also directly calcualte Z scores using the scale() function:
+R can also directly calculate Z scores using the scale() function:
 
 ```{r}
 WVSaus$Z2 <- scale(WVSaus$V55)
@@ -316,7 +316,7 @@ Lets check out the distribution of Z scores using the favstats() function:
 favstats(~Z2, data = WVSaus)
 ```
 
-The Z Score has tranformed the choice variable so that it now has a mean of zero and a SD of 1. A z score, then, tells you how many standard deviations a score is from the mean of its distribution. Going back to Jericho, if we wanted to calcualte his Z score then we just plug in his residual to the Z score calculation:
+The Z Score has transformed the choice variable so that it now has a mean of zero and a SD of 1. A z score, then, tells you how many standard deviations a score is from the mean of its distribution. Going back to Jericho, if we wanted to calculate his Z score then we just plug in his residual to the Z score calculation:
 
 ```{r}
 -1.81/1.92 # Jericho scored 6 and the mean is 7.81 so 6 - 7.81 = -1.81. We take this residual and divide it by the SD of 1.92.
@@ -346,15 +346,15 @@ xpnorm(6, mean = 7.81, sd = 1.92) # 6 is the score we are making predictions abo
 
 The first window tells us that there is a 17% chance that any randomly sampled Australian would score less than 6 on perceptions of choice, whereas 83% would report a larger score. Perhaps Jericho is a low scorer after all!
 
-The second window plots Jericho's score under the fitted normal curve. You can see that his Z-score, -.94, is exactly as we calcualted and it cuts off 83% of the sample. Pretty impressive use of our mean and SD!
+The second window plots Jericho's score under the fitted normal curve. You can see that his Z-score, -.94, is exactly as we calculated and it cuts off 83% of the sample. Pretty impressive use of our mean and SD!
 
 ## Activity
 
-Let's now return to our orgional aim for this session and imagine that Jericho was Japanese not Australian. Rather than coming from the Australian distribution, his score of 6 came from the Japanese distribution. We know what this score means in Australia but What does it mean in Japan? Does Japanese Jericho have a particuarly low score as well? Its your job to find out.
+Let's now return to our original aim for this session and imagine that Jericho was Japanese not Australian. Rather than coming from the Australian distribution, his score of 6 came from the Japanese distribution. We know what this score means in Australia but What does it mean in Japan? Does Japanese Jericho have a particularly low score as well? Its your job to find out.
 
 ## Task 1: Creating the dataframe
 
-First go back to the WVSchoce dataframe we created and filter for useable responses and Japan and save the filtered data as a new dataframe called WVSjapan
+First go back to the WVSchoice dataframe we created and filter for usable responses and Japan and save the filtered data as a new dataframe called WVSjapan
 
 ```{r}
 WVSjapan <- 

@@ -407,15 +407,15 @@ RandomSample %>%
   geom_boxplot(width = 0.3, fill = "white") +
   geom_jitter(width = 0.1, size = 1) + # geom_jitter adds the data points as a width of .1 and size of 1 (this is typically recommended)
   xlab("Country") +
-  stat_summary(fun.y = mean, geom = "point", shape = 18, size = 2.5, color ="red") + # I have added here the specification for the mean on the y axis (wellbeing) to be dispayed  as a red point, size 2.5 and shape 18.
+  stat_summary(fun.y = mean, geom = "point", shape = 18, size = 2.5, color ="red") + # I have added here the specification for the mean on the y axis (wellbeing) to be displayed  as a red point, size 2.5 and shape 18.
   ggtitle("Box-Plots for Wellbeing in Algeria and Australia") +
   theme_minimal(base_size = 8) 
 ```
 
 
-What do we see here? Although the median scores are the same, the Algerian mean is slightly larger than the Australian one. Aussies appear to feel a little happier and healthier than Algerians. Again, this shows how visulising the data provides information regarding spread, outliers, and central tendency.
+What do we see here? Although the median scores are the same, the Algerian mean is slightly larger than the Australian one. Aussies appear to feel a little happier and healthier than Algerians. Again, this shows how visualizing the data provides information regarding spread, outliers, and central tendency.
 
-Let's now overlay the countries in one box plot to get an overveiew of the overall distrubution of the two countries when combined.
+Let's now overlay the countries in one box plot to get an overview of the overall distribution of the two countries when combined.
 
 
 ```{r}
