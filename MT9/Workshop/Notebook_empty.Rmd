@@ -26,6 +26,7 @@ install.packages("sjlabelled")
 install.packages("fastDummies")
 install.packages("mosaic")
 install.packages("rstatix")
+install.package("Hmisc")
 ```
 
 
@@ -41,6 +42,7 @@ library("fastDummies")
 library("supernova")
 library("readr")
 library(rstatix)
+library(Hmisc)
 ```
 
 
@@ -298,7 +300,7 @@ ggplot(aes(x= Region, y = SOP)) + # remeber to use the chategory variable and no
 
 We could report the result as follow:
 
-The mean perfectionism in UK group was 4.51 (SD = .19), whereas the mean in North America group was 4.61(SD = .35). A two-samples t-test showed that the difference was statistically significant, t(137) = -1.8764, p < 0.05, d = .33; where, t(137) is shorthand notation for a t-statistic that has 137 degrees of freedom.
+The mean perfectionism in UK group was 4.51 (SD = .19), whereas the mean in North America group was 4.61(SD = .35). A two-samples t-test showed that the difference was not statistically significant, t(137) = -1.8764, p > 0.05, d = .33; where, t(137) is shorthand notation for a t-statistic that has 137 degrees of freedom.
 
 ## Three-parameter model or one-way ANOVA
 
