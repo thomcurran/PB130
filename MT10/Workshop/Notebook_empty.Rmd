@@ -26,7 +26,7 @@ install.packages("tidyverse")
 install.packages("ggplot2")
 install.packages("lm.beta")
 install.packages("ggpubr")
-install.packages("mosiac")
+install.packages("mosaic")
 install.packages("Hmisc")
 ```
 
@@ -69,7 +69,7 @@ First, lets load this data into our R environment. Go to the MT10 folder, and th
 
 
 ```{r}
-WHR <- read_csv("C:/Users/currant/Dropbox/Work/LSE/PB130/MT10/Workshop/WHR.csv")
+WHR <- read_csv("C:/Users/CURRANT/Dropbox/Work/LSE/PB130/MT10/Workshop/WHR.csv")
 WHR
 ```
 
@@ -202,7 +202,7 @@ rcorr(as.matrix(WHR[,c("GDP","Happiness")], type="pearson"))
 rcorr(as.matrix(WHR_cov))
 ```
 
-We can see that Pearson's r is the same as we have calcualted but the difference here is that underneath the correlation matrix we have a matrix for P. The p value associated with our correlation coeffcient is practically 0, therefore we can reject the null hypothesis. A zero relationship seems unlikely in the population. The positive correlation between GDP and happiness is, therefore, statistically significant.
+We can see that Pearson's r is the same as we have calculated but the difference here is that underneath the correlation matrix we have a matrix for P. The p value associated with our correlation coeffcient is practically 0, therefore we can reject the null hypothesis. A zero relationship seems unlikely in the population. The positive correlation between GDP and happiness is, therefore, statistically significant.
 
 We can visualize this relationiship using a scatterplot, whereby datapoints are plotted for happiness against GDP.
 
@@ -230,14 +230,14 @@ ggplot(aes(x = GDP, y = Happiness)) + # This is the same as in the visualisation
 
 As I mentioned a few weeks back, all models are wrong. What we are looking for is a model that outperforms nothing at all, or, in other words, better than the empty model. Comparing error between the Happiness model and the empty model allows us to ascertain which model is less wrong.
 
-Error is measured in terms of the residual, or the observed score for happiness minus the score fro happiness predicted by the model for each data point. Error in the empty model is the difference between an observed score and the mean. Error in the regression model is the difference between the observed score and the best-fitting regression line. Lets now draw two plots, one with the predicted line as the mean for Happiness (empty model) and one with the line as the best fitting regression line for the relationships between GDP and Happiness (two-parameter linear regression model). As a final step, lets also superimpose the empty model on the regression model. 
+Error is measured in terms of the residual, or the observed score for happiness minus the score for happiness predicted by the model for each datpoint. Error in the empty model is the difference between an observed score and the mean. Error in the regression model is the difference between the observed score and the best-fitting regression line. Lets now draw two plots, one with the predicted line as the mean for Happiness (empty model) and one with the line as the best fitting regression line for the relationships between GDP and Happiness (two-parameter linear regression model). As a final step, lets also superimpose the empty model on the regression model. 
 
 
 ```{r}
 # plot 1, empty model
 WHR %>%
 ggplot(aes(x = GDP, y = Happiness)) + 
-    geom_point() + # this is just a reques to plot the points
+    geom_point() + # this is just a request to plot the points
     geom_hline(aes(yintercept=mean(Happiness)), col="blue", size=1) + # this adds a line for the mean (empty model)
   ggtitle("Empty Model") +
   theme_classic(base_size = 8)
@@ -285,7 +285,7 @@ Both Yi and ei have the same interpretation in the regression model as in the gr
 
 Because Xi in the regression model represents the measured GDP of each country, b1 represents the increment that must be added to the predicted happiness of a country for each one-unit increment in GDP. If that sounds familiar, thats because it is exactly like the definition of the slope of a straight line (i.e., the amount of rise for each one unit of run). b1 is, in fact, the slope of the best-fitting regression line.
 
-If b1 is the slope of the line, it stands to reason that b0 will be the y-intercept of the line - in other words, the predicted value of happiness when GDP is equal to 0. As the regression line is a straight line, it has to be defined by a slope and an intercept. In the case of a model trying to predict Happiness, of course, the intercept is purely theoretical - it's impossible for a country to have 0 GDP! But, regardless, it is neverless important to know the intercept becuase it is the anchoring point of the regression line - the point at which the regression line passes through the y-axis.
+If b1 is the slope of the line, it stands to reason that b0 will be the y-intercept of the line - in other words, the predicted value of happiness when GDP is equal to 0. As the regression line is a straight line, it has to be defined by a slope and an intercept. In the case of a model trying to predict Happiness, of course, the intercept is purely theoretical - it's impossible for a country to have 0 GDP! But, regardless, it is nevertheless important to know the intercept because it is the anchoring point of the regression line - the point at which the regression line passes through the y-axis.
 
 As with last week, we are going to use the lm() to set up and test the linear model of happiness. The  lm()  function can detect whether the explanatory variable is continuous (as is the case here), and will by default fit the linear regression model. If the explanatory variable is categorical (as we did last week),  lm()  will fit a group model. Let's go ahead and fit the linear regression model for our data and save it in an R object called happiness.model1.
 
@@ -294,13 +294,13 @@ happiness.model1 <- lm(Happiness ~ 1 + GDP, data = WHR)
 summary(happiness.model1)
 ```
 
-By now, hopefully the lienar model output should be familiar. We have an intercpet(b0) of -1.36, which we have established is meanigless becuase it represents the predicted happiness value when GDP = 0. GDP cannot be 0, so this is simply a hypothetical value used to anchor the regression line.
+By now, hopefully the linear model output should be familiar. We have an intercpet(b0) of -1.36, which we have established is meaningless because it represents the predicted happiness value when GDP = 0. GDP cannot be 0, so this is simply a hypothetical value used to anchor the regression line.
 
 More interesting is the GDP estimate or b1. Here we have a value of .74. This is interpreted like the slope of a line. Therefore, for every one unit increase in GDP, there is an estimated .74 unit increase in mean happiness. Alongside this slope value we have a standard error (sampling variance) and t ratio. Hopefully we should know how these are interpreted. The p value associated with t is well below .05 and therefore we reject the null hypothesis. GDP is a statistically significant predictor of average happiness!
 
 ## Standardized estimates
 
-By default, the lm() function returns only the unstandardized slopes for the linear model. That is, the relationship between the variables in raw units. As we saw in the lecture, though, there are advantages of expressing this relationship in standardised units or units of standard deviation. Notably, it provides a measure of magnitude - of how large the relationship is. Standardised estimates tell us for every standard deviation unit increase in GDP there is a corresponding slope standard deviaiton increase in happiness. We can calcuate standardized estimates by first converting our variables into z-scores using the scale() function.
+By default, the lm() function returns only the unstandardized slopes for the linear model. That is, the relationship between the variables in raw units. As we saw in the lecture, though, there are advantages of expressing this relationship in standardized units or units of standard deviation. Notably, it provides a measure of magnitude - of how large the relationship is. Standardised estimates tell us for every standard deviation unit increase in GDP there is a corresponding slope standard deviation increase in happiness. We can calculate standardized estimates by first converting our variables into z-scores using the scale() function.
 
 
 ```{r}
@@ -344,7 +344,7 @@ WHR
 
 Instead of different predicted scores being returned on the basis of group membership (as we saw last week with group comparisons), you will see that the predicted scores returned by the regression model are different depending on each specific value of the continuous GDP variable. Pretty neat!
 
-Residuals are calcuated in the same way as in the other linear models we have tested. That is, the difference between the predicted happiness score and the observed happiness score. We can use the resid() function to calculate the residuals and save these as a new variable called residuals in the dataframe
+Residuals are calculated in the same way as in the other linear models we have tested. That is, the difference between the predicted happiness score and the observed happiness score. We can use the resid() function to calculate the residuals and save these as a new variable called residuals in the dataframe
 
 
 ```{r}
@@ -415,7 +415,7 @@ Before we delve into this topic, lets just clarify the research question and nul
 
 ## Task 1 - Filter the GINI variable
 
-As with the GDP variable, there are some missing data points for the GINI coefficient, where data is unavalaible for certain countries at certain time points. Write the code to filter the GINI variable so that it retains all values equal to and above 0.
+As with the GDP variable, there are some missing data points for the GINI coefficient, where data is unavailable for certain countries at certain time points. Write the code to filter the GINI variable so that it retains all values equal to and above 0.
 
 
 ```{r eval=FALSE}
@@ -449,7 +449,7 @@ Is the distribution of the GINI coefficient approximately normal?
 Now use the rcorr() function to call the correlation coefficient - or Pearson's r - for the relationship between GINI and happiness.
 
 ```{r eval=FALSE}
-rcorr(as.matrix(WHR[,c("??","Happiness")], type="??")) # fill in the ?? gaps here for the explanatory variable and the correlation type (pearson)
+rcorr(as.matrix(WHR[,c("??","??")], type="??")) # fill in the ?? gaps here for the explanatory variable and the correlation type (pearson)
 ```
 
 What is the correlation between GINI and happiness?
@@ -481,11 +481,11 @@ How does this line compare to the regression line for the relationship between G
 Now lets set our up our linear regression model to examine the intercpet and slope of that best fitting line using the lm() function. Don't forget to save the linear model in a new R object. I suggest happiness.model2 
 
 ```{r eval=FALSE}
-happiness.model2 <- lm(?? ~ 1 + ??, data=WHR) # add ?? variables to the linear model code
+happiness.model2 <- lm(??, data=WHR) # add ?? variables to the linear model code
 summary(??) # add the new R object to the summary function
 ```
 
-What is the incercept?
+What is the intercept?
 
 What is the slope?
 
@@ -501,7 +501,7 @@ Why?
 
 ## Task 6 - The standardized estimate
 
-You will see above that the unstandardized estimate for GINI looks very different to the unstandardized estimate for GDP. Every 1 unit increase in GINI equates to a 2.65 decrease in happiness according to our model. On the surface, that looks like a much larger effect than GDP (.74) but we know from the correlation coefficient that the relationship is in fact much smaller (-.19 vs .78). So what is going on here? Well, the relationship appears bigger in the linear model because GINI has a very differenrt scale of measurement than GDP (0-1 versus 0-12). So a 1 unit increase in GINI has a very different meaning to a 1 unit increase in GDP. This is why standardized estimate are so useful - they force the unit of measurement to the same scale so that effects can be directly compared. So lets go ahead and do that now. In the below chunk, use the lm.beta() function to calcuate the standardized estimate for the slope of GINI and happiness.
+You will see above that the unstandardized estimate for GINI looks very different to the unstandardized estimate for GDP. Every 1 unit increase in GINI equates to a 2.65 decrease in happiness according to our model. On the surface, that looks like a much larger effect than GDP (.74) but we know from the correlation coefficient that the relationship is in fact much smaller (-.19 vs .78). So what is going on here? Well, the relationship appears bigger in the linear model because GINI has a very different scale of measurement than GDP (0-1 versus 0-12). So a 1 unit increase in GINI has a very different meaning to a 1 unit increase in GDP. This is why standardized estimate are so useful - they force the unit of measurement to the same scale so that effects can be directly compared. So lets go ahead and do that now. In the below chunk, use the lm.beta() function to calculate the standardized estimate for the slope of GINI and happiness.
 
 ```{r eval=FALSE}
 lm.beta(??) # add happiness GINI model to the lm.beta function
