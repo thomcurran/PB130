@@ -502,4 +502,3 @@ anova(??, test="Chisq")
 ```
 
 What is the chi-square and degrees of freedom for the overall model and is it statistically significant?
-

@@ -15,7 +15,7 @@ By the end of this workshop, you should be able to:
 
 3. Set up a two-parameter linear model to test a simple relationship
 
-4. Use the lm.beta() function to return standarized estimates
+4. Use the lm.beta() function to return standardized estimates
 
 ## Install required packages
 
@@ -65,7 +65,7 @@ for Taiwan, up to 2014, are from the Penn World Table 9. A few countries are mis
 
 5. *Year of data collection (variable name "Year")*: The year the data were collected.
 
-First, lets load this data into our R environment. Go to the MT10 folder, and then to the workshop folder, and find the "WHR.csv" file. Click on it aand then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
+First, lets load this data into our R environment. Go to the MT10 folder, and then to the workshop folder, and find the "WHR.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
 
 ```{r}
@@ -76,19 +76,19 @@ WHR
 
 ## Two-parameter linear model with continuous variables or simple regression
 
-To practice conducting a two-parameter linear model with continuous variables (simple regression), we are going to use the happiness and GDP variables in the WHR dataframe. Our theory here is that as the wealth of a country increases, so self-report happiness also increases. In other words, we are expecting a positive relationship between wealth as measured by GDP and happiness as meansured by the Cantril life ladder. Given this expectation, we also expect that we can use a best fitting linear model to make relaiable estimations of happiness from GDP. 
+To practice conducting a two-parameter linear model with continuous variables (simple regression), we are going to use the happiness and GDP variables in the WHR dataframe. Our theory here is that as the wealth of a country increases, so self-report happiness also increases. In other words, we are expecting a positive relationship between wealth as measured by GDP and happiness as measured by the Cantril life ladder. Given this expectation, we also expect that we can use a best fitting linear model to make reliable estimations of happiness from GDP. 
 
 Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
 
 *Research Question* - Is there a linear relationship between GDP and happiness in the World Happiness Report Data?
 
-*Null Hypothesis* - The realtionship between GDP and happiness will be zero.
+*Null Hypothesis* - The relationship between GDP and happiness will be zero.
 
 
 ## Descriptives
 
 
-As always, it is important to understand the type of data we are playing with so lets first take a look at the means and standard devations for our variables. By now, you should know how to do this. As a reminder, we can use favstats() to inpect the descriptives.
+As always, it is important to understand the type of data we are playing with so lets first take a look at the means and standard deviations for our variables. By now, you should know how to do this. As a reminder, we can use favstats() to inspect the descriptives.
 
 
 ```{r}
@@ -100,7 +100,7 @@ Helpfully, the WHR data only contains relevant data - that is, there are no minu
 
 Inspecting the descriptives shows that the happiness variable has a mean of 5.44 and a SD of 1.12. Most mean happiness scores appear to fall above the scale mid-point, but there is a good amount of variance around this average. The GDP variable on the other hand has a mean of 9.22 and a SD of 1.18. It is difficult to interpret the meaning of this mean score, but we do know that there is far less variance in the GDP variable than in the happiness variable.
 
-We can visualse these distributions to get a better picture. But before we do that, lets just filter the GDP variable to get rid of the cases with missing values.
+We can visualize these distributions to get a better picture. But before we do that, lets just filter the GDP variable to get rid of the cases with missing values.
 
 ```{r}
 WHR <- # into existing dataframe
@@ -124,7 +124,7 @@ WHR %>%
   theme_minimal(base_size = 8) 
 ```
 
-Nice symetrical distribution of happiness here. We have a bell shaped curve and the mean and median are closely aligned. Next lets look at the GDP distribution.
+Nice symmetrical distribution of happiness here. We have a bell shaped curve and the mean and median are closely aligned. Next lets look at the GDP distribution.
 
 
 ```{r}
@@ -141,7 +141,7 @@ WHR %>%
 ```
 
 
-Again, looks pretty symetrical. There is perhaps a negative skew with a longer left tail pulling the mean to the left. But this is nothing we should be too troubled by.
+Again, looks pretty symmetrical. There is perhaps a negative skew with a longer left tail pulling the mean to the left. But this is nothing we should be too troubled by.
 
 
 ## Correlation between happiness and GDP
@@ -153,16 +153,23 @@ The covariance of two variables in a data set measures how the two are linearly 
 
 
 ```{r}
-cov(WHR[,c("GDP","Happiness")], method="pearson") # the [,c("GDP","Happiness")] part of this function tells R to only use the GDP and Happiness variables in the WHR dataframe. method = pearson becuase we want pearson's r but if we wanted the non-parametric equivalent, we could stipulate method="spearman". 
+cov(WHR[,c("GDP","Happiness")], method="pearson") # the [,c("GDP","Happiness")] part of this function tells R to only use the GDP and Happiness variables in the WHR dataframe. method = pearson because we want pearson's r but if we wanted the non-parametric equivalent, we could stipulate method="spearman". 
+
+## incidentally, we can also do this using tidy language and selecting out the variables of interest
+
+WHR_cov <- WHR %>%
+  select(GDP, Happiness)
+
+cov(WHR_cov, method="pearson")
 ```
 
-In this matrix, the diagonals represent the variance in each of the variables. You know how this is calculated, it is just the sum of sqaures divided by the degrees of freedom. Sometimes this is called the mean square.
+In this matrix, the diagonals represent the variance in each of the variables. You know how this is calculated, it is just the sum of squares divided by the degrees of freedom. Sometimes this is called the mean square.
 
-The covariance is represented in the off-diagonal element. Covariance is calcualted by taking the sum of the cross-products and dividing it by the degrees of freedom. Here it is 1.03. This is a positive value and shows that GDP and happiness are positively related. But we have no idea whether this covariance is large or small becuase the level of covariance depends on the scale of measurement for each of the variables.
+The covariance is represented in the off-diagonal element. Covariance is calculated by taking the sum of the cross-products and dividing it by the degrees of freedom. Here it is 1.03. This is a positive value and shows that GDP and happiness are positively related. But we have no idea whether this covariance is large or small because the level of covariance depends on the scale of measurement for each of the variables.
 
-As such, we need a standardised metric of covariance that we can use to estimate the size of the relationship. For this, we can calcualte the correlation coeffcient - this is sometimes called Pearson's r. 
+As such, we need a standardized metric of covariance that we can use to estimate the size of the relationship. For this, we can calculate the correlation coefficient - this is sometimes called Pearson's r. 
 
-We calcuate Pearson's r by taking the covariance and dividing it by the SD of x multiplied by the SD of y. Lets calcuate the corrleation coeffcient for the realtionship between GDP and happiness.
+We calculate Pearson's r by taking the covariance and dividing it by the SD of x multiplied by the SD of y. Lets calculate the correlation coefficient for the relationship between GDP and happiness.
 
 
 ```{r}
@@ -175,6 +182,10 @@ We can test our working by calling the correlation matrix between the variables 
 
 ```{r}
 cor(WHR[,c("GDP","Happiness")], method="pearson")
+
+## or
+
+cor(WHR_cov)
 ```
 
 And just as we did by hand, Pearsons r is .78. According to Cohen (1988, 1992), the effect size is low if the value of r varies around 0.1, medium if r varies around 0.3, and large if r varies more than 0.5. An r of .78 is a very large correlation! 
@@ -185,11 +196,15 @@ The cor() R function does not return p values, but the rcorr() function in the H
 
 ```{r}
 rcorr(as.matrix(WHR[,c("GDP","Happiness")], type="pearson"))
+
+## or 
+
+rcorr(as.matrix(WHR_cov))
 ```
 
 We can see that Pearson's r is the same as we have calcualted but the difference here is that underneath the correlation matrix we have a matrix for P. The p value associated with our correlation coeffcient is practically 0, therefore we can reject the null hypothesis. A zero relationship seems unlikely in the population. The positive correlation between GDP and happiness is, therefore, statistically significant.
 
-We can visualise this relationiship using a scatterplot, whereby datapoints are plotted for happiness against GDP.
+We can visualize this relationiship using a scatterplot, whereby datapoints are plotted for happiness against GDP.
 
 ```{r}
 WHR %>%
@@ -205,7 +220,7 @@ As well as plotting the data points, we can also draw the best-fitting regressio
 ```{r}
 WHR %>%
 ggplot(aes(x = GDP, y = Happiness)) + # This is the same as in the visualisation session except we have two variables for the aes() function - GDP and Happiness labeled x for the explanatory variable and y for the outcome
-    geom_point() + # this is just a reques to plot the points
+    geom_point() + # this is just a request to plot the points
     stat_smooth(method = "lm",
         col = "red",
         se = FALSE,
@@ -254,7 +269,7 @@ Hopefully, you can begin to see what is happening here when I say that the aim o
 
 Returning to the regression line for a moment, remember that in the empty model the mean equally balances the residuals above and below it. We call this the middle of a univariate distribution (i.e, one variable - UNIvariate). Likewise, the regression line is the middle of a bivariate distribution (i.e., two variables - BIvariate). Just as the sum of the residuals from the mean sum to 0, so too the sum of the residuals from the regression line also sum to 0.
 
-And here's another interesting equivalence between the mean and best-fitting regression line; for the country with the average GDP, we would intuatively estimate that their Happiness would also be average. And guess what? It turns out that the best fitting regression line intersects the joint means of the outcome variable and the explanatory variable. We are enhancing the empty model when we plot the best fitting line!
+And here's another interesting equivalence between the mean and best-fitting regression line; for the country with the average GDP, we would intuitively estimate that their Happiness would also be average. And guess what? It turns out that the best fitting regression line intersects the joint means of the outcome variable and the explanatory variable. We are enhancing the empty model when we plot the best fitting line!
 
 Furthermore, when we plot the best fitting line through the joint means, the sum of squares around the regression line is reduced to its lowest possible value (just as the mean is the point in the univariate distribution at which the Sum of squares Error is minimized). As we saw in the lecture, the sum of the squared deviations of the observed points is at its lowest possible level around the best-fitting regression line. This is why regression is sometimes referred to as Ordinary Least Squares regression (OLS). It finds the best fitting line that yields the *least squares*.
 
@@ -302,7 +317,7 @@ happiness.modelZ <- lm(zhappiness ~ 1 + zGDP, data = WHR)
 summary(happiness.modelZ)
 ```
 
-I have no idea why R uses scientific notation in the estimate for the standardised relationship, but it does. E-01 means move the decimal point 1 place to the right. Hence, the standardized estimate for the slope of GDP and happiness is 0.78. A couple of things to notice about this standardized estimate. First, it is different from the unstandardised estimate (0.74). This is becuase rather than raw units, the standardized estimate shows that for every 1 SD unit increase in GDP there is a .78 SD increase in happiness. Remember that z-sores have a mean of zero and SD of 1. Therefore, the standardised estimates can only range from -1 to +1. A standardized estimate of .74 is a very large effect!
+I have no idea why R uses scientific notation in the estimate for the standardised relationship, but it does. E-01 means move the decimal point 1 place to the right. Hence, the standardized estimate for the slope of GDP and happiness is 0.79. A couple of things to notice about this standardized estimate. First, it is different from the unstandardised estimate (0.74). This is because rather than raw units, the standardized estimate shows that for every 1 SD unit increase in GDP there is a .78 SD increase in happiness. Remember that z-sores have a mean of zero and SD of 1. Therefore, the standardised estimates can only range from -1 to +1. A standardized estimate of .74 is a very large effect!
 
 Second, in simple regression, where there is only one explanatory variable, the standardised estimate is exactly the same as Pearson's r. Take a look at the correlation matrix above to check this. This is not a coincidence - both are standardized estimates with equivalent calculations (see lecture notes). 
 
@@ -312,13 +327,13 @@ Rather than scaling the variables, there is a quicker way to call standardized e
 lm.beta(happiness.model1)
 ```
 
-Here you can see that the intercept is zero (the line is drawn through the joint means of happiness and GDP therefore when x = 0, y = 0) and the GDP slope is .78 - just as we have just calculated.
+Here you can see that the intercept is zero (the line is drawn through the joint means of happiness and GDP therefore when x = 0, y = 0) and the GDP slope is .78 - just as we have just calculated above (within errors of rounding).
 
 ## Partitioning variance
 
-Okay, so we have shown using the linear regression model that the best fitting regression line for the relationship between GDP and happiness contains an intercpet of -1.36 and a slope of .74. Using this regression line allows of to do some pretty interesting things, most notably of which is to make predictions. With the regression line, we can make happiness predictions for any given GDP score. But of course, there will be error in this estimation, which we calcualte as the difference between the predicted score and the observed scores in the data frame.
+Okay, so we have shown using the linear regression model that the best fitting regression line for the relationship between GDP and happiness contains an intercpet of -1.36 and a slope of .74. Using this regression line allows of to do some pretty interesting things, most notably of which is to make predictions. With the regression line, we can make happiness predictions for any given GDP score. But of course, there will be error in this estimation, which we calculate as the difference between the predicted score and the observed scores in the data frame.
 
-Lets go ahead and calcuate a predicted score for each of our countries in the WHR dataframe using the regression line. To do this, we can use the predict() function to calcuate the predicted scores and save them in a new variable called predicted (much like we have been doing in previous weeks)
+Lets go ahead and calculate a predicted score for each of our countries in the WHR dataframe using the regression line. To do this, we can use the predict() function to calculate the predicted scores and save them in a new variable called predicted (much like we have been doing in previous weeks)
 
 
 ```{r}
@@ -351,13 +366,13 @@ Hence, just like the residuals in any other linear model, we need to square them
 sum(WHR$residuals^2)
 ```
 
-In our regression model, we have a sum of squares of 828.15. Is this alot of error? We don't know until we also have a baseline to compare it to. Our baseline, of course, is the empty model. When we calculated the covariance earlier, we also retuned the variance in happiness in the diagonal of the matrix (see covariance matrix above if unsure). The variance for happiness is 1.257866. Therefore, we can just multiply that value by the df in the sample (1675) to return the sum of squares for the empty model.
+In our regression model, we have a sum of squares of 828.15. Is this a lot of error? We don't know until we also have a baseline to compare it to. Our baseline, of course, is the empty model. When we calculated the covariance earlier, we also returned the variance in happiness in the diagonal of the matrix (see covariance matrix above if unsure). The variance for happiness is 1.257866. Therefore, we can just multiply that value by the df in the sample (1675) to return the sum of squares for the empty model.
 
 ```{r}
 1.257866*1675 # remember variance (1.26) is SS/df so it follows that sum of squares is var*df
 ```
 
-When we run that calculation, we find that the sum of squares for the empty model is 2106.926. That means that adding GDP has minimised the error in the model by 1278.779 sum of squares (i.e., 2107 - 828.15 = 1278.779). Indeed, this is alot of error explained by one explanatory variable!
+When we run that calculation, we find that the sum of squares for the empty model is 2106.926. That means that adding GDP has minimized the error in the model by 1278.779 sum of squares (i.e., 2107 - 828.15 = 1278.779). Indeed, this is a lot of error explained by one explanatory variable!
 
 As we did last week, lets partition this variance using supernova() and interpret how much variance in happiness is explained by GDP.
 
@@ -366,7 +381,7 @@ superanova(happiness.model1)
 ```
 
 
-The values are exactly as we have calcuated, but we have a couple of additional metrics here. The first is PRE, but for all intents and purposes this is the R2 value for the model. We can see a R2 value of .61, which means that GDP explains 61% of the variance in happiness. The second is our F ratio, which is the ratio of the mean square for the model to the mean square for the error left over after subtracting out the model. The larger the ratio of variance explained by the model relative to error, the larger F will be. And F is a standardized metric that can be use for Null Hypothesis Significance Testing. We can see that the p value associated with F is zero and therefore we have a statistically significant amount of variance in happiness explained by our regression model. This chimes with what we found when we interpreted the linear model slope.
+The values are exactly as we have calculated, but we have a couple of additional metrics here. The first is PRE, but for all intents and purposes this is the R2 value for the model. We can see a R2 value of .61, which means that GDP explains 61% of the variance in happiness. The second is our F ratio, which is the ratio of the mean square for the model to the mean square for the error left over after subtracting out the model. The larger the ratio of variance explained by the model relative to error, the larger F will be. And F is a standardized metric that can be use for Null Hypothesis Significance Testing. We can see that the p value associated with F is zero and therefore we have a statistically significant amount of variance in happiness explained by our regression model. This chimes with what we found when we interpreted the linear model slope.
 
 Finally, lets put this information together in a plot that contains the correlation coefficient, 
 
@@ -382,6 +397,11 @@ ggplot(aes(x = GDP, y = Happiness)) +
   stat_cor() + # the retruns the correlation coefficient 
   stat_regline_equation(label.y = 7) # this returns the GLM equation
 ```
+
+## How its written
+
+A simple regression analysis was performed to test the relationship between GDP and Happiness in the World Happiness Report data. The regression model indicated that GDP explained 61% of the variance in Happiness (R = .78, R2 = .61, F(1) = 2584.90, p < .001). Inspection of the model estimates indicated that GDP positively predicted burnout (b = .74, β = .78, t (1) = 50.84, p < .001). 
+
 
 ## Exercise
 
