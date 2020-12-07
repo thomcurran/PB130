@@ -400,7 +400,7 @@ ggplot(aes(x = GDP, y = Happiness)) +
 
 ## How its written
 
-A simple regression analysis was performed to test the relationship between GDP and Happiness in the World Happiness Report data. The regression model indicated that GDP explained 61% of the variance in Happiness (R = .78, R2 = .61, F(1) = 2584.90, p < .001). Inspection of the model estimates indicated that GDP positively predicted burnout (b = .74, β = .78, t (1) = 50.84, p < .001). 
+A simple regression analysis was performed to test the relationship between GDP and Happiness in the World Happiness Report data. The regression model indicated that GDP explained 61% of the variance in Happiness (R = .78, R2 = .61, F(1) = 2584.90, p < .001). Inspection of the model estimates indicated that GDP positively predicted Happiness (b = .74, β = .78, t (1674) = 50.84, p < .001). 
 
 
 ## Exercise
