@@ -10,9 +10,9 @@ output:
 At the end of today’s workshop you should be able to do the following:
 
 
-1. Calcualte and interpret a 95% confidence interval using normal theory and bootstrpping in a group comparison linear model
+1. Calculate and interpret a 95% confidence interval using normal theory and bootstrapping in a group comparison linear model
 
-2. Calcualte and interpret a 95% confidence interval using normal theory and bootstrpping in a linear regression model
+2. Calculate and interpret a 95% confidence interval using normal theory and bootstrapping in a linear regression model
 
 
 ## Install required packages
@@ -57,11 +57,11 @@ library(plyr)
 ## The WVS data
 
 
-For this weeks workshop, we are going to return to the World Values Survey data. Just like in prvious weeks, we are going to run a group comparison linear model and a regression linear model. However, this week we are going to calcuate the confidence intervals for the estimates, rather than relying on the t ratio and p value for statistical inference.
+For this weeks workshop, we are going to return to the World Values Survey data. Just like in previous weeks, we are going to run a group comparison linear model and a regression linear model. However, this week we are going to calculate the confidence intervals for the estimates, rather than relying on the t ratio and p value for statistical inference.
 
 If you would like to have a quick recap on this data, go to the World Value Survey site. Don’t download anything: http://www.worldvaluessurvey.org/WVSContents.jsp.
 
-You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. The .rds extension is an R speicifc extension, most commonly we'll work with .csv files.
+You can access the .rdata (R data file) file of the data here: https://github.com/thomcurran/PB130/raw/master/MT3/Workshop/WV6_Data_R_v20180912.rds. The file is called WV6_Data_R_v20180912.rds. The .rds extension is an R specific extension, most commonly we'll work with .csv files.
 
 Now we are going to open the file in R using RStudio or RStudio Server. Use the command below, but be sure to change the filepath to the one where you have put the WV6_Data_R_v20180912.rds file. Alternatively, find the WV6_Data_R_v20180912.rds file in the MT11 workshop folder, click on it, and save it as WVS.
 
@@ -74,22 +74,22 @@ WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "charact
 
 ## Two-parameter model or independent t-test with confidence inttervals
 
-Okay lets now move to a new research topic using the WVS to examine differences between independent groups. We will start with a two-parameter model (two groups) becuase it is the easiest to comapre to the two-parameter regression model (one continuous explanatory variable) that we will run afterwards. 
+Okay lets now move to a new research topic using the WVS to examine differences between independent groups. We will start with a two-parameter model (two groups) because it is the easiest to compare to the two-parameter regression model (one continuous explanatory variable) that we will run afterwards. 
 
 As we should now know, the two-parameter linear model is often called an independent t-test. Like all linear models, this test can be done using the lm() in R. 
 
-To start, lets ask an interesting question of the WVS. In the data, there are some items that ask respondants about their attitudes toward marginalised groups. One of those questions asks whether respondants:
+To start, lets ask an interesting question of the WVS. In the data, there are some items that ask respondents about their attitudes toward marginalized groups. One of those questions asks whether respondents:
 
 "Would not like to have immigrants/foreign workers as neighbors"
 
-Coders recored a record of 1 if the respondant mentioned this and 2 if the respondant did not emntion this in their interview.
+Coders record a record of 1 if the respondent mentioned this and 2 if the respondent did not mention this in their interview.
 
 1 - Mentioned
 2 - Not mentioned
 
 Presently, the issue of attitudes toward immigrants is quite a 'live' one in the USA. So lets see whether Americans who reported that they would not like to have immigrants as neighbors differ in levels of life satisfaction in the WVS than those who did not report such attitudes. Our theory is that life satisfaction may differentiate these attitudes, but we don't know yet.
 
-The life satisfaction queestion asks: “What is the satisfaction with your life" and is measured on a 1-10 scale:
+The life satisfaction question asks: “What is the satisfaction with your life" and is measured on a 1-10 scale:
 
 1. Completely dissatisfied
 
@@ -106,7 +106,7 @@ Before we delve into this topic, though, lets just clarify the research question
 *Null Hypothesis* - The difference in life satisfaction between Americans who would and would not like to have immigrants as neighbors will be zero.
 
 
-I looked in the codebook and the immigrant variable is listed as V39. We also want the life satisfaction variable, which is listed as V23. So lets look for the variables and select them, then head the new dataframe entitled WVSimmigrant. Lets also select the country code varable, V2A, so we can use this to extract only responses for the USA. I have left some of the below code blank for you to fill the gap.
+I looked in the codebook and the immigrant variable is listed as V39. We also want the life satisfaction variable, which is listed as V23. So lets look for the variables and select them, then head the new dataframe entitled WVSimmigrant. Lets also select the country code variable, V2A, so we can use this to extract only responses for the USA. I have left some of the below code blank for you to fill the gap.
 
 
 ```{r}
@@ -127,11 +127,11 @@ WVSimmigrant
 ```
 
 
-Now given we are building a linear model with a categorical variable, coding is really important for our explanatory variable. We want to find the increment in life satisfaciton needed from the group who reported they would not like to have immigrants as neighbors to those who don't mind. Currently the V39 variable is coded 1=not mentioned and 2=mentioned. We need to replace the code for mentioned (i.e., 2) so that it becomes the intercept in our model. To do this, we need to replace 2 with 0 - so that the intercept in our linear model reflects the mean value of life satisfaction for those who would not like to have immigrants as neighbors.
+Now given we are building a linear model with a categorical variable, coding is really important for our explanatory variable. We want to find the increment in life satisfaction needed from the group who reported they would not like to have immigrants as neighbors to those who don't mind. Currently the V39 variable is coded 1=not mentioned and 2=mentioned. We need to replace the code for mentioned (i.e., 2) so that it becomes the intercept in our model. To do this, we need to replace 2 with 0 - so that the intercept in our linear model reflects the mean value of life satisfaction for those who would not like to have immigrants as neighbors.
 
 
 ```{r}
-WVSimmigrant$V39 <- revalue(as.factor(WVSimmigrant$V39), c("2"="0")) # revalue is part of the plyr package and takes the V39 variable from the WVSimmigrant data frame and replaces values of 2 with values of 0. This function always takes the input of a factor or categorical variable so that as.factor code just force V23 to a factor (i.e., not a numeric) variable.
+WVSimmigrant$V39 <- revalue(as.factor(WVSimmigrant$V39), c("2"="0")) # revalue is part of the plyr package and takes the V39 variable from the WVSimmigrant data frame and replaces values of 2 with values of 0. This function always takes the input of a factor or categorical variable so that as.factor code just forces V23 to a factor (i.e., not a numeric variable).
 ```
 
 Now lets run the histogram and look at the look at the life satisfaction distribution.
@@ -151,7 +151,7 @@ WVSimmigrant %>%
 
 As we have seen with this data in the past, the life satisfaction variable has a negative skew with values to the left of the mean pulling it downwards. Keep this in mind as it may be relevant later. 
 
-Okay great, we are ready to go. Lets first inspect this data and take a look at the means and standard devations for each group. By now, you should know how to do this. As a reminder, we can use favstats() to inpect the descriptives.
+Okay great, we are ready to go. Lets first inspect this data and take a look at the means and standard deviations for each group. By now, you should know how to do this. As a reminder, we can use favstats() to inspect the descriptives.
 
 
 ```{r}
@@ -160,7 +160,7 @@ favstats(~V23, V39, data=WVSimmigrant) # the second line of favstats is our fact
 
 Remember that those who mentioned they would not like to have immigrants as neighbors are coded as 0, all else are coded 1.
 
-We can see that the means are pretty close but there is a slight difference in favour of the all else group. Lets quickly work that mean difference in R.
+We can see that the means are pretty close but there is a slight difference in favor of the all else group. Lets quickly work that mean difference in R.
 
 ```{r}
 7.474763-7.238854
@@ -171,7 +171,7 @@ The difference is 0.24 points on a 1-10 Likert scale, which doesn't seem a great
 
 ## Setting up the linear model
 
-Now lets set our up our linear model to examine the statitical significance of that 0.24 mean difference. As always, we are using the lm() function to test a two-parameter linear model becuase we have two means to estimate. Lets build the model and save it in a new R object called immigrant.model. Hopefully, you know how to do this.
+Now lets set our up our linear model to examine the statistical significance of that 0.24 mean difference. As always, we are using the lm() function to test a two-parameter linear model because we have two means to estimate. Lets build the model and save it in a new R object called immigrant.model. Hopefully, you know how to do this.
 
 
 ```{r}
@@ -180,25 +180,25 @@ immigrant.model <- lm(V23 ~ 1 + V39, data=WVSimmigrant)
 summary(immigrant.model) 
 ```
 
-Notice that the intercept part of our model - bo - is the same as the mean score for those who would not like to have immigrants as neighbors - 7.24? Notice also that b1 is the mean difference or the increment needed to get to those who did not mention that would not like to have immigrants as neighbors (i.e.,  .24 + 7.24 = 7.48)? This shows that we now have two parameters, and a mean difference that is exactly as we calcuated by hand.
+Notice that the intercept part of our model - bo - is the same as the mean score for those who would not like to have immigrants as neighbors - 7.24? Notice also that b1 is the mean difference or the increment needed to get to those who did not mention that would not like to have immigrants as neighbors (i.e.,  .24 + 7.24 = 7.48)? This shows that we now have two parameters, and a mean difference that is exactly as we calculated by hand.
 
-Notice also we have the same other statistics as in our previous model. The standard error and the t-ratio. From what you now know about these statistics, you should be able to work out whether the difference of .24 is statistically meanignful. We have a t of 2.08 and a p value of .04 - we can reject the null hypothesis.
+Notice also we have the same other statistics as in our previous model. The standard error and the t-ratio. From what you now know about these statistics, you should be able to work out whether the difference of .24 is statistically meaningful. We have a t of 2.08 and a p value of .04 - we can reject the null hypothesis.
 
 We might write this up in a research paper as follows:
 
-There was a statistically significant difference between Amercians who reported that they would not like to have immigrants as neighbors and those who did not: t(137) = 2.08, p < .05.
+There was a statistically significant difference between Americans who reported that they would not like to have immigrants as neighbors and those who did not: t(137) = 2.08, p < .05.
 
 The implication from this analysis appears to be that Americans who reported they would not like to have immigrants as neighbors are less satisfied with their life than those who didn't. 
 
 ## Calculating the 95% confidence interval for the estiamte using normal theory
 
-To this point, I've been showing you how we use the estiamted standard deviaiton of the sampling distribution - or the *standard error* - to gauge how far away our estiamte is from a zero effect. 
+To this point, I've been showing you how we use the estimated standard deviation of the sampling distribution - or the *standard error* - to gauge how far away our estimate is from a zero effect. 
 
 When we take the standard error and divide it by the estimate we have a metric - a t ratio - that tells us how many standard errors our estimate is away from zero. If the t ratio is greater than 1.96, then we reject the null hypothesis and conclude that, assuming a normal sampling distribution, a zero mean difference is unlikely in the population.
 
-We can make this assumption of a normal sampling distribution because of something called the central limit theorem (see leture notes for more information)
+We can make this assumption of a normal sampling distribution because of something called the central limit theorem (see lecture notes for more information)
 
-However, as we saw in the lecture, there is a more intuative way of expressing the same idea using confidence intervals that provide a range of values for which a population mean difference is likely to reside around the sample mean difference.
+However, as we saw in the lecture, there is a more intuitive way of expressing the same idea using confidence intervals that provide a range of values for which a population mean difference is likely to reside around the sample mean difference.
 
 From the central limit theorem, we know that the sampling distribution follows a normal distribution with a mean difference that is equal to the population mean difference. But what we don’t know is the mean difference in the population. 
 
@@ -216,7 +216,7 @@ Lets calculate the upper and lower limits of the confidence interval using the e
 
 
 ```{r}
-.24 - (.11*1.96) # .24 is the mean differencem, .11 is the standard error, and 1.96 is our critical value based on the normal distribution. I've taken 1.96 standard errors from the estimate here.
+.24 - (.11*1.96) # .24 is the mean difference, .11 is the standard error, and 1.96 is our critical value based on the normal distribution. I've taken 1.96 standard errors from the estimate here.
 .24 + (.11*1.96) # I've added 1.96 standard errors to the estimate here.
 ```
 
@@ -224,12 +224,12 @@ We have a normal theory 95% confidence interval that runs from .02 to to .46. A 
 
 
 ```{r}
-confint(immigrant.model) # this just takes the linear model R object and returns the confidence interval for the two estiamtes.
+confint(immigrant.model) # this just takes the linear model R object and returns the confidence interval for the two estimates.
 ```
 
-Okay so we are a little off in our rounding but the interpretation stays the same. If we randomly sampled the same data 100 times, the true popualtion mean difference would fall somewhere between .01 and .46 in 95 of those samples. Thats all we can say! 
+Okay so we are a little off in our rounding but the interpretation stays the same. If we randomly sampled the same data 100 times, the true population mean difference would fall somewhere between .01 and .46 in 95 of those samples. Thats all we can say. 
 
-However, if zero is not inluded in that range then we can conclude that a zero mean difference is pretty unlikely.
+However, if zero is not included in that range then we can conclude that a zero mean difference is pretty unlikely.
 
 Does this include zero? No! Therefore, the interpretation is that we can reject the null hypothesis. People who would not like to have immigrants as neighbors are still less satisfied with their life under this interpretation of statistical inference.
 
@@ -242,20 +242,19 @@ We've established that there is a mean difference using both the t ratio and 95%
 supernova(immigrant.model)
 ```
 
-Okay, this table puts the sample mean difference into more perspective. Yes, it is statistically significant but the variance explaned is tiny - PRE or R2 = 0.2%! This needs to be bourne in mind when drawing conclusions. We have statistically significant difference, but is it practically meaningful? Perhaps not.
+Okay, this table puts the sample mean difference into more perspective. Yes, it is statistically significant but the variance explained is tiny - PRE or R2 = 0.2%! This needs to be borne in mind when drawing conclusions. We have statistically significant difference, but is it practically meaningful? Perhaps not.
 
 ## Calculating the 95% confidence interval for the estiamte using bootstrapping
 
-Now, lets just take a bit of stock. What we have just done is to create the 95% confidence interval for the mean difference using normal theory. 
-That is, we used the normal curve to calculate a probability of finding the population estimate, with probabilities of .05 and less considered “unlikely” (i.e., 1.96 SE away from the mean). 
+Now, lets just take a bit of stock. What we have just done is to create the 95% confidence interval for the mean difference using normal theory. That is, we used the normal curve to calculate a probability of finding the population estimate, with probabilities of .05 and less considered “unlikely” (i.e., 1.96 SE away from the mean). 
 
-We then used that probability to yield a range of values through which the popualtion mean difference would be observed in 95 samples out of 100. This is the nomral theory 95% confidence interval.
+We then used that probability to yield a range of values through which the population mean difference would be observed in 95 samples out of 100. This is the normal theory 95% confidence interval.
 
 Because of the Central Limit Theorem, the normal curve turns out to be an excellent model for a sampling distribution of means but only when the distribution of variables and the estimate is normal.
 
 As we saw in the lecture, when the distribution of estimates are not normal, we run the risk of encountering type I and type II errors.
 
-So, rather than assume a normal sampling distribution of estimated values, a better approach is to generate a sampling distribution from the avaliable data to arrive at a 95% confidence interval that requires no restrictive assumptions regarding the distribution of estimates.
+So, rather than assume a normal sampling distribution of estimated values, a better approach is to generate a sampling distribution from the available data to arrive at a 95% confidence interval that requires no restrictive assumptions regarding the distribution of estimates.
 
 Bootstrapping is one method that uses the characteristics of an original sample to produce many thousands of resamples with replacement – estimating coefficients of interest each time. Typically, it is recommended that little benefit is achieved over about 5000 bootstrap resamples, so I recommend you always request 5000 resamples. 
 
@@ -264,13 +263,13 @@ In this way, bootsrapping permits us to generate a distribution of estimates tha
 So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called immigrant.boot. Note that we are going to request 5000 resamples so that might take a little time to run!
 
 ```{r}
-immigrant.boot <- Boot(immigrant.model, f=coef, R = 5000) # this function takes the linear model we built earlier and asks for the coeffiencts to be calcuated in 5000 resamples with replacement from the original sample (R=5000)
+immigrant.boot <- Boot(immigrant.model, f=coef, R = 5000) # this function takes the linear model we built earlier and asks for the coeffiencts to be calculated in 5000 resamples with replacement from the original sample (R=5000)
 summary(immigrant.boot) # just like the linear model, the summary function outputs the summary of this analysis
 ```
 
-What R just did there is take a resample of the original sample and calcuate the model coeffciencts (i.e., b0 and b1) and repeat that process 5000 times! Before the advent of fast computers that would have taken weeks, but R does it in 20 seconds or so.
+What R just did there is take a resample of the original sample and calculate the model coefficients (i.e., b0 and b1) and repeat that process 5000 times! Before the advent of fast computers that would have taken weeks, but R does it in 20 seconds or so.
 
-You can see that the output gives the sample estimates under the original column and then mean estiamtes from the 5000 resamples in the bootMed column. The difference between the sample and mean bootstrap estiamte is given in the bootBias column.  Finally, the mean standard error from the 5000 resamples is given in the bootSE comlumn.
+You can see that the output gives the sample estimates under the original column and then mean estimates from the 5000 resamples in the bootMed column. The difference between the sample and mean bootstrap estimate is given in the bootBias column.  Finally, the mean standard error from the 5000 resamples is given in the bootSE column.
 
 We can see that the sample mean difference and bootstrap mean difference are virtually the same. The bias is quite small.
 
@@ -281,14 +280,14 @@ And, just like normal theory, if zero is not included in the bootstrap 95% confi
 Lets go ahead and call the bootsrap 95% confidence interval using the confint() function.
 
 ```{r}
-confint(immigrant.boot, level = .95, type = "norm") # this function request the confidence intervals from the immigrant.boot object. The level is .95 becuase we want the 95% confidence intervals. The type is norm becuase we dont want to correct them in any way.
+confint(immigrant.boot, level = .95, type = "norm") # this function request the confidence intervals from the immigrant.boot object. The level is .95 because we want the 95% confidence intervals. The type is norm because we dont want to correct them in any way.
 ```
 
-And well, what do you know! The bootstrap 95% confidence interval tells us something different to the normal theory 95% confidence interval. Here, we see that the range of values runs from -.0001 to .47 (your values might slightly differ to this, bootstrapping will produce slightly different estimates each time it resamples). Cruically, though, this range now includes zero! We cannot reject the null hypothesis.
+And well, what do you know! The bootstrap 95% confidence interval tells us something different to the normal theory 95% confidence interval. Here, we see that the range of values runs from -.0001 to .47 (your values might slightly differ to this, bootstrapping will produce slightly different estimates each time it resamples). Crucially, though, this range now includes zero! We cannot reject the null hypothesis.
 
-To get a clue about why the normal theory 95% confidence interval is too liberal (i.e., rejecting the null when it is possibly true), take a look at the distribution of life satisfaction above. We can see a negative skew meaning that a normal curve underestimates values below the mean, and overestimates them above the mean. These differences are marginal, but when the estimate is ONLY JUST significant, as is the case here, it can cause erroroneous conclusions. This is why bootstrapping should always be preferred. It makes no assumptions about the distribution of variables and estimates.
+To get a clue about why the normal theory 95% confidence interval is too liberal (i.e., rejecting the null when it is possibly true), take a look at the distribution of life satisfaction above. We can see a negative skew meaning that a normal curve underestimates values below the mean, and overestimates them above the mean. These differences are marginal, but when the estimate is ONLY JUST significant, as is the case here, it can cause erroneous conclusions. This is why bootstrapping should always be preferred. It makes no assumptions about the distribution of variables and estimates.
 
-As I mentioned in the leture, bootstrapping the estimates is now the conventional way to determine statistical significnacne. So, therefore, the difference in life satisfaction between those who reported they would not like to have immigrants as neighbors and those who didn't mind immigrants as neighbors is not statistically significant.
+As I mentioned in the lecture, bootstrapping the estimates is now the conventional way to determine statistical significance. So, therefore, the difference in life satisfaction between those who reported they would not like to have immigrants as neighbors and those who didn't mind immigrants as neighbors is not statistically significant.
 
 We might write this is a research paper like so:
 
@@ -375,14 +374,14 @@ Is this correlation statistically significant?
 
 ## Task 5 - Set up the linear model
 
-Now lets set our up our linear regression model to examine the intercpet and slope of the best fitting regression line using the lm() function. Don't forget to save the linear model in a new R object. I suggest finance.model
+Now lets set our up our linear regression model to examine the intercept and slope of the best fitting regression line using the lm() function. Don't forget to save the linear model in a new R object. I suggest finance.model
 
 ```{r eval=FALSE}
 finance.model <- lm(?? ~ 1 + ??, data=WVSfinance) # add ?? variables to the linear model code
 summary(finance.model) # add the new R object to the summary function
 ```
 
-What is the incercept?
+What is the intercept?
 
 What is the slope?
 
