@@ -49,7 +49,7 @@ library(Hmisc)
 ## One-parameter linear model or paired samples t-test
 
 
-To practice conducting a one-parameter linear model with paried differences (paired samples t-test), we are going to use a dataset from Pruzek & Helmreich (2009). This dataset presents 15 paired data corresponding to the weights (lbs) of girls before and after 14-weeks of psychological therapy for anorexia. 
+To practice conducting a one-parameter linear model with paired differences (paired samples t-test), we are going to use a dataset from Pruzek & Helmreich (2009). This dataset presents 15 paired data corresponding to the weights (lbs) of girls before and after 14-weeks of psychological therapy for anorexia. 
 
 The data are from an intervention study with pre and post weights and give a good example of a paired design. Many interventions are set up like this in psychology, and the one-parameter linear model is how we test for differences from pre-test to post-test. 
 
@@ -59,7 +59,7 @@ First, lets load this data into our R environment. Go to the MT9 folder, and the
 
 
 ```{r}
-anorexia <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT9/Workshop/anorexia.csv")
+anorexia <- read_csv("C:/Users/CURRANT/Dropbox/Work/LSE/PB130/MT9/Workshop/anorexia.csv")
 anorexia
 ```
 
@@ -454,6 +454,41 @@ TukeyHSD(perfectionism.ANOVA)# Now we have to use the perfectionism.ANOVA model 
 
 Using the Tukey's HSD adjustment, only the UK-USA comparison is statistically significant (i.e., p < .05). This suggests that SOP is higher in the US than the UK, but that there is insufficient statistical support to distinguish between the the UK and Canada and the US and Canada. Exactly the same as the Bonferroni adjustment, but note that the p-values are slightly less conservative (i.e., lower).
 
+## Visulaisation
+
+If you are interested in visualizing results of ANOVA and post-hoc tests on the same plot (directly on the boxplots), here is a piece of code which may be of interest to you:
+
+```{r}
+## set up of elements
+x <- which(names(perfectionism) == "Country") # name of independent variable
+y <- which(
+  names(perfectionism) == "SOP" # name of outcome variable
+)
+method1 <- "anova" # overall test of main effect = anova 
+method2 <- "t.test" # test of specific comparisons = t test
+my_comparisons <- list(c("CAN", "USA"), c("USA", "UK"), c("UK", "CAN")) # comparisons for post-hoc tests
+## building the plot
+library(ggpubr)
+for (i in y) {
+  for (j in x) {
+    p <- ggboxplot(perfectionism,
+      x = colnames(perfectionism[j]), y = colnames(perfectionism[i]),
+      color = colnames(perfectionism[j]),
+      legend = "none",
+      palette = "npg",
+      add = "jitter"
+    )
+    print(
+      p + stat_compare_means(aes(label = paste0(..method.., ", p-value = ", ..p.format..)),
+        method = method1, label.y = max(perfectionism[, i], na.rm = TRUE)
+      )
+      + stat_compare_means(comparisons = my_comparisons, method = method2, label = "p.format") 
+    )
+  }
+}
+```
+
+
 ## Effect size
 
 We can also calculate effect sizes for the group difference just like we did above. 
@@ -471,7 +506,7 @@ A one-way between-subjects ANOVA was conducted to compare the effect of country 
 
 ## Exercise
 
-Okay, your turn to run some of the tests that we have described here. To do that, let's once again return to our WVS data and specifcially the comparison of perceptions of choice between Australia and Japan that we made last week. Then, we compared the distributions using z-scores. Let's now go one step further and test the differences in perceptions of choice using a two-parameter linear model or independent t-test.
+Okay, your turn to run some of the tests that we have described here. To do that, let's once again return to our WVS data and specifically the comparison of perceptions of choice between Australia and Japan that we made last week. Then, we compared the distributions using z-scores. Let's now go one step further and test the differences in perceptions of choice using a two-parameter linear model or independent t-test.
 
 Before we start, lets just clarify the research question for our two-parameter linear model and null hypothesis we are testing:
 

@@ -109,7 +109,7 @@ rcorr(as.matrix(WHR[,c("GDP","Happiness")], type="pearson"))
 
 Pearsons r is .78. According to Cohen (1988, 1992), the effect size is low if the value of r varies around 0.1, medium if r varies around 0.3, and large if r varies more than 0.5. An r of .78 is a very large correlation! 
 
-We can visualise this relationiship using a scatterplot with ggplot(), whereby datapoints are plotted for happiness against GDP. We can also draw the best-fitting regression line, which represents the Happiness model, over the same WHR data points
+We can visualize this relationship using a scatterplot with ggplot(), whereby data points are plotted for happiness against GDP. We can also draw the best-fitting regression line, which represents the Happiness model, over the same WHR data points
 
 ```{r}
 WHR %>%
@@ -137,7 +137,7 @@ simple.model <- lm(Happiness ~ 1 + GDP, data = WHR)
 summary(simple.model)
 ```
 
-By now the lienar model output should be familiar. We have an intercpet (b0) of -1.49, which we have established is meaningless becuase it represents the predicted happiness value when GDP = 0. GDP cannot be 0, so this is simply a hypothetical value used to anchor the regression line.
+By now the linear model output should be familiar. We have an intercept (b0) of -1.49, which we have established is meaningless because it represents the predicted happiness value when GDP = 0. GDP cannot be 0, so this is simply a hypothetical value used to anchor the regression line.
 
 More interesting is the GDP estimate or b1. Here we have a value of .76. This is interpreted like the slope of a line. Therefore, for every one unit increase in GDP, there is an estimated .76 unit increase in mean happiness. Alongside this slope value we have a standard error (sampling variance) and t ratio. Hopefully we should know how these are interpreted. The p value associated with t is well below .05 and therefore we reject the null hypothesis. GDP is a statistically significant predictor of average happiness!
 
@@ -151,7 +151,7 @@ Here you can see that the intercept is zero (the line is drawn through the joint
 
 ## Calculating the 95% confidence interval for the coefficients using bootstrapping
 
-As we saw just before Christmas, rather than assume a normal sampling distribution of estimated values when ascertaining the statistical significance of estimates (i.e., the t-distribution), a better approach is to generate a sampling distribution from the avaliable data to arrive at a 95% confidence interval that requires no restrictive assumptions regarding distributions.
+As we saw just before Christmas, rather than assume a normal sampling distribution of estimated values when ascertaining the statistical significance of estimates (i.e., the t-distribution), a better approach is to generate a sampling distribution from the available data to arrive at a 95% confidence interval that requires no restrictive assumptions regarding distributions.
 
 Bootstrapping is one method that uses the characteristics of an original sample to produce many thousands of resamples with replacement – estimating coefficients of interest each time. Typically, it is recommended that little benefit is achieved over about 5000 bootstrap resamples, so I recommend you always request 5000 resamples. 
 
@@ -164,34 +164,34 @@ simple.boot <- Boot(simple.model, f=coef, R = 5000) # this function takes the li
 summary(simple.boot) # just like the linear model, the summary function outputs the summary of this analysis
 ```
 
-What R just did there is take a resample of the original sample and calcuate the model coeffciencts (i.e., b0 and b1) and repeat that process 5000 times! Before the advent of fast computers that would have taken weeks, but R does it in 20 seconds or so.
+What R just did there is take a resample of the original sample and calculate the model coefficients (i.e., b0 and b1) and repeat that process 5000 times! Before the advent of fast computers that would have taken weeks, but R does it in 20 seconds or so.
 
-You can see that the output gives the sample estimates under the original column and then mean estiamtes from the 5000 resamples in the bootMed column. The difference between the sample and mean bootstrap estiamte is given in the bootBias column.  Finally, the mean standard error from the 5000 resamples is given in the bootSE comlumn.
+You can see that the output gives the sample estimates under the original column and then mean estiamtes from the 5000 resamples in the bootMed column. The difference between the sample and mean bootstrap estiamte is given in the bootBias column.  Finally, the mean standard error from the 5000 resamples is given in the bootSE column.
 
 We can see that the sample estimates and bootstrap estimates are virtually the same. The bias is tiny.
 
-Now, though, to the important part. With the bootsrap distributio we have just called, we can construct a confidence interval for our estimates. We do this by simply finding the values of b0 (intercept) and b1 (slope) in the bootstrap distribution that reflect the 2.5 and 97.5 percentiles for the upper and lower bounds of the confidence interval. 
+Now, though, to the important part. With the bootstrap distribution we have just called, we can construct a confidence interval for our estimates. We do this by simply finding the values of b0 (intercept) and b1 (slope) in the bootstrap distribution that reflect the 2.5 and 97.5 percentiles for the upper and lower bounds of the confidence interval. 
 
 And, just like normal theory, if zero is not included in the bootstrap 95% confidence interval then we can reject the null hypothesis and conclude that a zero estimate in the population is unlikely.
 
-Lets go ahead and call the bootsrap 95% confidence interval using the confint() function.
+Lets go ahead and call the bootstrap 95% confidence interval using the confint() function.
 
 ```{r}
 confint(simple.boot, level = .95, type = "norm") # this function request the confidence intervals from the immigrant.boot object. The level is .95 becuase we want the 95% confidence intervals. The type is norm becuase we dont want to correct them in any way.
 ```
 
-Here we see that the range of values for our slope estimate of the relationship between GDP and happiness runs from 0.73 to 0.78 (your values might slightly differ to this, bootstrapping will produce slightly different estimates each time it resamples). Cruically, though, this range does not include zero! We can reject the null hypothesis.
+Here we see that the range of values for our slope estimate of the relationship between GDP and happiness runs from 0.73 to 0.78 (your values might slightly differ to this, bootstrapping will produce slightly different estimates each time it resamples). Crucially, though, this range does not include zero! We can reject the null hypothesis.
 
 ## Partitioning variance
 
-As we have been doing every week, lets finally partition the variance in our simple regression model between that expalined by the model and that left over(i.e., error). We will use supernova() to do this.
+As we have been doing every week, lets finally partition the variance in our simple regression model between that explained by the model and that left over(i.e., error). We will use supernova() to do this.
 
 ```{r}
 superanova(simple.model)
 ```
 
 
-The supernova table shows us that the sum of squares for the empty model is 1898.91. This means that adding GDP has minimised the error in the model by 1140.78 sum of squares (i.e., 1898.91 - 758.13 = 1140.78). Indeed, this is alot of error explained by one explanatory variable!
+The supernova table shows us that the sum of squares for the empty model is 1898.91. This means that adding GDP has minimized the error in the model by 1140.78 sum of squares (i.e., 1898.91 - 758.13 = 1140.78). Indeed, this is alot of error explained by one explanatory variable!
 
 We can also see a PRE or R2 value of .60, which means that GDP explains 60% of the variance in happiness. Similarly there is an F ratio, which is the ratio of the mean square for the model to the mean square for the error left over after subtracting out the model. The larger the ratio of variance explained by the model relative to error, the larger F will be. And, as we saw in the lecture, F is a standardized metric with a smoothed distribution that can be used for Null Hypothesis Significance Testing. We can see that the p value associated with F is zero and therefore we have a statistically significant amount of variance in happiness explained by our regression model. This chimes with what we found when we interpreted the linear model slope.
 
@@ -216,23 +216,23 @@ The first step in any test of relationships is to inspect the extent to which ou
 rcorr(as.matrix(WHR[,c("GDP","Happiness", "GINI")], type="pearson")) # note how this code is the same as the rcorr code above but include our additional predictor; GINI
 ```
 
-We already know the correlation of GDP and happiness is .78. However, there is some interesting additional information here. The gini coefficient is also corellated with happiness - albeit sharing a much smaller negative relationship of -.19. Likewise, the gini coefficient and GDP are also negatively correlated, with a correlation coeffcient of -.32. This correlation is important becuase it will need to be removed from the linear model so that the regression coefficients of GDP and gini on happines represent unique effects.
+We already know the correlation of GDP and happiness is .78. However, there is some interesting additional information here. The gini coefficient is also correlated with happiness - albeit sharing a much smaller negative relationship of -.19. Likewise, the gini coefficient and GDP are also negatively correlated, with a correlation coefficient of -.32. This correlation is important because it will need to be removed from the linear model so that the regression coefficients of GDP and gini on happiness represent unique effects.
 
 ## Setting up the linear model
 
-Estimating the parameters of the multiple regression model is accomplished in the exact same way as estimating the parameters of the simple regression model. It all comes down to fitting a line! But in this case, the line is drawn from some optimally weighted combination of predictor variables - GDP and the gini coeffcient.
+Estimating the parameters of the multiple regression model is accomplished in the exact same way as estimating the parameters of the simple regression model. It all comes down to fitting a line! But in this case, the line is drawn from some optimally weighted combination of predictor variables - GDP and the gini coefficient.
 
-Let's look at how we build a multiple regression model in the case where we have two continuous explanatory variables - in this case GDP and the gini coefficient. We write the model in notational form like this:
+Let's look at how we build a multiple regression model in the case where we have two continuous explanatory variables - in this case GDP and the gini coefficient. We write the model in notional form like this:
 
 Yi = b0 + b1X1i + b2X2i + ei
 
 Both Yi and ei have the same interpretation in the multiple regression model as in the simple regression model. The outcome variable in both cases is mean happiness of each country, measured as a quantitative variable. And the error term is each country's deviation from their predicted happiness under the model.
 
-Because X1i and X2i in the regression model represents the measured GDP of each country and the gini coeffcient, b1 and b2 represent the increment that must be added to the predicted happiness of a country for each one-unit increment in GDP or the gini coefficient.
+Because X1i and X2i in the regression model represents the measured GDP of each country and the gini coefficient, b1 and b2 represent the increment that must be added to the predicted happiness of a country for each one-unit increment in GDP or the gini coefficient.
 
-If b1 and b2 are the parameters for the slope of the line, it stands to reason that b0 will be the y-intercept of the line - in other words, the predicted value of happiness when GDP and gini are equal to 0. As the regression line is a straight line, it has to be defined by a slope and an intercept. In the case of a model trying to predict Happiness, of course, the intercept is purely theoretical - it's impossible for a country to have 0 GDP and 0 gini! But, regardless, it is neverless important to know the intercept becuase it is the anchoring point of the regression line - the point at which the regression line passes through the y-axis.
+If b1 and b2 are the parameters for the slope of the line, it stands to reason that b0 will be the y-intercept of the line - in other words, the predicted value of happiness when GDP and gini are equal to 0. As the regression line is a straight line, it has to be defined by a slope and an intercept. In the case of a model trying to predict Happiness, of course, the intercept is purely theoretical - it's impossible for a country to have 0 GDP and 0 gini! But, regardless, it is nevertheless important to know the intercept because it is the anchoring point of the regression line - the point at which the regression line passes through the y-axis.
 
-As with all our anayses to date, we are going to use the lm() to build and test the multiple regression model of happiness. The  lm()  function can detect whether the predictor variables are continuous (as is the case here), and will by default fit the linear regression model. Let's go ahead and fit the linear regression model for our data and save it in an R object called multiple.model.
+As with all our analyses to date, we are going to use the lm() to build and test the multiple regression model of happiness. The  lm()  function can detect whether the predictor variables are continuous (as is the case here), and will by default fit the linear regression model. Let's go ahead and fit the linear regression model for our data and save it in an R object called multiple.model.
 
 ```{r}
 multiple.model <- lm(Happiness ~ 1 + GDP + GINI, data = WHR) # notice that all I have done here is add an additional variable to the model. This is a good example of what is happening when we run a multiple regression, we are just adding an additional variable to the existing model.
@@ -261,7 +261,7 @@ WHR
 
 Instead of different predicted scores being returned on the basis of scores one predictor (as we saw when we did a simple regression), you will see that the predicted scores returned by the regression model now depend on country scores for both GDP and gini. Pretty neat!
 
-Error or the residuals are calcuated in the same way as in the other linear models we have tested. That is, the difference between the model predicted happiness score and the observed happiness score. We can use the resid() function to calculate the residuals and save these as a new variable called residuals in the dataframe
+Error or the residuals are calculated in the same way as in the other linear models we have tested. That is, the difference between the model predicted happiness score and the observed happiness score. We can use the resid() function to calculate the residuals and save these as a new variable called residuals in the dataframe
 
 
 ```{r}
@@ -269,7 +269,7 @@ WHR$residuals <- resid(multiple.model)
 WHR
 ```
 
-In multiple regression, whats awesome about the predcited values is that they not only give us a means of calcuating the error left over in the model (i.e., residuals), but they also give us a means of plotting the line that best fits our multiple regression model. That is, the one that reflects the relationship between the outcome and the optimally weighted combination of predictor variables. To visualise this, lets create 2 plots - one that shows the simple relationship between happiness and GDP and one that shows the multiple relationship between happiness and a combination of GDP and gini. In both plots, we will demarcate the empty model (i.e., the mean of happiness) with a blue line.
+In multiple regression, whats awesome about the predicted values is that they not only give us a means of calculating the error left over in the model (i.e., residuals), but they also give us a means of plotting the line that best fits our multiple regression model. That is, the one that reflects the relationship between the outcome and the optimally weighted combination of predictor variables. To visualize this, lets create 2 plots - one that shows the simple relationship between happiness and GDP and one that shows the multiple relationship between happiness and a combination of GDP and gini. In both plots, we will demarcate the empty model (i.e., the mean of happiness) with a blue line.
 
 
 ```{r}
@@ -303,7 +303,7 @@ ggplot(aes(x = predicted, y = Happiness)) +
 
 You can see here that the addition of gini - though a statistically significant predictor - hasn't really done a great deal in terms of explaining additional empty variance in happiness. The model R is the same and the regression line largely unchanged.
 
-Finally, lets also have R call the standardized estimates by using the lm.beta() function. Standardised estiamstes are really important in multiple regression becuase they allow us to directly compare estimates.
+Finally, lets also have R call the standardized estimates by using the lm.beta() function. Standardized estimates are really important in multiple regression because they allow us to directly compare estimates.
 
 
 ```{r}
@@ -315,7 +315,7 @@ You will see above that the unstandardized estimate for GINI looks very differen
 
 ## Calculating the 95% confidence interval for the coefficients using bootstrapping
 
-By now, we know that the sampling distribution (i.e., t-ratio) is not the most optimal way to conduct null hypothesis testing. As we have seen, bootstrapping is the most satisfactory method that provides a confidence interval for the estimates without making restrictive assumptions regarding the distribution of varaiables and estimates. So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called multiple.boot. Note that we are going to request 5000 resamples so that might take a little time to run!
+By now, we know that the sampling distribution (i.e., t-ratio) is not the most optimal way to conduct null hypothesis testing. As we have seen, bootstrapping is the most satisfactory method that provides a confidence interval for the estimates without making restrictive assumptions regarding the distribution of variables and estimates. So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called multiple.boot. Note that we are going to request 5000 resamples so that might take a little time to run!
 
 ```{r}
 multiple.boot <- Boot(multiple.model, f=coef, R = 5000) 
@@ -324,50 +324,50 @@ summary(multiple.boot)
 
 We can see that the sample estimates and bootstrap estimates are virtually the same. The bias is tiny.
 
-Lets go ahead and call the bootsrap 95% confidence interval using the confint() function.
+Lets go ahead and call the bootstrap 95% confidence interval using the confint() function.
 
 ```{r}
 confint(multiple.boot, level = .95, type = "norm") 
 ```
 
-Here we see that the range of values for our slope estimate of the relationship between GDP and happiness runs from 0.74 to 0.81. Likewise, the range of values for our slope estimate of the relationship between gini and happiness runs from 0.22 to 1.41 (your values might slightly differ to this, bootstrapping will produce slightly different estimates each time it resamples). Cruically, these ranges do not include zero! We can therefore reject the null hypotheses.
+Here we see that the range of values for our slope estimate of the relationship between GDP and happiness runs from 0.74 to 0.81. Likewise, the range of values for our slope estimate of the relationship between gini and happiness runs from 0.22 to 1.41 (your values might slightly differ to this, bootstrapping will produce slightly different estimates each time it resamples). Crucially, these ranges do not include zero! We can therefore reject the null hypotheses.
 
 # Partitioning variance
 
-As we did with the simple regression model, lets partition the variance in our simple regression model between that expalined by the model and that left over (i.e., error). We will use supernova() to do this.
+As we did with the simple regression model, lets partition the variance in our simple regression model between that explained by the model and that left over (i.e., error). We will use supernova() to do this.
 
 ```{r}
 superanova(multiple.model)
 ```
 
 
-Like in the simple regression, the supernova table shows us that the sum of squares for the empty model is 1898.91. This should not be surprising becuase the empty model is exactly the same whether we test for simple or multiple regression - that is, the mean of happiness as the baseline model. So adding gini has minimised the error further in the model by 6.102 sum of squares. Is this alot? Certainly does not look like it. Furthermore, the PRE or R2 is exactly the same as the simple model - .60 or 60% of the variance explained. So was the addition of gini worth it? There are a couple of ways we can test this.
+Like in the simple regression, the supernova table shows us that the sum of squares for the empty model is 1898.91. This should not be surprising because the empty model is exactly the same whether we test for simple or multiple regression - that is, the mean of happiness as the baseline model. So adding gini has minimized the error further in the model by 6.102 sum of squares. Is this alot? Certainly does not look like it. Furthermore, the PRE or R2 is exactly the same as the simple model - .60 or 60% of the variance explained. So was the addition of gini worth it? There are a couple of ways we can test this.
 
-First is the F ratio, which is the ratio of the mean square for the model to the mean square for the error left over after subtracting out the model. The cruical advantage of this metric of fit over R2 is that it accounts for the degrees of freedom in the model. With 1 additional predictor in the model we now have 2 degrees of freedom and an F ratio of 1137.69. This is statistically significant, but lower than the F ratio for the simple regression model (2246). It seems adding gini to our model is quite exensive in terms of model fit relative to the empty model.
+First is the F ratio, which is the ratio of the mean square for the model to the mean square for the error left over after subtracting out the model. The crucial advantage of this metric of fit over R2 is that it accounts for the degrees of freedom in the model. With 1 additional predictor in the model we now have 2 degrees of freedom and an F ratio of 1137.69. This is statistically significant, but lower than the F ratio for the simple regression model (2246). It seems adding gini to our model is quite expensive in terms of model fit relative to the empty model.
 
 As we saw in the lecture, though, there is another more direct test of whether adding gini was worth it. Rather than inspect the F ratio for the model comparison to the empty model, we can also calculate F for the comparison between the simple model (GDP only) and the full model (GDP and gini). The calculation for doing this F test is:
 
 F = ((R2full - R2imple)/(dffull-dfsimple))/((1-R2full)/dffull) - see lecture notes for formula
 
-Lets quickly run that calcualtion with our numbers from the supanova output 
+Lets quickly run that calculation with our numbers from the supanova output 
 
 ```{r}
 ((.6040-.6008)/(2-1))/((1-.6040)/1492)
 ```
 
-We have a F ratio of 12.06. F is a standardized metric with a smoothed distribution that can be used for Null Hypothesis Significance Testing. In order to know whether an F of 12.06 is large enough to be considered statistically significant we need to inspect a table of F distributions and find the critical value of F with 1,1492 degrees of freedom that cuts off 95% of the distribution. F tables are freely avaliable online, one of them can be accessed here: https://web.stanford.edu/dept/radiology/cgi-bin/classes/stats_data_analysis/lesson_5/234_7_n.html
+We have a F ratio of 12.06. F is a standardized metric with a smoothed distribution that can be used for Null Hypothesis Significance Testing. In order to know whether an F of 12.06 is large enough to be considered statistically significant we need to inspect a table of F distributions and find the critical value of F with 1,1492 degrees of freedom that cuts off 95% of the distribution. F tables are freely available online, one of them can be accessed here: https://web.stanford.edu/dept/radiology/cgi-bin/classes/stats_data_analysis/lesson_5/234_7_n.html
 
-We can see that with 1 degree of freedom in the numerator and over 120 degress of freedom in the denominator, we would need a F ratio larger than 6.6349 to consider the addition of gini statistically meaningful. Our F ratio is larger than this and therefore we prefer the full model - there is an improvement of fit with gini added but I would caution that it is small and signficant only becuase of the very large sample size (making even small increases in R2 significant)
+We can see that with 1 degree of freedom in the numerator and over 120 degrees of freedom in the denominator, we would need a F ratio larger than 6.6349 to consider the addition of gini statistically meaningful. Our F ratio is larger than this and therefore we prefer the full model - there is an improvement of fit with gini added but I would caution that it is small and significant only because of the very large sample size (making even small increases in R2 significant)
 
 So what do we conclude in relation to our research question? Well a combination of GDP and gini explain a statistically significant amount of variance in Happiness. Controlling for each other, both gini and GDP have positive relationships with Happiness, but GDP is by far the most meaningful predictor.
 
 ## Exercise
 
-Okay, lets now give you a chance to set up and test a multiple regression. For this, lets use a dataset that contan data on employee goals and levels of enthusiams in the workplace. This is a real dataset collected in the field from a sample of accontants working at an accountancy firm in Bristol, UK. In this dataset are responses to a survey assessing employees' levels of two motivational goals for work and their enthusiasm - all responed to on Likert scales running between 1 and 5. 
+Okay, lets now give you a chance to set up and test a multiple regression. For this, lets use a dataset that contain data on employee goals and levels of enthusiasms in the workplace. This is a real dataset collected in the field from a sample of accountants working at an accountancy firm in Bristol, UK. In this dataset are responses to a survey assessing employees' levels of two motivational goals for work and their enthusiasm - all responded to on Likert scales running between 1 and 5. 
 
-The first goal measured is a task goal, which is employees' tendency to strive to develop their skills and abilities, advance their learning, understand material, or complete or master a task (e.g., "I work to master tasks and overcome challenges"). The second is an ego goal, which measures employee tendencies to prove one's competence and to gain favorable judgments about it from others (e.g., "I work to recieve bonuses and awards"). Enthusiasm was measured using an items referring to how much enjoyment and excitment one felt at work (e.g., "I feel a sense of excitement when I'm working")
+The first goal measured is a task goal, which is employees' tendency to strive to develop their skills and abilities, advance their learning, understand material, or complete or master a task (e.g., "I work to master tasks and overcome challenges"). The second is an ego goal, which measures employee tendencies to prove one's competence and to gain favorable judgments about it from others (e.g., "I work to receive bonuses and awards"). Enthusiasm was measured using an items referring to how much enjoyment and excitement one felt at work (e.g., "I feel a sense of excitement when I'm working")
 
-Becuase task goals are more controllable and focus on personal growth rather than normative performative, it was hypothesised that task goals would contribute more to enthusiasm at work than would ego goals. To test this hypothesis, we are going to run a multiple regression to see how different goals predict enthusiasm.
+Because task goals are more controllable and focus on personal growth rather than normative performance, it was hypothesised that task goals would contribute more to enthusiasm at work than would ego goals. To test this hypothesis, we are going to run a multiple regression to see how different goals predict enthusiasm.
 
 Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
 
@@ -490,19 +490,13 @@ What is the p value?
 
 What do we conclude in relation to our research question?
 
-# Task 6 - Complete the lab questionnaire
+# Task 6 - Use this workshop for your quantitative writing practice due Wednesday but you have until next Monday to submit (01/02/2020)
 
-For the lab on Wednesday, we are going to analyse some group data to demonstrate how to collect, retreive and start a new R project. So, to do this, before you leave today I would like you to quickly complete this short PB130 online survey that I have set up using Gorilla. Please copy and paste the below link into your browser and follow the instructions:
-
-https://research.sc/participant/login/dynamic/183F1D85-9289-4685-A099-4E572069A0DA
-
-# Task 7 - Use this workshop for your quantitative writing practice due on MONDAY
-
-For the quantitative writing practice due on Monday, I would like for you to practice writing a brief quantitative report on a simple regression, analysing the relationship between GDP and Happiness with the WHR data. This report should include the following:
+For the quantitative writing practice, I would like for you to practice writing a brief quantitative report on a simple regression, analyzing the relationship between GDP and Happiness with the WHR data. This report should include the following:
 
 Introduction:
 
-500 word introduction on relationship between GDP and happiness - what is the theory and is there any other eveidence of relationships. List here the research question and null hypothesis being tested.
+500 word introduction on relationship between GDP and happiness - what is the theory and is there any other evidence of relationships. List here the research question and null hypothesis being tested.
 
 Methods:
 
@@ -514,4 +508,4 @@ Results:
 
 Discussion:
 
-Brief 250 word disucssion interpreting the results and addressing the research question and null hypothesis.
+Brief 250 word discussion interpreting the results and addressing the research question and null hypothesis.
