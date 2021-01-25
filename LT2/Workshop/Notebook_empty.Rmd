@@ -105,10 +105,6 @@ An initial step in any test of relationships is to inspect the extent to which o
 
 ```{r}
 rcorr(as.matrix(WHR[,c("GDP","Happiness")], type="pearson"))
-
-corr <- WHR %>%
-  select(GDP, Happiness)
-rcorr(corr, type = "pearson")
 ```
 
 Pearsons r is .78. According to Cohen (1988, 1992), the effect size is low if the value of r varies around 0.1, medium if r varies around 0.3, and large if r varies more than 0.5. An r of .78 is a very large correlation! 
