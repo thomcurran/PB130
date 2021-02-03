@@ -123,11 +123,11 @@ summary(model.c)
 lm.beta(model.c)
 ```
 
-We can see that the c path in our model - the total effect of control on exhaustion - is .12. The standardised estimate is .17. We can also see that the F ratio (6.23) is significant indictating that the linear model is a better fit than the empty model. The SE of the slope estiamte is small and the t value is larger that 1.96 (2.50). As such, we can reject the null hypothesis and conclude this is a statistically significant postive effect.
+We can see that the c path in our model - the total effect of control on exhaustion - is .12. The standardised estimate is .17. We can also see that the F ratio (6.23) is significant indicating that the linear model is a better fit than the empty model. The SE of the slope estimate is small and the t value is larger that 1.96 (2.50). As such, we can reject the null hypothesis and conclude this is a statistically significant positive effect.
 
 ## Multiple regression: The c' and b paths
 
-Now we have the "a" path in our mediation model, we need the "b" path and the direct effect "c'". The "b" path is the prediction of disconnection on exhuastion controlling for control and the "c'" path is the direct effect of control on exhaution, controlling for disconnection. As such, we need to build a multiple regression model that regresses exhaustion on control and disconnection. Lets do that now and create a new R object for this multiple regression called model.b.
+Now we have the "a" path in our mediation model, we need the "b" path and the direct effect "c'". The "b" path is the prediction of disconnection on exhaustion controlling for control and the "c'" path is the direct effect of control on exhaustion, controlling for disconnection. As such, we need to build a multiple regression model that regresses exhaustion on control and disconnection. Lets do that now and create a new R object for this multiple regression called model.b.
 
 ```{r}
 model.b <- lm(Exhaustion ~ 1 + Control + Disconnection, data = employee)
@@ -164,7 +164,9 @@ mediation <- mediate(model.a, model.b, treat="Control", mediator="Disconnection"
 summary(mediation)
 ```
 
-The output here is a bit weird. The indirect - or ab - is listed as ACME, which means "average causal mediation effect". Remember I said statisticians like calling the same things different names? This is another example. The ACME from this output is the same as the indirect effect (i.e., ab). Here we see an indirect effect of .07, which is the same as we calculated by hand. We also see some other output. The ADE is the "average direct effect" - or direct effect as we have been calling it - and is .04, just like we saw in the multiple regression model. The total effect is .12, just like we saw in the simple regression model and the proportion mediated is basically the proportion of the total effect that is explained by the mediator. In other words, 62% of the variance shared between control and exhaustion is explained by disconnection.
+The output here is a bit weird. The indirect effect - or ab - is listed as ACME, which means "average causal mediation effect". Remember I said statisticians like calling the same things different names? This is another example. The ACME from this output is the same as the indirect effect (i.e., ab). Here we see an indirect effect of .07, which is the same as we calculated by hand. 
+
+We also see some other output. The ADE is the "average direct effect" - or direct effect as we have been calling it - and is .04, just like we saw in the multiple regression model. The total effect is .12, just like we saw in the simple regression model and the proportion mediated is basically the proportion of the total effect that is explained by the mediator. In other words, 62% of the variance shared between control and exhaustion is explained by disconnection.
 
 Of most importance here is bootstrap confidence interval for the indirect effect. We can see that with 5000 simulations, the 95% confidence interval for our indirect effect of .07 runs from .03 to .12. Crucially, this interval does not include a zero indirect effect and therefore we can reject the null hypothesis. A sense of disconnection with others at work does indeed mediate the relationship between manager control and exhaustion!
 
@@ -232,7 +234,7 @@ jn <- jn(mod.model, dv='Exhaustion', iv='Structure', mod='Control') # this funct
 jn
 ```
 
-You can see that the conditional effect of structure on exhaustion is negative and significant when control is low, but is positive and significant when control is high. More information than the pick-a-point to indicate that at very high levels of control the conditional effect is significant. However, this output is not overly satisfactory becuase it does not show the specific values of the moderator at which the conditional effect becomes statistically significant. So I created a package for this purpose called modplot, which uses a jnt() function to return the specific values of the moderator at which the conditional effect is significant at the .05 level. Three outcomes are possible using this function:
+You can see that the conditional effect of structure on exhaustion is negative and significant when control is low, but is positive and significant when control is high. More information than the pick-a-point to indicate that at very high levels of control the conditional effect is significant. However, this output is not overly satisfactory because it does not show the specific values of the moderator at which the conditional effect becomes statistically significant. So I created a package for this purpose called modplot, which uses a jnt() function to return the specific values of the moderator at which the conditional effect is significant at the .05 level. Three outcomes are possible using this function:
 
 1) A single value of the moderator that the conditional effect is either significant above, or below, but not both.
 
@@ -254,7 +256,7 @@ Hopefully this plot brings our analyses to life. You can see that when the effec
 
 # Activity: Moderation with a categorical moderator
 
-Okay, lets now give you a chance to set up a linear model to test for moderation, but this time with a categorical rather than continuous moderator. For this, lets continue to use the employee dataset, but this time lok at whether gender moderates the relationship between manager control and  employee exhaustion. Before we go on, I want to note that I have fabricated the gender variable for demonstration purposes. Relationships will not look like this in the real world. Our goal here is understand how the effect of manager control is conditioned across two levels of the moderator: males and females. In essence, with this analysis we are interested to know whether the effects of manager control on employee exhaustion depend on whether one is male or female.
+Okay, lets now give you a chance to set up a linear model to test for moderation, but this time with a categorical rather than continuous moderator. For this, lets continue to use the employee dataset, but this time look at whether gender moderates the relationship between manager control and  employee exhaustion. Before we go on, I want to note that I have fabricated the gender variable for demonstration purposes. Relationships will not look like this in the real world. Our goal here is understand how the effect of manager control is conditioned across two levels of the moderator: males and females. In essence, with this analysis we are interested to know whether the effects of manager control on employee exhaustion depend on whether one is male or female.
 
 Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
 
@@ -290,7 +292,7 @@ Is the interaction term statistically significant?
 
 ## Probing the interaction
 
-We have a significant interaction term, but what is the nature of this moderation - to understadn this we need to probe it. When we had a continuous predictor, we used pick a point and the JN technique to calcuate conditonal effects at various values of the moderator. However, with a categorical variable there are only two values of the moderator; 0 and 1 or Females and Males. Therefore, there are only 2 conditional effects to calculate. The first is when the moderator = zero and the second when the moderator = 1. We already know the condtional effect when the moderator = 0 becuase it is the b1 estimate in the multiple regression (i.e., -.41). So the female slope estimate for the relationship between manager control and exhaustion is -.41. Among females, manager control appears to lower exhaustion. But what about when the moderator = 1 (i.e., for males)? R is cleaver enough to detect a dummy categorical variable so when we run the pickapoint() function it will return the conditional effects at 0 and 1 (i.e., not +1SD, mean, and -1SD). 
+We have a significant interaction term, but what is the nature of this moderation - to understand this we need to probe it. When we had a continuous predictor, we used pick a point and the JN technique to calculate conditional effects at various values of the moderator. However, with a categorical variable there are only two values of the moderator; 0 and 1 or Females and Males. Therefore, there are only 2 conditional effects to calculate. The first is when the moderator = zero and the second when the moderator = 1. We already know the conditional effect when the moderator = 0 because it is the b1 estimate in the multiple regression (i.e., -.41). So the female slope estimate for the relationship between manager control and exhaustion is -.41. Among females, manager control appears to lower exhaustion. But what about when the moderator = 1 (i.e., for males)? R is cleaver enough to detect a dummy categorical variable so when we run the pickapoint() function it will return the conditional effects at 0 and 1 (i.e., not +1SD, mean, and -1SD). 
 
 ```{r eval = FALSE}
 pickapoint(??, dv='??', iv='??', mod='??') ## enter the iv, dv, and dummy variables here
@@ -300,7 +302,7 @@ Here we have the conditional effects at 0 and 1. As we saw, we know the effect f
 
 What is the conditional effect for males? 
 
-For males, does manager control have a positive or neagtive relationship with exhaustion?
+For males, does manager control have a positive or negative relationship with exhaustion?
 
 Are the conditional effects statistically significant?
 
