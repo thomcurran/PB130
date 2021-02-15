@@ -123,7 +123,7 @@ Now, traditionally, 2 x 2 ANOVA is tested using the dedicated aov() function tha
 ```{r}
 anova.model1 <- aov(grade ~ attend + reading, data = rtfm.2)
 summary(anova.model1)
-eta_sq(anova.model1, partial=TRUE)
+effectsize::eta_squared(anova.model1, partial=TRUE)
 ```
 
 The output presents the two main effects for each of attendance and reading on grades as well as the effect sizes (partial eta squared). And what do you know, these main effects and effect sizes are EXACTLY the same as those outputted in the supernova table above. Go ahead and check them. I suggested earlier that there are some benefits of using the dedicated aov() function rather than lm() to test linear models with categorical predictors (i.e., factorial ANOVA) and this is because they allow us to make direct comparisons of the means. The supernova output reports whats called an omnibus F test for the main effects that tests the null hypothesis that there is no significant difference across the groups within the predictor variable. Obtaining a significant F for the omnibus test doesn't tell you which groups are different to which. We can use the linear model to calculate these differences with the slope coefficients and with 2 predictors each containing 2 levels this is quite straightforward. Indeed, we did this when we inspected the intercept and slope coefficients from the linear.model1 above.
@@ -136,7 +136,7 @@ However, as the number of categories per predictor increases, comparing the mean
 
 2. The difference in grades between those who did the readings and those who did not
 
-A tool called Tukey's "Honestly Significant Difference" (or Tukey's HSD for short) makes these comparisons from the factoral ANOVA model. It constructs 95% simulataneous confidence intervals around each specific mean comparison. Simultaneous just means that there is a 95% probability *all* of these confidence intervals including the true difference in the population. To all intents and purposes, it is interpreted in the same way we have been interpreting 95% confidence intervals to date. Lets go ahead and request Tukey's HSD using the TukeyHSD() function from the anova.model1 object.
+A tool called Tukey's "Honestly Significant Difference" (or Tukey's HSD for short) makes these comparisons from the factorial ANOVA model. It constructs 95% simultaneous confidence intervals around each specific mean comparison. Simultaneous just means that there is a 95% probability *all* of these confidence intervals including the true difference in the population. To all intents and purposes, it is interpreted in the same way we have been interpreting 95% confidence intervals to date. Lets go ahead and request Tukey's HSD using the TukeyHSD() function from the anova.model1 object.
 
 ```{r}
 TukeyHSD(anova.model1)
@@ -454,10 +454,13 @@ emmeans(anova.model4, pairwise ~ Congruency|Posture, adjust='bonferroni')
 ```
 
 What is the mean difference in reaction time for the sitting condition?
+-119
 
-What is the mean difference in reason time for the standing condition?
+What is the mean difference in reaction time for the standing condition?
+-96
 
 Are these differences statistically significant using paired t-test?
+Yes
 
 We can see that the paired contrasts are significant for both conditions - reaction time was slower in incongruent condition for both standing and sitting. But this effect appears to be mitigated somewhat when the participants were standing.
 
@@ -490,11 +493,11 @@ Becasue of the mixed nature of this design, the data is structured slightly diff
 Go to the LT3 folder, and then to the workshop folder, and find the "extraordinary.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
 ```{r}
-extraordinary <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT5/Workshop/extraordinary.csv")
+extraordinary <- read_csv("C:/Users/CURRANT/Dropbox/Work/LSE/PB130/LT5/Workshop/extraordinary.csv")
 View(extraordinary)
 ```
 
-If you go to the data file and click on the "ID" column, it will sort the data file from low to high. As you will see, when you sort the data by ID, each individual has 2 data rows. The first is for the rating of extraordinariness at time point 1 (coded 0) and the second is for the rating of extraordinariness at time point 2 (Coded 1). This is the within-person factor. The condition that the person belongs to (i.e., ordinary coded 0 or extraordinary coded 1) is the same across each time point becuase this is the between-person factor - the factor that differs between persons, but not within them. Structured this way, the linear model can estiamte the effect of time (i.e., differences between the time points) and condition (i.e., the differences between the conditions) simultaneously. 
+If you go to the data file and click on the "ID" column, it will sort the data file from low to high. As you will see, when you sort the data by ID, each individual has 2 data rows. The first is for the rating of extraordinariness at time point 1 (coded 0) and the second is for the rating of extraordinariness at time point 2 (Coded 1). This is the within-person factor. The condition that the person belongs to (i.e., ordinary coded 0 or extraordinary coded 1) is the same across each time point because this is the between-person factor - the factor that differs between persons, but not within them. Structured this way, the linear model can estimate the effect of time (i.e., differences between the time points) and condition (i.e., the differences between the conditions) simultaneously. 
 
 As always, before we delve into this topic lets just clarify the research question and null hypothesis we are testing:
 
@@ -504,7 +507,7 @@ As always, before we delve into this topic lets just clarify the research questi
 
 ## Setting up the linear model
 
-Now lets set up the linear model. And we don't need to intoduce anything new here - we are just building a moderated regression model in the same way as we did in LT3 - but this time we are using categorical predictors rather than continuous. For this, we add the preditors and their interaction term in the lm() function. So lets add do that now to build our a linear model of extraordinariness and create a new R object called "linear.model2"
+Now lets set up the linear model. And we don't need to introduce anything new here - we are just building a moderated regression model in the same way as we did in LT3 - but this time we are using categorical predictors rather than continuous. For this, we add the predictors and their interaction term in the lm() function. So lets add do that now to build our a linear model of extraordinariness and create a new R object called "linear.model2"
 
 ```{r}
 linear.model4 <- lm(extraordinary ~ 1 + time + Condition + time*Condition, data=extraordinary)
@@ -513,7 +516,7 @@ summary(linear.model4)
 
 We already know that in a linear model with an interaction term, the estimates for b1 and b2 become conditional effects - differences between the level of the predictor when the other predictor is 0. So here the intercept estimate is the mean extraordinary rating for the people in the ordinary condition (coded 0) at time 1 (coded 0). The slope for time is the boost needed to the intercept to find the mean extraordinary rating for people in the ordinary condition (coded 0) at time point 2 (coded 1). The slope for condition is the boost needed to the intercept to find the mean extraordinary rating for people in the extraordinary condition (coded 1) at time point 1 (coded 0).
 
-As we know from LT3, these main effects, as we have been calling them, are irrelevant in the presence of a significant interaction term because they will depend on the level of the moderator. In this case, the interaction of time and condition means that the effect of time on extraordinariness depends on the condition that participants were assigned to. I don't want you to focus on the t ratios and p values here becuase this is a mixed design and therefore the errors in the linear model are wrong (more below). For now, lets just move forward to probing this interaction.
+As we know from LT3, these main effects, as we have been calling them, are irrelevant in the presence of a significant interaction term because they will depend on the level of the moderator. In this case, the interaction of time and condition means that the effect of time on extraordinariness depends on the condition that participants were assigned to. I don't want you to focus on the t ratios and p values here because this is a mixed design and therefore the errors in the linear model are wrong (more below). For now, lets just move forward to probing this interaction.
 
 ## Probing the interaction
 
@@ -524,11 +527,11 @@ Okay, so just like moderation analysis, the slope for the interaction term doesn
 pickapoint(linear.model4, dv='extraordinary', iv='time', mod='Condition')
 ```
 
-Now we are getting somewhere! Consisitent with the interaction term, we can see that the effect of time on ratings of extraordinariness depend on what condition the participants belong to. In the ordinary condition, we can see that the mean diffence between time 1 and time 2 ratings of extraordiness increased by 1.2 points. However, for people randomly assigned to the extraordinalry condition, the difference between time 1 and time 2 ratings of extraordinariness is much smaller - only 0.17. 
+Now we are getting somewhere! Consistent with the interaction term, we can see that the effect of time on ratings of extraordinariness depend on what condition the participants belong to. In the ordinary condition, we can see that the mean difference between time 1 and time 2 ratings of extraordiness increased by 1.2 points. However, for people randomly assigned to the extraordinalry condition, the difference between time 1 and time 2 ratings of extraordinariness is much smaller - only 0.17. 
 
 ## Plotting the interaction
 
-To get a better understading of this moderation, we can plot it. For this, I'm going to create a new data object called data thast will contain the means and standard errors for each condition, at each time point so that I can then plot them on an interaction plot. As such, I will use ggplot() this time rather than interation.plot() as we did in LT3 becuase I with the standard errors, can plot the confidence intervals around the means for each condition at each time point. Lets go ahead and create that plot.
+To get a better understanding of this moderation, we can plot it. For this, I'm going to create a new data object called data thast will contain the means and standard errors for each condition, at each time point so that I can then plot them on an interaction plot. As such, I will use ggplot() this time rather than interation.plot() as we did in LT3 because I with the standard errors, can plot the confidence intervals around the means for each condition at each time point. Lets go ahead and create that plot.
 
 ```{r}
 data <- extraordinary %>% 
@@ -546,13 +549,13 @@ data %>%
 theme_classic()
 ```
 
-We can see clearly here what is happening in the data. Ordinary experiences were perceived as far more extraordinary at Time 2 than at Time 1, whereas these ratings for the extraordinary experiences did not differ between Time 1 and Time 2. This is precicely the hypothesis that Zhang et al had. Ordinary events come to be perceived as more extraordinary over time, whereas perceptions of extraordinary events do not change across time. 
+We can see clearly here what is happening in the data. Ordinary experiences were perceived as far more extraordinary at Time 2 than at Time 1, whereas these ratings for the extraordinary experiences did not differ between Time 1 and Time 2. This is precisely the hypothesis that Zhang et al had. Ordinary events come to be perceived as more extraordinary over time, whereas perceptions of extraordinary events do not change across time. 
 
 ## Equivalence with aov()
 
 Again, I want to show you equivalence of the lm() with aov() for this mixed 2 x 2 ANOVA to further demonstrate how ANOVA is just a special case of regression. Special in that the predictor variables are categorical and not continuous.
 
-I said above that lm() and aov() are both appropriate methods for anaysing the 2 x 2 ANOVA. However, when there is a mixed deisgn, like this one, aov() should ALWAYS be used. Why? Think back to the coefficients for the linear model and remember I said that we cannot interpret the t values and p values becuase the error portion of the model is wrong? Well thats becuase when we stacked the data into long format we doubled the sample size (i.e., each person has 2 rows, one for time 1 and one for time 2) and the lm() function has no way of knowing that those additional observations are actually grouped by ID. It therefore assumes the sample size is 260 rather than 130 and,  as such, overestimates the degrees of freedom in the residual. Thats why we cannot rely on the lm() for null hypothesis significance testing. 
+I said above that lm() and aov() are both appropriate methods for analyzing the 2 x 2 ANOVA. However, when there is a mixed design, like this one, aov() should ALWAYS be used. Why? Think back to the coefficients for the linear model and remember I said that we cannot interpret the t values and p values because the error portion of the model is wrong? Well thats because when we stacked the data into long format we doubled the sample size (i.e., each person has 2 rows, one for time 1 and one for time 2) and the lm() function has no way of knowing that those additional observations are actually grouped by ID. It therefore assumes the sample size is 260 rather than 130 and,  as such, overestimates the degrees of freedom in the residual. Thats why we cannot rely on the lm() for null hypothesis significance testing. 
 
 But this said, the analyses are equivalent and the focal coefficient - the estimate for the interaction - will be identical. For ease, I'm going to run the supernova for the linear model and the summary for the ANOVA model to demonstrate this.
 
@@ -560,16 +563,16 @@ But this said, the analyses are equivalent and the focal coefficient - the estim
 supernova(linear.model4)
 
 anova.model4 <- aov(extraordinary ~ as.factor(time)*as.factor(Condition) + Error(as.factor(ID)/as.factor(time)), data = extraordinary)
-summary(anova.model4) ## the Error addition to the ANOVA model tells R that this is a mixed design and that time is the within-person factor with each person categorised by their ID
+summary(anova.model4) ## the Error addition to the ANOVA model tells R that this is a mixed design and that time is the within-person factor with each person categorized by their ID
 ```
 
-Of noting here is the degrees of freedom in the total model and - by extention - the error. In the linear model it is overestimated (i.e., 259) but in the ANOVA model it is correct (i.e., 128) because we have conditioned the between person effects on the within person condition. A mixed factoral ANOVA first outputs the main effect of condition. This is the overall effect of condition on extraordinariness ratings irrespective of time. Those in the extraordinary condition rated the events as more extraodinary overall, irrespective of time point. It then outputs the main effect of time, irrespecitve of condition. Here, experiences seemed more extraordinary overall at Time 2 than they did 3 months earlier, at Time 1, irrespecitve of what condition the participants were in. Sound familiar? Thats right, these are the same as unique effects in regression.
+Of noting here is the degrees of freedom in the total model and - by extention - the error. In the linear model it is overestimated (i.e., 259) but in the ANOVA model it is correct (i.e., 128) because we have conditioned the between person effects on the within person condition. A mixed factorial ANOVA first outputs the main effect of condition. This is the overall effect of condition on extraordinariness ratings irrespective of time. Those in the extraordinary condition rated the events as more extraodinary overall, irrespective of time point. It then outputs the main effect of time, irrespective of condition. Here, experiences seemed more extraordinary overall at Time 2 than they did 3 months earlier, at Time 1, irrespective of what condition the participants were in. Sound familiar? Thats right, these are the same as unique effects in regression.
 
-Importantly, however, the ANOVA also outputs the interaction between time and condition, F(1, 128) = 15.02, p < .001. And this, of course, is the focal effect of interest. We can interpret the F ratio and P value for this effect becuase the degrees of freedom in the error portion of the model are correct. And, as we can see, the interaction is significant. What I would like you note here is the symatery between the lm() and aov(). The sum of squares for the interaction term is exactly the same in the linear model and the ANOVA model (17.45). The F ratio and p value is wrong becuase there is no adjustment to the error in the lm(), but the mechanics under the hood are exactly the same.
+Importantly, however, the ANOVA also outputs the interaction between time and condition, F(1, 128) = 15.02, p < .001. And this, of course, is the focal effect of interest. We can interpret the F ratio and P value for this effect because the degrees of freedom in the error portion of the model are correct. And, as we can see, the interaction is significant. What I would like you note here is the symmetry between the lm() and aov(). The sum of squares for the interaction term is exactly the same in the linear model and the ANOVA model (17.45). The F ratio and p value is wrong because there is no adjustment to the error in the lm(), but the mechanics under the hood are exactly the same.
 
 ## Post-hoc testing
 
-As a result of the significant interation term, we should conduct our multiple comparisons by conditioning the effect of time on the experimental condition. We do this in the emmeans() function using the vertical bar |. The vertical bar reads as meaning conditional. Here we will condition the effect of time on experimental condition using |. Lets go ahead and do that now.
+As a result of the significant interaction term, we should conduct our multiple comparisons by conditioning the effect of time on the experimental condition. We do this in the emmeans() function using the vertical bar |. The vertical bar reads as meaning conditional. Here we will condition the effect of time on experimental condition using |. Lets go ahead and do that now.
 
 ```{r}
 extraordinary$time <- factor(extraordinary$time, levels = c("1", "0"))
@@ -578,7 +581,7 @@ emmeans(anova.model4, pairwise ~Condition)
 emmeans(anova.model4, pairwise ~time|Condition)
 ```
 
-The way these contrasts are calcualated is pre-post and therefore the estimates should be reversed to reflect the direction of effects (i.e., negative vlaues indicate increases and vice versa). I have done this in the first line of code above. Of noting is that the point estimate for the contrasts reveal the story: the increase in ratings of extraordinariness are larger for the oridinary group (mean=1.20, SE=0.19, t=6.31) than for the extraordinary group (mean=.17, SE=0.19, t=.89).
+The way these contrasts are calculated is pre-post and therefore the estimates should be reversed to reflect the direction of effects (i.e., negative values indicate increases and vice versa). I have done this in the first line of code above. Of noting is that the point estimate for the contrasts reveal the story: the increase in ratings of extraordinariness are larger for the ordinary group (mean=1.20, SE=0.19, t=6.31) than for the extraordinary group (mean=.17, SE=0.19, t=.89).
 
 ## How its written
 
