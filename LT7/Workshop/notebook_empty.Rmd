@@ -13,9 +13,9 @@ By the end of this workshop, you should be able to:
 
 1. Run a chi-square goodness of fit test
 
-2. Run a chi-square indpendence test
+2. Run a chi-square independence test
 
-3. Understand how to run a logstic regression
+3. Understand how to run a logistic regression
 
 # Install required packages
 
