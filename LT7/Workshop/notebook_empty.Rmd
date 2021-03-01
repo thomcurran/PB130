@@ -57,7 +57,7 @@ For example, imagine that there are 3 political parties (Democrats, Republicans,
 
 The research question is:
 
-Are US citizen's political party preferences equally distrubuted?
+Are US citizen's political party preferences equally distributed?
 
 To answer this, lets take a random sample of US citizens and ask them which party they support. This data can be found in the votes dataframe. Write the code to load it below:
 
@@ -86,7 +86,7 @@ N <- sum(votes)
 N
 ```
 
-There are 1619 paritcipants in our sample. Lets now divide each party count by the sample size to get an indication of the proportion of voters for each political party in our sample.
+There are 1619 participants in our sample. Lets now divide each party count by the sample size to get an indication of the proportion of voters for each political party in our sample.
 
 ```{r}
 votes_freq <- votes/N
@@ -109,11 +109,11 @@ e <- N * p
 e
 ```
 
-Since we have 3 categories (Democrat, Republican, Independent), and our null hypothesis is that voters are equally distributed across the categories, our hypothesized proportion p of voters/party = 1/3. Thus, our expected frequencies for each party should be N*p = 1619 * 13 = 539.6667.
+Since we have 3 categories (Democrat, Republican, Independent), and our null hypothesis is that voters are equally distributed across the categories, our hypothesized proportion p of voters/party = 1/3. Thus, our expected frequencies for each party should be N*p = 1619 * 0.33 = 539.6667.
 
 ## Calculate x2
 
-Recall from the lecture that the calcualtion for chi-square is just the sum of the observed counts for each cell minus the expected counts squared divided by the expected count. So lets do that calculation now by hand in R and save it as a new object called chisq_gf:
+Recall from the lecture that the calculation for chi-square is just the sum of the observed counts for each cell minus the expected counts squared divided by the expected count. So lets do that calculation now by hand in R and save it as a new object called chisq_gf:
 
 ```{r}
 chisq_gf <- (587 - 539.67)^2/539.67 + (552-539.67)^2/539.67 + (480 - 539.67)^2/539.67
@@ -126,7 +126,7 @@ Here we have a chi-square of 11.03. Is that large enough to be considered statis
 
 Degrees of freedom in chi-square is k-1, where k is the number of categories. So in this case our df = 3-1 = 2.
 
-We can compare a chi-square of 11.03 with a df of 2 to a table of critical values - like in the lecture. Or we can directly calcualte the p value in R using pchsq(). To do this, we just create a new R object called p_val that contains this calculation.
+We can compare a chi-square of 11.03 with a df of 2 to a table of critical values - like in the lecture. Or we can directly calculate the p value in R using pchsq(). To do this, we just create a new R object called p_val that contains this calculation.
 
 ```{r}
 p_val <- pchisq(chisq_gf, df = 2, lower.tail = F)
@@ -152,7 +152,7 @@ We can reject the null hypothesis that the voters are equally distributed across
 
 ## Chi-square test of independence
 
-If you have two categorical variables, and you’d like to determine whether the variables are independent (i.e., that there is no relationship between them), you can use a x2 test of inderpendence.
+If you have two categorical variables, and you’d like to determine whether the variables are independent (i.e., that there is no relationship between them), you can use a x2 test of independence.
 
 Null hypothesis (H0): The 2 categorical variables are independent (there is no relationship between the variables)
 
@@ -205,7 +205,7 @@ Try filling in a blank code with the expected values, and then calculate out x2!
 
 ```{r eval = FALSE}
 ## write the data out and list the number of columns
-expected <- matrix(c(27.39, 32.35, ??, ??, ??, ??), ncol=2)
+expected <- matrix(c(27.39, 32.35, 42.26, 66.61, 78.65, 102.74), ncol=2)
 
 # label the columns and rows
 colnames(expected) <- c('maltreat', 'other')
@@ -219,14 +219,14 @@ death_table
 
 I've outputted both expected and observed Tables here. Expected is top and observed is bottom. Lets use these values and the chi-square formula to calculate chi-square by hand.
 
-Remember, the calcualtion for chi-square is:
+Remember, the calculation for chi-square is:
 
-X2 = sum(observed-expcected)^2/expected
+X2 = sum(observed-expected)^2/expected
 
 So for each cell take the observed from the expected, square it, and then divide by the expected. Then, add them all up.
 
 ```{r eval = FALSE}
-chisq_in <- (26 - 27.39)^2/27.39 + (31-32.35)^2/32.35 + (?? - ??)^2/?? + (?? - ??)^2/?? + (80 - ??)^2/?? + (?? - ??)^2/?? # fill in the blanks here
+chisq_in <- (26 - 27.39)^2/27.39 + (31-32.35)^2/32.35 + (45 - 42.26)^2/42.26 + (68 - 66.61)^2/66.61 + (80 - 78.65)^2/78.65 + (100 - 102.74)^2/102.74 # fill in the blanks here
 chisq_in
 ```
 
@@ -298,9 +298,9 @@ college
 
 ## Setting up the logistic regression model
 
-To build the logistic regression model we will use glm() rather than lm(). This is becuase logistic regression is a special case of the linear model - one in which the outcome is estimated in terms of log(odds) rather than raw units. We need to do this becuase the outcome only goes from 0 to 1 and a linear model will make predicted values that fall outside of these boundarys without this transformation (see lecture). But otherwise, the coding is exactly the same as we have been working with to date.
+To build the logistic regression model we will use glm() rather than lm(). This is because logistic regression is a special case of the linear model - one in which the outcome is estimated in terms of log(odds) rather than raw units. We need to do this because the outcome only goes from 0 to 1 and a linear model will make predicted values that fall outside of these boundaries without this transformation (see lecture). But otherwise, the coding is exactly the same as we have been working with to date.
 
-For the simple logisitic regression model, lets create a new R object called college.model and tell R to run a logistic regression on the categorical outcome. The code of the glm function is similar to that of lm, except that we must pass the argument family = binomial in order to tell R to run a logistic regression rather than some other type of generalized linear model.
+For the simple logistic regression model, lets create a new R object called college.model and tell R to run a logistic regression on the categorical outcome. The code of the glm function is similar to that of lm, except that we must pass the argument family = binomial in order to tell R to run a logistic regression rather than some other type of generalized linear model.
 
 ```{r}
 college.model <- glm(admit ~ 1 + gpa, data = college, family = "binomial")
@@ -324,7 +324,7 @@ college.boot <- Boot(college.model, f=coef, R = 5000)
 confint(college.boot, level = .95, type = "norm")
 ```
 
-The confidence interval for the gpa slope does not include zero and therefore this support the normal theory test. The relationship between gpa and college attendance is statistically significant.
+The confidence interval for the gpa slope does not include zero and therefore this supports the normal theory test. The relationship between gpa and college attendance is statistically significant.
 
 ## Odds ratios
 
@@ -354,7 +354,7 @@ To find the difference in deviance for the two models (i.e., the test statistic)
 with(college.model, null.deviance - deviance)
 ```
 
-The degrees of freedom for the difference between the two models is equal to the number of predictor variables in the mode, and can be obtained using:
+The degrees of freedom for the difference between the two models is equal to the number of predictor variables in the model, and can be obtained using:
 
 ```{r}
 with(college.model, df.null - df.residual)
@@ -383,13 +383,13 @@ In anova, much like with each main effect we saw in LT5, the reduction in devian
 
 ## How its written
 
-We used logistic regression to test whether the college admission could be predicted by gpa. The chi-square test statistic for the overall logistic regression model was statistically significant: x2(1) = 13.01, p < .05. Therefore, our model does fits significantly better than an empty intercept-only model. The logistic regression coefficient indicted that gpa was positively correlated with admission status (b = 1.05, SE = .30, z = 3.10, p < .05). With 5,000 resamples, the bootstrap 95% confidence interval associated with the regression coeffient was .44 to 1.64. The odds ratio associated with the regression coefficient of 2.86 indicated that a one unit increase in gpa enhances the chance of attending college by a factor of 2.86. 
+We used logistic regression to test whether the college admission could be predicted by gpa. The chi-square test statistic for the overall logistic regression model was statistically significant: x2(1) = 13.01, p < .05. Therefore, our model does fit significantly better than an empty intercept-only model. The logistic regression coefficient indicted that gpa was positively correlated with admission status (b = 1.05, SE = .30, z = 3.10, p < .05). With 5,000 resamples, the bootstrap 95% confidence interval associated with the regression coeffient was .44 to 1.64. The odds ratio associated with the regression coefficient of 2.86 indicated that a one unit increase in gpa enhances the chance of attending college by a factor of 2.86. 
 
 ## Adding an additional predictor
 
 As we saw in the lecture, logistic regression is just an extension of the linear model. Specifically, it is a general linear model because the outcome is categorical and therefore we must transform the y-axis to log(odds) rather than raw units. But otherwise, the analyses are the same - our transformation linearlizes the relationship and permits tests using the straight line equation (i.e., y = a + bx + e)
 
-And becuase logistic regression is equivalent to the linear model, we can also do fancy extentions with more than one predictor variable.  Just like multiple regression or ANOVA for the linear model.
+And because logistic regression is equivalent to the linear model, we can also do fancy extensions with more than one predictor variable.  Just like multiple regression or ANOVA for the linear model.
 
 Lets go ahead and extend the simple logistic regression model we just built to include an additional predictor - school prestige (labeled 'pres') - and call it 'multiple.college.model'. By doing so, we will have a multiple logistic regression model - one that includes two predictors.
 
@@ -421,7 +421,7 @@ Here we can see that the reduction in error attributable to gpa is 13 and the ad
 
 ## Activity
 
-Okay, lets now give you a chance to set up and test a logistic regression. We are going to examine whether personality effect whether or not someone volunteers for psychological research.
+Okay, lets now give you a chance to set up and test a logistic regression. We are going to examine whether personality effects whether or not someone volunteers for psychological research.
 
 The data for this task are from Cowles and Davis (1987). They were interested to know whether students' extroversion and neuroticism influenced their tendency to volunteer for research projects. 
 
@@ -454,11 +454,11 @@ summary(??)
 
 What is the effect of neuroticism on volunteering and how is it interpreted?
 
-Is the effect of neuroticism on volunteering statistical significant?
+Is the effect of neuroticism on volunteering statistically significant?
 
 What is the effect of extroversion on volunteering and how is it interpreted?
 
-Is the effect of extroversion on volunteering statistical significant?
+Is the effect of extroversion on volunteering statistically significant?
 
 # Task 2 - Bootstrap 95% confidence interval for the model estimates
 
