@@ -43,7 +43,7 @@ In general, the chi-square (x2) test is a useful statistical test to look at dif
 
 2. When estimating whether two variables are independent (e.g., is the likelihood of getting aid from large companies vs. small companies the same for all three political parties?). Here we use an independent test.
 
-Because of the relative simplicty of chi-square, we'll first compute x2 by hand, and then we will do it using R!
+Because of the relative simplicity of chi-square, we'll first compute x2 by hand, and then we will do it using R!
 
 ## Chi-square goodness of fit test
 
@@ -144,7 +144,7 @@ gf_test <- chisq.test(votes)
 gf_test
 ```
 
-This is the simple way to do chi-square, but I wanted to show you the process underpinning this output. We can see that the chi-sqaure is indeed large enough to be statistically significant (i.e., p < .05). The voters are not equally distributed across the political parties.
+This is the simple way to do chi-square, but I wanted to show you the process underpinning this output. We can see that the chi-square is indeed large enough to be statistically significant (i.e., p < .05). The voters are not equally distributed across the political parties.
 
 ## Writing up results
 
@@ -266,7 +266,7 @@ Logistic regression, also called a logit model, is used to model categorical out
 
 ## The data
 
-We are going to go through a very simple example of logisitc regression. That is one categorical outcome and one continuous predictor. At the end, we will see that logisitc regression is just like normal regression  and it can be exended to more than one predictor. But for now, its best to start with the simplest design.
+We are going to go through a very simple example of logistic regression. That is one categorical outcome and one continuous predictor. At the end, we will see that logistic regression is just like normal regression  and it can be extended to more than one predictor. But for now, its best to start with the simplest design.
 
 A researcher is interested in how GPA (grade point average) effects admission into graduate school. The outcome variable, admit/don’t admit, is a categorical variable.
 
@@ -307,13 +307,13 @@ college.model <- glm(admit ~ 1 + gpa, data = college, family = "binomial")
 summary(college.model)
 ```
 
-In the output above, the first thing we see is the call, this is R reminding us what the model we ran was, what options we specified, etc. Next we see the deviance residuals, which are a measure of model fit. This part of output shows the distribution of the deviance residuals for individual cases used in the model - which is like the liklihood estiamtes we calcuated in the lecture. Below we discuss how to use summaries of the deviance statistic to assess model fit.
+In the output above, the first thing we see is the call, this is R reminding us what the model we ran was, what options we specified, etc. Next we see the deviance residuals, which are a measure of model fit. This part of output shows the distribution of the deviance residuals for individual cases used in the model - which is like the likelihood estimates we calculated in the lecture. Below we discuss how to use summaries of the deviance statistic to assess model fit.
 
 The next part of the output shows the coefficients, their standard errors, the z-statistic (sometimes called a Wald z-statistic), and the associated p-values. Both the intercept and gpa slope are statistically significant (i.e., p < .05). The logistic regression coefficients give the change in the log odds of the outcome for a one unit increase in the predictor variable.
 
 So, for every one unit change in gpa, the log odds of admission (versus non-admission) increases by 1.05.
 
-Below the table of coefficients are fit indices, including the null and deviance residuals and the AIC. Later we show an example of how you can use these values to help assess model fit. However, in short, deviance is analogous to the sum of squares calculations in linear regression and is a measure of the lack of fit to the data in a logistic regression model. The null deviance represents the difference between a model with only the intercept (which means “no predictors”) and a saturated model (a model with a theoretically perfect fit). The goal is for the model deviance (noted as Residual deviance) to be lower; smaller values indicate better fit. In this respect, the null model provides a baseline upon which to compare predictor models.
+Below the table of coefficients are fit indexes, including the null and deviance residuals and the AIC. Later we show an example of how you can use these values to help assess model fit. However, in short, deviance is analogous to the sum of squares calculations in linear regression and is a measure of the lack of fit to the data in a logistic regression model. The null deviance represents the difference between a model with only the intercept (which means “no predictors”) and a saturated model (a model with a theoretically perfect fit). The goal is for the model deviance (noted as Residual deviance) to be lower; smaller values indicate better fit. In this respect, the null model provides a baseline upon which to compare predictor models.
 
 ## Bootstrapping the estimate
 
@@ -324,7 +324,7 @@ college.boot <- Boot(college.model, f=coef, R = 5000)
 confint(college.boot, level = .95, type = "norm")
 ```
 
-The confidence interval for the gpa slope does not include zero and therefore this support the normal theory test. The relationship between gpa and college attendance is statistivcally significant.
+The confidence interval for the gpa slope does not include zero and therefore this support the normal theory test. The relationship between gpa and college attendance is statistically significant.
 
 ## Odds ratios
 
@@ -342,7 +342,7 @@ Now we can say that for a one unit increase in gpa, the odds of being admitted t
 
 ## Model fit
 
-We may also wish to see measures of how well our model fits. The output produced by summary(college.model) included indices of fit (shown below the coefficients), including the null and deviance residuals and the AIC. 
+We may also wish to see measures of how well our model fits. The output produced by summary(college.model) included indexes of fit (shown below the coefficients), including the null and deviance residuals and the AIC. 
 
 One measure of model fit is the significance of the overall model. This test asks whether the model with predictors fits significantly better than a model with just an intercept (i.e., the empty model). 
 
@@ -387,11 +387,11 @@ We used logistic regression to test whether the college admission could be predi
 
 ## Adding an additional predictor
 
-As we saw in the lecture, logistic regression is just an extention of the linear model. Specifically, it is a general linear model because the outcome is categorical and therefore we must transform the y-axis to log(odds) rather than raw units. But otherwise, the analyses are the same - our transformation linearlizes the relationship and permits tests using the straight line equation (i.e., y = a + bx + e)
+As we saw in the lecture, logistic regression is just an extension of the linear model. Specifically, it is a general linear model because the outcome is categorical and therefore we must transform the y-axis to log(odds) rather than raw units. But otherwise, the analyses are the same - our transformation linearlizes the relationship and permits tests using the straight line equation (i.e., y = a + bx + e)
 
 And becuase logistic regression is equivalent to the linear model, we can also do fancy extentions with more than one predictor variable.  Just like multiple regression or ANOVA for the linear model.
 
-Lets go ahead and extend the simple logsitic regression model we just built to include an additional predictor - school prestige (lablled 'pres') - and call it 'multiple.college.model'. By doing so, we will have a multiple logistic regression model - one that includes two predictors.
+Lets go ahead and extend the simple logistic regression model we just built to include an additional predictor - school prestige (labeled 'pres') - and call it 'multiple.college.model'. By doing so, we will have a multiple logistic regression model - one that includes two predictors.
 
 
 ```{r}
@@ -407,27 +407,27 @@ So holding pres constant, for every one unit change in gpa the log odds of admis
 
 And holding gpa constant, for every one unit change in pres the log odds of admission (versus non-admission) decreases by 0.58.
 
-And just like multiple regression, we can add as many predictors as we see fit to our logisitic regression model.
+And just like multiple regression, we can add as many predictors as we see fit to our logistic regression model.
 
 Pretty neat!
 
-Like above, we can also call the model fit for this multiple model using anova(). Here the overal reduction in error is outputted after the last predictor and every previous reduction in fit with the addition of each predictor.
+Like above, we can also call the model fit for this multiple model using anova(). Here the overall reduction in error is outputted after the last predictor and every previous reduction in fit with the addition of each predictor.
 
 ```{r}
 anova(multiple.college.model, test="Chisq")
 ```
 
-Here we can see that the reduction in error attributable to gpa is 13 and the addition of prestige reduces the error further by around 10 to 23.03. 23.03 is the overall model fit and is a chi-sqaure statistic on 2 df. We can see that this is significant so the overall model is better than the empty model. We can reject the null hypothesis.
+Here we can see that the reduction in error attributable to gpa is 13 and the addition of prestige reduces the error further by around 10 to 23.03. 23.03 is the overall model fit and is a chi-square statistic on 2 df. We can see that this is significant so the overall model is better than the empty model. We can reject the null hypothesis.
 
 ## Activity
 
 Okay, lets now give you a chance to set up and test a logistic regression. We are going to examine whether personality effect whether or not someone volunteers for psychological research.
 
-The data for this task are from Cowles and Davis (1987). They were interstest to know whether students' extraversion and neuroticism influenced their tendency to volunteer for research projects. 
+The data for this task are from Cowles and Davis (1987). They were interested to know whether students' extroversion and neuroticism influenced their tendency to volunteer for research projects. 
 
 The outcome variable - volunteering - is a categorical outcome with two levels. These are yes and no, with no coded 0 and yes coded 1.
 
-The continuous predictor variables neuroticism and extraversion are scale measurements from the Eysenck personality inventory.
+The continuous predictor variables neuroticism and extroversion are scale measurements from the Eysenck personality inventory.
 
 Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
 
@@ -435,9 +435,9 @@ Before we delve into this topic, lets just clarify the research question and nul
 
 *Null Hypothesis* - The relationship between neuroticism and tendency to volunteer for psychology research will be zero
 
-*Null hypothesis* - The relationship between extraversion and tendency to volunteer for psychology research will be zero
+*Null hypothesis* - The relationship between extroversion and tendency to volunteer for psychology research will be zero
 
-Before we start, lets load the cowles dataframe to the R environment. Go to the LT7 folder, and then to the workshop folder, and find the "cowles.csv" file. Click on it aand then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
+Before we start, lets load the cowles dataframe to the R environment. Go to the LT7 folder, and then to the workshop folder, and find the "cowles.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
 ```{r}
 cowles <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT7/Workshop/cowles.csv")
@@ -445,7 +445,7 @@ cowles <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT7/Workshop/cowles.cs
 
 ## Task 1 -  Build the multiple logistic regression model
 
-Use the glm() function to build the multiple logistic regression model volunteering. Place the 'volunteer' variable as the outcome in this model and the 'neuroticism' and 'extraversion' variables as the predictors. Save this logisitic regression model in a new R object called cowles.model and call the summary.
+Use the glm() function to build the multiple logistic regression model volunteering. Place the 'volunteer' variable as the outcome in this model and the 'neuroticism' and 'extroversion' variables as the predictors. Save this logistic regression model in a new R object called cowles.model and call the summary.
 
 ```{r eval = FALSE}
 cowles.model <- glm(?? ~ 1 + ?? + ??, data = ??, family = "binomial")
@@ -454,15 +454,15 @@ summary(??)
 
 What is the effect of neuroticism on volunteering and how is it interpreted?
 
-Is the effect of neuroticism on volunteering statisticall significant?
+Is the effect of neuroticism on volunteering statistical significant?
 
-What is the effect of extraversion on volunteering and how is it interpreted?
+What is the effect of extroversion on volunteering and how is it interpreted?
 
-Is the effect of extraversion on volunteering statisticall significant?
+Is the effect of extroversion on volunteering statistical significant?
 
 # Task 2 - Bootstrap 95% confidence interval for the model estimates
 
-Lets go ahead generate a bootstrap sampling distribution of the estimates and name it as a new R object; cowles.boot. Then use it to call the bootsrap 95% confidence interval using the confint() function.
+Lets go ahead generate a bootstrap sampling distribution of the estimates and name it as a new R object; cowles.boot. Then use it to call the bootstrap 95% confidence interval using the confint() function.
 
 ```{r eval = FALSE}
 cowles.boot <- Boot(??, f=coef, R = ??) 
@@ -481,7 +481,7 @@ Do we accept or reject the null hypothesis?
 
 # Task 3 - The odds ratio
 
-Knowing the estimates in units of log(odds) is not overly informative, so it is also a good idea to also express effects in terms of the odds ratio. This is the increase/decrease in the odds of finding the outcome for every unit increase in the predictor. To do this, we simply  exponentiate (exp) the slope coefficients, and tell R that the object you want to exponentiate is called coefficients and it is part of cowles.model (coef(cowles.model)). We can use the same logic to get odds ratios and their confidence intervals by exponentiating the confidence intervals from the bootstrapping procedure. To put it all in one table, we use cbind to bind the coefficients and confidence intervals column wise. Using the code above as a guide, fill in the missing code belof for the odds ratios and the confidence intervals.
+Knowing the estimates in units of log(odds) is not overly informative, so it is also a good idea to also express effects in terms of the odds ratio. This is the increase/decrease in the odds of finding the outcome for every unit increase in the predictor. To do this, we simply  exponentiate (exp) the slope coefficients, and tell R that the object you want to exponentiate is called coefficients and it is part of cowles.model (coef(cowles.model)). We can use the same logic to get odds ratios and their confidence intervals by exponentiating the confidence intervals from the bootstrapping procedure. To put it all in one table, we use cbind to bind the coefficients and confidence intervals column wise. Using the code above as a guide, fill in the missing code below for the odds ratios and the confidence intervals.
 
 ```{r eval = FALSE}
 exp(coef(??)
