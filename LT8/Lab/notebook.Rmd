@@ -64,7 +64,7 @@ bigfive <- select(bigfive, e1, e2, e3, e4, e5, e6, e7, e8, c1, c2, c3, c4, c5, c
 
 ## Cleaning: Reliability analysis
 
-The next step after we have recoded the items is to check the scales are reliable. As we saw in the lecture, we can calculate the reilaibility of the Big 5 scales using the Cronbach's alpha, which is the ratio of variance in the true score to error variance. We saw in the lecture tha tit is calculated as:
+The next step after we have recoded the items is to check the scales are reliable. As we saw in the lecture, we can calculate the reliability of the Big 5 scales using the Cronbach's alpha, which is the ratio of variance in the true score to error variance. We saw in the lecture tha tit is calculated as:
 
 r = Vt/V
 
@@ -80,7 +80,7 @@ conscientiousness <- select(bigfive, c1, c2, c3, c4, c5, c6, c7, c8, c9)
 agreeableness <- select(bigfive, a1, a2, a3, a4, a5, a6, a7, a8, a9)
 
 alpha(neuroticism)
-alpha(extraversion)
+alpha(extroversion)
 alpha(openness)
 alpha(conscientiousness)
 alpha(agreeableness)
@@ -98,7 +98,7 @@ bigfive <- bigfive %>%
 bigfive <- bigfive %>%
   mutate(openness = (o1 + o2 + o3 + o4 + o5 + o6 + o7 + o8 + o9 + o10)/10)
 bigfive <- bigfive %>%
-  mutate(extraversion = (e1 + e2 + e3 + e4 + e5 + e6 + e7 + e8)/8)
+  mutate(extroversion = (e1 + e2 + e3 + e4 + e5 + e6 + e7 + e8)/8)
 bigfive <- bigfive %>%
   mutate(conscientiousness = (c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9)/9)
 bigfive <- bigfive %>%
@@ -110,8 +110,8 @@ bigfive <- bigfive %>%
 
 ```{r}
 # First create dataframe with means
-mean_score <- c(mean(bigfive$neuroticism), mean(bigfive$openness), mean(bigfive$extraversion), mean(bigfive$conscientiousness), mean(bigfive$agreeableness))
-personality <- c("neuroticism", "openness", "extraversion", "conscientiousness", "agreeableness")
+mean_score <- c(mean(bigfive$neuroticism), mean(bigfive$openness), mean(bigfive$extroversion), mean(bigfive$conscientiousness), mean(bigfive$agreeableness))
+personality <- c("neuroticism", "openness", "extroversion", "conscientiousness", "agreeableness")
 data <- data_frame(mean_score, personality)
 
 ## Now create the bar chart
