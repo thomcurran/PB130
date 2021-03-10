@@ -31,7 +31,7 @@ bigfive
 
 ## Cleaning: Recoding items
 
-The first step when working with psychological test data like this is to identify and tehn recode any reverse items. Recall from the lecture I said some tools have reverse items to mitigate the impact of aquiescence? Well this is true of the Big 5 questionnaire. There are several reverse items for each subscale so we need to recode them so that 5 = 1, 2 = 4, and so on.. Lets do that now with the recode function found in the car package:
+The first step when working with psychological test data like this is to identify and then recode any reverse items. Recall from the lecture I said some tools have reverse items to mitigate the impact of acquiescence? Well this is true of the Big 5 questionnaire. There are several reverse items for each subscale so we need to recode them so that 5 = 1, 2 = 4, and so on.. Lets do that now with the recode function found in the car package:
 
 ```{r}
 # first filter out NAs
@@ -70,19 +70,19 @@ r = Vt/V
 
 Where Vt is true score variance, and V is overall variance in the measure.
 
-We can call Cronbach's alpha using the alpha function in the psych package. Lets do that now for each of our subscales; Openness, Extraversion, Neuroticism, Agreeableness, and Concienciousness.
+We can call Cronbach's alpha using the alpha function in the psych package. Lets do that now for each of our subscales; Openness, Extroversion, Neuroticism, Agreeableness, and Conscientiousness.
 
 ```{r}
-extraversion <- select(bigfive, e1, e2, e3, e4, e5, e6, e7, e8)
+extroversion <- select(bigfive, e1, e2, e3, e4, e5, e6, e7, e8)
 neuroticism <- select(bigfive, n1, n2, n3, n4, n5, n6, n7, n8)
 openness <- select(bigfive, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10)
-concienciousness <- select(bigfive, c1, c2, c3, c4, c5, c6, c7, c8, c9)
+conscientiousness <- select(bigfive, c1, c2, c3, c4, c5, c6, c7, c8, c9)
 agreeableness <- select(bigfive, a1, a2, a3, a4, a5, a6, a7, a8, a9)
 
 alpha(neuroticism)
 alpha(extraversion)
 alpha(openness)
-alpha(concienciousness)
+alpha(conscientiousness)
 alpha(agreeableness)
 ```
 
@@ -100,7 +100,7 @@ bigfive <- bigfive %>%
 bigfive <- bigfive %>%
   mutate(extraversion = (e1 + e2 + e3 + e4 + e5 + e6 + e7 + e8)/8)
 bigfive <- bigfive %>%
-  mutate(concienciousness = (c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9)/9)
+  mutate(conscientiousness = (c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9)/9)
 bigfive <- bigfive %>%
   mutate(agreeableness = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9)/9)
 ```
@@ -110,8 +110,8 @@ bigfive <- bigfive %>%
 
 ```{r}
 # First create dataframe with means
-mean_score <- c(mean(bigfive$neuroticism), mean(bigfive$openness), mean(bigfive$extraversion), mean(bigfive$concienciousness), mean(bigfive$agreeableness))
-personality <- c("neuroticism", "openness", "extraversion", "concienciousness", "agreeableness")
+mean_score <- c(mean(bigfive$neuroticism), mean(bigfive$openness), mean(bigfive$extraversion), mean(bigfive$conscientiousness), mean(bigfive$agreeableness))
+personality <- c("neuroticism", "openness", "extraversion", "conscientiousness", "agreeableness")
 data <- data_frame(mean_score, personality)
 
 ## Now create the bar chart
