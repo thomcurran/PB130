@@ -5,6 +5,10 @@ output:
     df_print: paged
 ---
 
+# Introduction
+
+So far in this course we have used many explanatory and outcome variables in our workshops and labs. Overwhelmingly, the most common form of variable in psychology is self-report. As an example, the World Attitudes Survey is full of self-reported information. Many experiments and field work use self-report to measure things like emotions, personality, and psychopathology. It is therefore important we have an appreciation of how these self-report measures are constructed and some key considerations required to ensure that they are reliable (i.e., consistent). This week we will cover this topic.
+
 ## Packages
 
 ```{r eval = FALSE}
