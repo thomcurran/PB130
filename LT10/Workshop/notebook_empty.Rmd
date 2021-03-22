@@ -76,7 +76,7 @@ happiness$Year <- (happiness$Year-2015)
 happiness
 ```
 
-Now let's plot these values to get an idea of the shape of the trend. We can do this really easily in ggplot give visualisation methods we have covered way back in the Michaelmas term.
+Now let's plot these values to get an idea of the shape of the trend. We can do this really easily in ggplot give visualization methods we have covered way back in the Michaelmas term.
 
 ```{r}
 plot <- ggplot(happiness, aes(x = Year, y = Happiness)) + geom_point() + theme_classic()
@@ -120,7 +120,7 @@ But the question is, can we do better? Can we explain more variance by adding po
 
 ## The second degree polynomial model (quadratic shape)
 
-The firs polynomial we are going to add is the 2nd degree polynomial term, which models a quadratic shape - that is, whether the effect accelerates or decelerates over time. For this we will add a third parameter to the simple regression model, which is year^2 (or year to the second power). Lets go ahead and do that now and save the model as a new R object called 'fit2'.
+The first polynomial we are going to add is the 2nd degree polynomial term, which models a quadratic shape - that is, whether the effect accelerates or decelerates over time. For this we will add a third parameter to the simple regression model, which is year^2 (or year to the second power). Lets go ahead and do that now and save the model as a new R object called 'fit2'.
 
 ```{r}
 fit2 <- lm(Happiness ~ 1 + Year + I(Year^2), data = happiness) # must specify the polynomial term in I() to tell R this is polynomial (and not Year specified twice)
@@ -182,7 +182,6 @@ anova(fit2, fit3)
 
 Since the p-value is greater than 0.05, we accept the null hypothesis: there wasn't a significant improvement of the model. The quadratic model with the 2nd degree polynomial is the best fit.
 
-
 ## Plotting the polynomial
 
 Great, we have identified the shape of the trend - it is quadratic with a deceleration!
@@ -208,16 +207,16 @@ First, lets load this data into our R environment. Go to the LT10 folder, and th
 
 
 ```{r}
-perfectionism <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT10/Workshop/perfectionism.csv")
+perfectionism <- read_csv("C:/Users/CURRANT/Dropbox/Work/LSE/PB130/LT10/Workshop/perfectionism.csv")
 ```
 
-Becuase college student data has a restricted range of age (i.e., between 18 and 25), we need to correct the correlation observed in college students to yield a likely correlation in the population as a whole. To see this, lets just run the favstats function on the age variable.
+Because college student data has a restricted range of age (i.e., between 18 and 25), we need to correct the correlation observed in college students to yield a likely correlation in the population as a whole. To see this, lets just run the favstats function on the age variable.
 
 ```{r}
 favstats(~age, data=perfectionism)
 ```
 
-The range of values is small going from 18 to 25.96, with a mean of 20.59 and SD of 2.27. This is a classic scenario for range restriction correction - when the predictor variable is restricted at one end of the distribution (in this case the lower end).
+The range of values is small going from 18 to 25.96, with a mean of 20.17 and SD of 1.72. This is a classic scenario for range restriction correction - when the predictor variable is restricted at one end of the distribution (in this case the lower end).
 
 So let's first calculate the correlation coefficient for age and perfectionism (variable name; spp) in the restricted sample.
 
@@ -225,7 +224,7 @@ So let's first calculate the correlation coefficient for age and perfectionism (
 rcorr(as.matrix(perfectionism[,c("spp","age")], type="pearson"))
 ```
 
-As we can see, in our restricted data there is no correlation between age and perfectionism. The correlation is -0.08, and the p value is 0.29. But we know the correlation is restricted, so lets estimate it in the adult population using the range restriction correction we covered in the lecture.
+As we can see, in our restricted data there is a small negative correlation between age and perfectionism. The correlation is -0.18, and the p value is 0.03. But we know the correlation is restricted, so lets estimate it in the adult population using the range restriction correction we covered in the lecture.
 
 ## Doing the range restriction calculation
 
@@ -245,26 +244,26 @@ This ratio is useful because a normal distribution, truncated at Xc, will have a
 
 ![Cohen's Ratio, Restricted SD, and z Score for Truncation Point](Cohen.jpg "Table 1")
 
-The sample of interest is assumed to be a random sample from a normal population truncated at some unknown point. Cohen’s ratio is calculated from the sample mean and standard deviation (X, SD) and the lowest or highest observed variate-value (Xc) depending on where the sample is restricted. In this example, truncation is assumed to occur at the upper end of the distribution (i.e., we are missing older age groups). If truncation has occurred at the lower end of a distribution, the method described is the same except that Xc is taken as the lowest observed sample value. Let's calculate Cohen's ratio  with the avaliable information:
+The sample of interest is assumed to be a random sample from a normal population truncated at some unknown point. Cohen’s ratio is calculated from the sample mean and standard deviation (X, SD) and the lowest or highest observed variate-value (Xc) depending on where the sample is restricted. In this example, truncation is assumed to occur at the upper end of the distribution (i.e., we are missing older age groups). If truncation has occurred at the lower end of a distribution, the method described is the same except that Xc is taken as the lowest observed sample value. Let's calculate Cohen's ratio  with the available information:
 
 Cohen's ratio: SD^2/(X - Xc)^2
 
 ```{r}
-2.271121^2/(20.5984 - 25.96)^2
+1.72^2/(20.71161 - 25.96)^2
 ```
 
-Once Cohen’s ratio has been calculated, the closest tabled value (Table 1) is located. The corresponding z-cut, that is, the z-score identifying the point of truncation, and the standard deviation in a normal distribution truncated at that point may then be obtained from Table 1. Here we can see that a Cohen's ratio of 0.18 corresponds with a truncated SD of 0.963 and a z score of -2.25. Since the standard deviation in Table 1 is the standardized value of the standard deviation after truncation, that tabled value also represents the proportional reduction in the standard deviation due to range restriction. The observed sample standard deviation may be corrected by:
+Once Cohen’s ratio has been calculated, the closest tabled value (Table 1) is located. The corresponding z-cut, that is, the z-score identifying the point of truncation, and the standard deviation in a normal distribution truncated at that point may then be obtained from Table 1. Here we can see that a Cohen's ratio of 0.11 corresponds with a truncated SD of .992 and a z score of -2.95. Since the standard deviation in Table 1 is the standardized value of the standard deviation after truncation, that tabled value also represents the proportional reduction in the standard deviation due to range restriction. The observed sample standard deviation may be corrected by:
 
 population SD = restricted SD / truncated SD
 
 ```{r}
-2.271121/.963
+1.72/0.992
 ```
 
 And there we have it - the estimated SD in the population! Incidentally, we can also estimate the corrected mean using this information. All we have to do is take the truncated value - in this case the highest score 25.96 and subtract out the z-score multiplied by the restricted SD.
 
 ```{r}
-25.96 - (-2.25*2.271121)
+25.96 - (-2.95*1.72)
 ```
 
 When we do so we get an unrestricted mean age of 31. Still a slight underestimation based on what we know about the mean US population (approx 38 years), but nevertheless closer than what our original sample assumes.
@@ -274,13 +273,13 @@ When we do so we get an unrestricted mean age of 31. Still a slight underestimat
 Now we have an estimated population SD of 2.36, lets now correct our correlation of -0.08 for range restriction. To do so, we can use the psych package, which implements Thorndike's case 2 using the rangeCorrection() function.
 
 ```{r}
-rangeCorrection(-0.08,2.358381,2.271121,case=2) # this function takes the correlation, followed by the population SD, followed by the sample SD, and then stipualtes case 2 for Thorndike's case 2 correction
+rangeCorrection(-0.18,1.733871,1.72,case=2) # this function takes the correlation, followed by the population SD, followed by the sample SD, and then stipualtes case 2 for Thorndike's case 2 correction
 ```
 
 And here we can see that the corrected correlation is more or less the same as the uncorrected correlation. This is likely because the estimated population SD was quite close to the sample SD. If we increase the population SD a little to 4 you can see that the corrected correlation difference also increases.
 
 ```{r}
-rangeCorrection(-0.10,4,2.271121,case=2)
+rangeCorrection(-0.10,4,1.72,case=2)
 ```
 
 This is what happens when we correct our correlations for range restriction - the bigger the difference in the variance of the population and sample, the larger the difference between the uncorrected and corrected correlation.
@@ -351,11 +350,11 @@ The first step in correcting the correlation for unreliability is to calculate t
 neuroticism <- select(bigfive, n1, n2, n3, n4, n5, n6, n7, n8)
 openness <- select(bigfive, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10)
 
-alpha(neuroticism)
-alpha(openness)
+psych::alpha(neuroticism)
+psych::alpha(openness)
 ```
 
-The first and most important outpur tells us that the neuroticism variable has a Cronbach alpha of .83 and the openness variable a Cronbach alpha of .55.
+The first and most important output tells us that the neuroticism variable has a Cronbach alpha of .83 and the openness variable a Cronbach alpha of .55.
 
 ## Correcting the correlation
 
@@ -413,7 +412,7 @@ perfectionism
 Finally, lets now plot the relationship with the centered year variable to make sure it hasn't altered any other characteristics of the data
 
 ```{r eval = FALSE}
-plot2 <- ggplot(perfectionism, aes(x = year, y = spp)) + geom_point() + theme_classic()
+plot2 <- ggplot(perfectionism, aes(x = ??, y = ??)) + geom_point() + theme_classic()
 plot2
 ```
 
@@ -423,7 +422,7 @@ First we need to test the linear model to ascertain if there is a linear trend. 
 
 ```{r eval = FALSE}
 per1 <- lm(spp ~ ??, data = perfectionism) 
-summary(per1)
+summary(??)
 ```
 
 What is the R2 associated with this model?
@@ -438,8 +437,8 @@ Next we need to test the quadratic model, with year raised to the 2nd power. To 
 
 
 ```{r eval = FALSE}
-per2 <- lm(spp ~ ??, data = perfectionism)
-summary(per2)
+per2 <- lm(spp ~ ?? + ??, data = perfectionism)
+summary(??)
 ```
 
 What is the R2 associated with this model?
@@ -460,12 +459,12 @@ Why?
 
 ## Test the cubic model
 
-Fianlly we need to test the cubic model, with year raised to the 3rd power. To do this we just add year^3 to our quadratic model. Lets do that now and save it as a new R object called per2..
+Finally we need to test the cubic model, with year raised to the 3rd power. To do this we just add year^3 to our quadratic model. Lets do that now and save it as a new R object called per3..
 
 
 ```{r eval = FALSE}
-per3 <- lm(spp ~ ??, data = perfectionism) 
-summary(per3)
+per3 <- lm(spp ~ ?? + ?? + ??, data = perfectionism) 
+summary(??)
 ```
 
 What is the R2 associated with this model?
@@ -486,9 +485,9 @@ Why?
 
 ## Task 5 - Plot the trend
 
-To visulaise this relationship draw a figure that fits the best fitting shape to the data (i.e., linear, quadratic, or cubic). You can use the origional plot1 from task 1 and add the stat_smooth layer with the best fitting polynomial model in the formula.
+To visualize this relationship draw a figure that fits the best fitting shape to the data (i.e., linear, quadratic, or cubic). You can use the original plot1 from task 1 and add the stat_smooth layer with the best fitting polynomial model in the formula.
 
 ```{r eval = FALSE}
-plot2 + stat_smooth(method = "lm", formula = y ~ x + ?? + ??, size = 1)
+plot2 + stat_smooth(method = "lm", formula = y ~ x + I(x^2) + I(x^3), size = 1)
 ```
 
