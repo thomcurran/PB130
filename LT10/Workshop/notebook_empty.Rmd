@@ -46,15 +46,15 @@ library(ggplot2)
 
 Polynomial regression is used to test the shape of non-linear relationships. Those that are assumed to have a shape that is different to a straight line.
 
-Lets say, for example, that we are interested in the the happiness of British college students over the last 10 years. We have reason to suspect that the data will be non-linear. Although college student happiness seems to rise after the recession, there is good evidence that this rise slowed down in recent years due to several macro-economic factors including increased competition and avaliablity of graduate jobs.
+Lets say, for example, that we are interested in the the happiness of British college students over the last 10 years. We have reason to suspect that the data will be non-linear. Although college student happiness seems to rise after the recession, there is good evidence that this rise slowed down in recent years due to several macro-economic factors including increased competition and availability of graduate jobs.
 
-Okay, given this information, we need to create a polynomial regression that can approximate the levels of happiness of British college students across the past 10 years. I'm going to do somethign different in terms of data entry this week. I'm going to show you how to create your own data frames. First I'm going to enter the year variable covering 2010 to 2020.
+Okay, given this information, we need to create a polynomial regression that can approximate the levels of happiness of British college students across the past 10 years. I'm going to do something different in terms of data entry this week. I'm going to show you how to create your own data frames. First I'm going to enter the year variable covering 2010 to 2020.
 
 ```{r}
 Year <- c(2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020) # create an object year that contains (c) 2010 through 2020
 ```
 
-Then I'm going to create the happiness variable, which contains mean happiness data from students in the UK who completed the NSS survey. Happiness is captured on a 1 to 7 scale, with 1 indicating not at all happy to 7 extemely happy.
+Then I'm going to create the happiness variable, which contains mean happiness data from students in the UK who completed the NSS survey. Happiness is captured on a 1 to 7 scale, with 1 indicating not at all happy to 7 extremely happy.
 
 ```{r}
 Happiness <- c(4.835, 4.970, 5.085, 5.160, 5.310, 5.260, 5.235, 5.255, 5.235, 5.210, 5.175)
@@ -83,9 +83,9 @@ plot <- ggplot(happiness, aes(x = Year, y = Happiness)) + geom_point() + theme_c
 plot
 ```
 
-Okay, so we can see here that the trend is definately not linear. Just as we suspected, there is an initial period of growth in happiness following the recession, but this slows down from around 2014 (-1 on our recoded year variable). 
+Okay, so we can see here that the trend is definitely not linear. Just as we suspected, there is an initial period of growth in happiness following the recession, but this slows down from around 2014 (-1 on our recoded year variable). 
 
-Yet it is not sufficient to just visulaise this trend, we need to statistically ascertain its best fitting shape. For this we will run polynomial regression.
+Yet it is not sufficient to just visualize this trend, we need to statistically ascertain its best fitting shape. For this we will run polynomial regression.
 
 ## The 1st degree linear model
 
@@ -93,18 +93,18 @@ As we saw in the lecture, polynomial regression just uses the linear model, but 
 
 You might be asking; at what degree of the polynomial stop? Well, it depends on the degree of precision that we seek. The greater the degree of the polynomial, the greater the accuracy of the model, but the greater the difficulty in calculating; remember that we must also verify the significance of coefficients that are found.
 
-I am minded at this point to remind students of Occam's razor - the princpal of parsimony. Named after William of Occam who beleived that 'it is vain to do with more what can be done with less'. Science should be no different. An elegant equation is more likely to be right than an ugly one that seems to fit the data. In other words, natural symmertary and honed brevity are more likely to fit the data in the end.
+I am minded at this point to remind students of Occam's razor - the principal of parsimony. Named after William of Occam who believed that 'it is vain to do with more what can be done with less'. Science should be no different. An elegant equation is more likely to be right than an ugly one that seems to fit the data. In other words, natural symmetry and honed brevity are more likely to fit the data in the end.
 
 As such, it is unlikely that psychologists would go further than the 3rd degree when testing polynomial regression. We will also stop here.
 
-First then, we need to test the linear model to ascertain the fit of a straight line to the data. We know it will not fit optimally becuase we have plotted the points, but it nevertheless gives us a baseline model with which to compare the addition of polynomial terms. So let's go ahead and run the linear model and save it as a new R object called 'fit1'.
+First then, we need to test the linear model to ascertain the fit of a straight line to the data. We know it will not fit optimally because we have plotted the points, but it nevertheless gives us a baseline model with which to compare the addition of polynomial terms. So let's go ahead and run the linear model and save it as a new R object called 'fit1'.
 
 ```{r}
 fit1 <- lm(Happiness ~ 1 + Year, data = happiness)
 summary(fit1)
 ```
 
-We can see that the linear model fits the data reasonably well. There is 47% variance in happiness explained by year. And the slope coefficient for year is positive and statistically significnant (i.e., p < .05). Lets just bootstrap those estimates as all good staticians should.
+We can see that the linear model fits the data reasonably well. There is 47% variance in happiness explained by year. And the slope coefficient for year is positive and statistically significant (i.e., p < .05). Lets just bootstrap those estimates as all good statisticians should.
 
 
 ```{r}
@@ -120,7 +120,7 @@ But the question is, can we do better? Can we explain more variance by adding po
 
 ## The second degree polynomial model (quadratic shape)
 
-The firs polynomial we are going to add is the 2nd degree polynomial term, which models a quadratic shape - that is, whether the effect accelerates or decelerates over time. For this we will add a third parameter to the simple regression model, which is year^2 (or yeasr to the second power). Lets go ahead and do that now and save the model as a new R object called 'fit2'.
+The firs polynomial we are going to add is the 2nd degree polynomial term, which models a quadratic shape - that is, whether the effect accelerates or decelerates over time. For this we will add a third parameter to the simple regression model, which is year^2 (or year to the second power). Lets go ahead and do that now and save the model as a new R object called 'fit2'.
 
 ```{r}
 fit2 <- lm(Happiness ~ 1 + Year + I(Year^2), data = happiness) # must specify the polynomial term in I() to tell R this is polynomial (and not Year specified twice)
@@ -129,7 +129,7 @@ summary(fit2)
 
 Okay, now we are getting somewhere! We can see that both the linear and quadratic effects are significant. The negative sign of the quadratic slope indicates that while the linear trend is positive, it decelerates over time.
 
-We can also see that the addition of the 2nd degree polynomial has substancially increased the variance explained in the model - from 47% to 94%!
+We can also see that the addition of the 2nd degree polynomial has substantially increased the variance explained in the model - from 47% to 94%!
 
 Like always, lets just check this with bootstrapping.
 
@@ -139,9 +139,9 @@ summary(fit2.boot)
 confint(fit2.boot, level = .95, type = "norm")
 ```
 
-And the bootsrapping support the normal theory testing.
+And the bootstrapping support the normal theory testing.
 
-As we saw in LT2, it is not an especially good idea to compare models directly using R2 becuase R2 does not take into consideration the degrees of freedom in the model.
+As we saw in LT2, it is not an especially good idea to compare models directly using R2 because R2 does not take into consideration the degrees of freedom in the model.
 
 There is another more direct test of whether adding our 2nd degree polynomial significantly improves the model. Rather than inspect the R2 the models, we can also calculate F for the comparison between the simple model (linear effect only) and the full model (linear and quadratic). The calculation for doing this F test is:
 
@@ -153,7 +153,7 @@ But we can also request it directly in R using anova(). Lets do that now for mod
 anova(fit1, fit2)
 ```
 
-This output shows us that the addition of the quadratic term to the linear model has reduced the residual (error) sum of squares by .10 (.11 - .01). In the context of the 1 degree of freedom spent adding the quadratic term to the linear model (i.e., 1), the F ratio asssociated with this reduction in error is large and significnant (64.03, p < .05). There is an improvement of fit with the quadratic term added!
+This output shows us that the addition of the quadratic term to the linear model has reduced the residual (error) sum of squares by .10 (.11 - .01). In the context of the 1 degree of freedom spent adding the quadratic term to the linear model (i.e., 1), the F ratio associated with this reduction in error is large and significant (64.03, p < .05). There is an improvement of fit with the quadratic term added!
 
 ## The 3rd degree polynomial model (cubic shape)
 
@@ -164,7 +164,7 @@ fit3 <- lm(Happiness ~ 1 + Year + I(Year^2) + I(Year^3), data = happiness)
 summary(fit3)
 ```
 
-In this model, the slopes for the lienar and cubic effects are not significant, and it therefore appears that the best model is the polynomial of 2nd degree. We can confirm this using bootrapping. 
+In this model, the slopes for the linear and cubic effects are not significant, and it therefore appears that the best model is the polynomial of 2nd degree. We can confirm this using bootstrapping. 
 
 ```{r}
 fit3.boot <- Boot(fit3, f=coef, R = 5000) 
@@ -172,7 +172,7 @@ summary(fit3.boot)
 confint(fit3.boot, level = .95, type = "norm")
 ```
 
-And the bootsrapping results support the normal theory.
+And the bootstrapping results support the normal theory.
 
 Furthermore, look at the Multiple R-squared: in the 2nd degree model it is 94.07%, while in the 3rd degree model it is 96.22%. Yes there has been an increase in accuracy of the model, but we know that adding any variable will increase R2 due if nothing else but to chance. Therefore, let's compare the cubic model with the quadratic model using anova() to see if the addition of the cubic term was worth it.
 
@@ -185,7 +185,7 @@ Since the p-value is greater than 0.05, we accept the null hypothesis: there was
 
 ## Plotting the polynomial
 
-Great, we have identified the shape of the trend - it is quadradic with a deceleration!
+Great, we have identified the shape of the trend - it is quadratic with a deceleration!
 
 The last thing to do now is to represent graphically the result. In fact, ggplot has an excellent layer called stat_smooth that plots polynomials for whatever degree you have found to fit the data best. In our case we have found a 2nd degree polynomial to fit the data best, so we just add this layer (+) to our initial plot of the data points above (i.e., plot).
 
@@ -200,7 +200,7 @@ And there you have it! You have just successfully conducted your first polynomia
 
 Another topic we covered in the lecture was correcting correlations for two common artefacts that can influence their estimation; range restriction and unreliability.
 
-Let's start with range restriction and look how we correct correlations that come from restricted ranges. In this example, we are going to use some of my perfectionism data retrieved from college students.. Rather than look at the relationship of time or country on pefectionism scores, we are going to look at age.
+Let's start with range restriction and look how we correct correlations that come from restricted ranges. In this example, we are going to use some of my perfectionism data retrieved from college students.. Rather than look at the relationship of time or country on perfectionism scores, we are going to look at age.
 
 Our research question is: is there a relationship between age and perfectionism in American adults?
 
@@ -211,7 +211,7 @@ First, lets load this data into our R environment. Go to the LT10 folder, and th
 perfectionism <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT10/Workshop/perfectionism.csv")
 ```
 
-Becuase college student data has a resticted range of age (i.e., between 18 and 25), we need to correct the correlation observed in college students to yield a likely correlation in the population as a whole. To see this, lets just run the favstats function on the age variable.
+Becuase college student data has a restricted range of age (i.e., between 18 and 25), we need to correct the correlation observed in college students to yield a likely correlation in the population as a whole. To see this, lets just run the favstats function on the age variable.
 
 ```{r}
 favstats(~age, data=perfectionism)
@@ -219,7 +219,7 @@ favstats(~age, data=perfectionism)
 
 The range of values is small going from 18 to 25.96, with a mean of 20.59 and SD of 2.27. This is a classic scenario for range restriction correction - when the predictor variable is restricted at one end of the distribution (in this case the lower end).
 
-So let's first calcualte the correlation coefficient for age and perfectionism (variable name; spp) in the restricted sample.
+So let's first calculate the correlation coefficient for age and perfectionism (variable name; spp) in the restricted sample.
 
 ```{r}
 rcorr(as.matrix(perfectionism[,c("spp","age")], type="pearson"))
@@ -231,13 +231,13 @@ As we can see, in our restricted data there is no correlation between age and pe
 
 A correction for range restriction that is well known is Thorndike Case 2:
 
-Let R be the unrestricted correlaton, r the restricted correlation, S the unrestricted standard deviation, s the restricted standard deviation, then
+Let R be the unrestricted correlation, r the restricted correlation, S the unrestricted standard deviation, s the restricted standard deviation, then
 
 R = (rS / s) / sqrt(1 - r^2 + r^2 * (S^2 / s^2)).
 
 ## Estimating the population SD
 
-For this formula to hold, we need the population standard deviation (S). We could find the population range of ages and work a SD for the American adult population. But lets for the sake of this task assume thast we do not have access to the population SD. I am assuming this becuase it is often the case that we do not know the SD in the population and thus we need to somehow estimate it.
+For this formula to hold, we need the population standard deviation (S). We could find the population range of ages and work a SD for the American adult population. But lets for the sake of this task assume that we do not have access to the population SD. I am assuming this because it is often the case that we do not know the SD in the population and thus we need to somehow estimate it.
 
 To estimate the population SD from the distributional properties of a restricted sample, Cohen (1959) proposed the ratio: SD^2/(X - Xc)^2. In other words, the sample variance (SD) over the squared difference between the sample mean (X) and point of truncation (Xc). 
 
@@ -261,17 +261,17 @@ population SD = restricted SD / truncated SD
 2.271121/.963
 ```
 
-And there we have it - the estimated SD in the population! Incidently, we can also estimate the corrected mean using this information. All we have to do is take the truncated value - in this case the highest score 25.96 and subtract out the z-score multiplied by the restricted SD.
+And there we have it - the estimated SD in the population! Incidentally, we can also estimate the corrected mean using this information. All we have to do is take the truncated value - in this case the highest score 25.96 and subtract out the z-score multiplied by the restricted SD.
 
 ```{r}
 25.96 - (-2.25*2.271121)
 ```
 
-When we do so we get an unrestricted mean age of 31. Still a slight underestimation based on what we know about the mean US population (approx 38 years), but nevertheless closer than what our origional sample assumes.
+When we do so we get an unrestricted mean age of 31. Still a slight underestimation based on what we know about the mean US population (approx 38 years), but nevertheless closer than what our original sample assumes.
 
 ## Correcting the correlation
 
-Now we have an estimated population SD of 2.36, lets now correct our correlation of -0.08 for range restriction. To do so, we can use the psych package, which implements Thorndike's case 2 using the rangeCorrection() fucntion.
+Now we have an estimated population SD of 2.36, lets now correct our correlation of -0.08 for range restriction. To do so, we can use the psych package, which implements Thorndike's case 2 using the rangeCorrection() function.
 
 ```{r}
 rangeCorrection(-0.08,2.358381,2.271121,case=2) # this function takes the correlation, followed by the population SD, followed by the sample SD, and then stipualtes case 2 for Thorndike's case 2 correction
@@ -283,13 +283,13 @@ And here we can see that the corrected correlation is more or less the same as t
 rangeCorrection(-0.10,4,2.271121,case=2)
 ```
 
-This is what happens when we correct our correlations for range restriction - the bigger the difference in the variance of the population and sample, the larger the difference betwene the uncorrected and corrected correlation.
+This is what happens when we correct our correlations for range restriction - the bigger the difference in the variance of the population and sample, the larger the difference between the uncorrected and corrected correlation.
 
 ## Correcting for unreliability
 
-The second correction often applied to correlations is that for unreliability. As we saw in the lecture and in LT8, unreliability is when a measure contains error. Now, all measures contain some error, but some contain more than others. We can estimate how much error is contained in a measure by calcualting the ratio of true score variance to overall variance in a variable.
+The second correction often applied to correlations is that for unreliability. As we saw in the lecture and in LT8, unreliability is when a measure contains error. Now, all measures contain some error, but some contain more than others. We can estimate how much error is contained in a measure by calculating the ratio of true score variance to overall variance in a variable.
 
-To illustrate this, I want to return to the data we collected on personality in LT8 and correct the corrlation between neuroticism and openness for unrelaibility.
+To illustrate this, I want to return to the data we collected on personality in LT8 and correct the correlation between neuroticism and openness for unreliability.
 
 First, lets load this data into our R environment. Go to the LT10 folder, and then to the workshop folder, and find the "bigfive.csv" file. Click on it and then select "import dataset". In the new window that appears, click "update" and then when the dataframe shows, click import. If you want, you can try running the code below and it might do the same thing (if not put your hand up).
 
@@ -335,17 +335,17 @@ bigfive <- bigfive %>%
   mutate(openness = (o1 + o2 + o3 + o4 + o5 + o6 + o7 + o8 + o9 + o10)/10)
 ```
 
-Okay, great we have the data in good shape. Just like for range restriction, lets first calcualte the uncorrected correlation between neuroticism and openness.
+Okay, great we have the data in good shape. Just like for range restriction, lets first calculate the uncorrected correlation between neuroticism and openness.
 
 ```{r}
 rcorr(as.matrix(bigfive[,c("neuroticism","openness")], type="pearson"))
 ```
 
-We can see that the uncorrected correlation is 0.43, but not significant (p< .05). But don't worry about that, we have a small sample of only 14. Lets focus on the correlation estimate and how much it has been attenuated by measurement unrelaibility.
+We can see that the uncorrected correlation is 0.43, but not significant (p< .05). But don't worry about that, we have a small sample of only 14. Lets focus on the correlation estimate and how much it has been attenuated by measurement unreliability.
 
 ## Calculating reliability
 
-The first step in correcting the correlation for unreliability is to calcuate the reliability of the variable. If you recall, neuroticism has 8 items and opennes has 10, we first collate these items and then calculate Cronbach's alpha. We did this by hand in the lecture, and by using the alpha() function from the psych package in the workshop. So lets go ahead and do that now.
+The first step in correcting the correlation for unreliability is to calculate the reliability of the variable. If you recall, neuroticism has 8 items and openness has 10, we first collate these items and then calculate Cronbach's alpha. We did this by hand in the lecture, and by using the alpha() function from the psych package in the workshop. So lets go ahead and do that now.
 
 ```{r}
 neuroticism <- select(bigfive, n1, n2, n3, n4, n5, n6, n7, n8)
@@ -355,11 +355,11 @@ alpha(neuroticism)
 alpha(openness)
 ```
 
-The first and most important outpur tells us that the neuroticism variable has a Cronbach alpha of .83 and the openness varable a Cronbach alpha of .55.
+The first and most important outpur tells us that the neuroticism variable has a Cronbach alpha of .83 and the openness variable a Cronbach alpha of .55.
 
 ## Correcting the correlation
 
-With this information we can do a simple correction to the correlation between these variables, which accounts for the measururement error or unreliability inherent to the two variables. Recall from the lecture that the calculation for correcting the correlation for measurement error is:
+With this information we can do a simple correction to the correlation between these variables, which accounts for the measurement error or unreliability inherent to the two variables. Recall from the lecture that the calculation for correcting the correlation for measurement error is:
 
 rxy / sqrt(rxx * ryy), 
 
@@ -371,13 +371,13 @@ Plugging these numbers into R..
 .43 / sqrt(.83*.55)
 ```
 
-We find that the correct correlation is .64. Thats quite an increase! This is becuase the openness variable has poor reliability and therefore the measure contains alot of error that is irrelevant to neuroticism. Lets see what happens if openness contained less error and, for instance, had a Chronbach alpha of .90..
+We find that the correct correlation is .64. That's quite an increase! This is because the openness variable has poor reliability and therefore the measure contains a lot of error that is irrelevant to neuroticism. Lets see what happens if openness contained less error and, for instance, had a Chronbach alpha of .90..
 
 ```{r}
 .43 / sqrt(.83*.90)
 ```
 
-A much smaller difference. So this is what I mean when I say unreliablity attenuates relationships. The more error there is in a measure, the smaller the relationship can be. It is therefore important to correct correlations for measurement error when we aggregate variables using psychological tools. And now you know how to!
+A much smaller difference. So this is what I mean when I say unreliability attenuates relationships. The more error there is in a measure, the smaller the relationship can be. It is therefore important to correct correlations for measurement error when we aggregate variables using psychological tools. And now you know how to!
 
 ## Activity
 
@@ -397,7 +397,7 @@ Describe the shape of this trend:
 
 ## Task 2 - Mean center the predictor variable
 
-Before we look at this relationship, we must center the predictor (year) at the mean. First lets calcuate the mean for year.
+Before we look at this relationship, we must center the predictor (year) at the mean. First lets calculate the mean for year.
 
 ```{r eval = FALSE}
 mean(perfectionism$year)
@@ -410,7 +410,7 @@ perfectionism$year <- (perfectionism$year-??)
 perfectionism
 ```
 
-Finally, lets now plot the relationship with the centered year variable to make sure it hasn't altered any other charecteristics of the data
+Finally, lets now plot the relationship with the centered year variable to make sure it hasn't altered any other characteristics of the data
 
 ```{r eval = FALSE}
 plot2 <- ggplot(perfectionism, aes(x = year, y = spp)) + geom_point() + theme_classic()
@@ -426,7 +426,7 @@ per1 <- lm(spp ~ ??, data = perfectionism)
 summary(per1)
 ```
 
-What is the R2 assoaicted with this model?
+What is the R2 associated with this model?
 
 What is the beta for year?
 
@@ -442,7 +442,7 @@ per2 <- lm(spp ~ ??, data = perfectionism)
 summary(per2)
 ```
 
-What is the R2 assoaicted with this model?
+What is the R2 associated with this model?
 
 What is the beta for the quadratic effect?
 
@@ -468,7 +468,7 @@ per3 <- lm(spp ~ ??, data = perfectionism)
 summary(per3)
 ```
 
-What is the R2 assoaicted with this model?
+What is the R2 associated with this model?
 
 What is the beta for the cubic effect?
 
