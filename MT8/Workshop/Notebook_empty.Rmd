@@ -53,7 +53,7 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 ```{r}
 WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT8/Workshop/WV6_Data_R_v20180912.rds")
 
-WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
+WVS$V2A <- as_character(WVS$V2A) # this saves the country variable as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
 ```
 
 
@@ -77,7 +77,7 @@ I looked in the codebook and the perceptions of choice variable is listed as V55
 ```{r}
 WVSchoice <- 
   WVS %>% 
-  select() # SELECT THE VARIABLES OF INTEREST HERE
+  select(??) # SELECT THE VARIABLES OF INTEREST HERE
 head(WVSchoice)
 ```
 
@@ -86,7 +86,7 @@ Lets now run the favstats() function to see what we are playing with for the cho
 
 
 ```{r}
-favstats()
+favstats(??)
 ```
 
 
@@ -106,7 +106,7 @@ Box-plot, histogram, and descriptives.
 
 ## The empty model
 
-Lets begin to build an empty model for Australia. The first step in this process is to calcuate the mean and save it into the dataframe. Remeber, the mean is our "best guess" of what someone in Austrsalia would score on perceptions of choice given no other information. The mean is the empty model. It is the predicted score. We can calcualte and save the mean as an additional variable in our dataframe using the mutate() function.
+Lets begin to build an empty model for Australia. The first step in this process is to calculate the mean and save it into the dataframe. Remember, the mean is our "best guess" of what someone in Australia would score on perceptions of choice given no other information. The mean is the empty model. It is the predicted score. We can calculate and save the mean as an additional variable in our dataframe using the mutate() function.
 
 
 ```{r}
@@ -126,7 +126,7 @@ WVSaus
 
 Now we can see that the mean as the model predicts that Australians will score 7.81 in terms of perceptions of control. However, as is evident from the dataframe - that is a pretty terrible model - there are alot of deviations from the mean. 
 
-Lets visualise this distribution using a histogram to see this better.
+Lets visualize this distribution using a histogram to see this better.
 
 ```{r}
 WVSaus %>% 
@@ -145,7 +145,7 @@ Most people do not score 7.81. Some score higher, some score lower. There is als
 
 The beauty of the mean as a model is that this slight skew is accounted for by adding all the responses together and dividing them by the sample. In other words, using the mean as the model ensures the higher and lower scores are perfectly balanced. To see this, lets calculate the second important part of our model - the error (or residual). The error, remember, is the difference of the model (mean) from the observed score. 
 
-We can calcualte the error by taking the observed score for choice and subtracting it from the mean score. Lets use the mutate function to do that for the participants in this sample.
+We can calculate the error by taking the observed score for choice and subtracting it from the mean score. Lets use the mutate function to do that for the participants in this sample.
 
 
 ```{r}
@@ -185,7 +185,7 @@ lm(V55 ~ NULL, data = WVSaus)
 
 Although the output seems a little odd, with words like “Coefficients” and “Intercept,” it does give you back the mean of the distribution (7.81), as expected. We will see in subsequent weeks why the mean is referred to as the intercept, but for now just think about the intercept as the best fitting model. Our "best guess", so to speak. The word “NULL” is another word for “empty” (as in “empty model.”)
 
-It will be helpful as we go forward to save the results of this linear model in an R object. Here’s code that uses  lm()  to fit the empty model, then saves the results in an R object called Aus.model
+It will be helpful as we go forward to save the results of this linear model in an R object. Here’s code that uses  lm() to fit the empty model, then saves the results in an R object called Aus.model
 
 ```{r}
 Aus.model <- lm(V55 ~ NULL, data = WVSaus)
@@ -216,7 +216,7 @@ Again, this output is exactly the same as we calculated by hand. This is no coin
 
 Back to the model and lets hone in on the error. Remember when we summed the residuals and were left with a zero value? This highlights the usefulness of the mean in balancing the residuals, but we are left with the problem that the sum of the residuals does not tell us a great deal about the TOTAL amount of error in our model. When the mean is the model, ALL distributions will have a sum of residual equaling zero irrespective of whether the amount of error is large or small. Can you think how we remedy this?
 
-Thats right, we can square the residuals to get rid of the minus values. The sum of squares also has another useful property in that it is minimised at the mean. And this is what we are attempting to do with statistics - minimise the error! 
+Thats right, we can square the residuals to get rid of the minus values. The sum of squares also has another useful property in that it is minimized at the mean. And this is what we are attempting to do with statistics - minimize the error! 
 
 Let's now square the residuals in our data and save a new variable that contains the squared values.
 
@@ -233,7 +233,7 @@ sum(WVSaus$residuals_square)
 ```
 
 
-We can also check this using a function called  anova()  to look at the error from the Aus.model lm() object we created earlier. ANOVA stands for ANalysis Of VAriance. Analysis means “to break down”, and in the coming weeks we will use this function to break down the variation of outcome variables into parts. However for now we will use  anova() just to test out how much error there is around the model, measured in sum of squares.
+We can also check this using a function called  anova()  to look at the error from the Aus.model lm() object we created earlier. ANOVA stands for ANalysis Of VAriance. Analysis means “to break down”, and  in the comingweeks we will use this function to break down the variation of outcome variables into parts. However for now we will use  anova() just to test out how much error there is around the model, measured in sum of squares.
 
 
 ```{r}
@@ -243,7 +243,7 @@ anova(Aus.model)
 
 Look at the Sum Sq column and you will see the same value from our calculations above - 5373.5. Woah! Thats a really large number, there must be loads of error in this model right? Well, maybe but also maybe not. You see, the sum of squares for the model is very sensitive to sample size. If the sample size is large then the sum of squares will be large - irrespective of the amount of error. This is because the sum of squares adds together all the squared differences. With a sample size of 1,459, that is almost 1500 squared differences to aggregate. Hence, we have a large number for the sum of squares.
 
-This problem is solved by variance and standard deviation. To calculate variance, we start with sum of squares and then divide by the degress of freedom to end up with a measure of average error around the mean. In other words, the average of the squared deviations. Lets calcualte the variances using R as a simple calculator
+This problem is solved by variance and standard deviation. To calculate variance, we start with sum of squares and then divide by the degrees of freedom to end up with a measure of average error around the mean. In other words, the average of the squared deviations. Lets calculate the variances using R as a simple calculator
 
 
 ```{r}
@@ -251,7 +251,7 @@ This problem is solved by variance and standard deviation. To calculate variance
 ```
 
 
-You will see this value is the same as the Mean Sq value from the ANOVA output. This is becuase these values represent the same thing. Whenever you see Mean Sq you now know it means variance.
+You will see this value is the same as the Mean Sq value from the ANOVA output. This is because these values represent the same thing. Whenever you see Mean Sq you now know it means variance.
 
 Because it is an average, variance is not impacted by sample size, and thus, can be used to compare the amount of error across two samples of different sizes. 
 
@@ -277,7 +277,7 @@ Let's say an Australian participant - Jericho - in the WVS has a perception of c
 
 To interpret the meaning of Jericho's single score, it helps to know something about the distribution the score came from. 
 
-Standard deviation is really useful here. We know that Jericho’s score is about 2 points lower than the average Australian choice score. But now we also know that, on average, choice scores are 1.9 points away from the mean the SD, both above and below. Although Jericho's score is below average, it is definitely not one of the lowest in the distribution. Let's draw another histogram but this time add a layer to it that plots Jericho's score in the distribution of values.
+Standard deviation is really useful here. We know that Jericho’s score is about 2 points lower than the average Australian choice score. But now we also know that, on average, choice scores are 1.9 points away from the mean (the SD), both above and below. Although Jericho's score is below average, it is definitely not one of the lowest in the distribution. Let's draw another histogram but this time add a layer to it that plots Jericho's score in the distribution of values.
 
 ```{r}
 WVSaus %>% 
@@ -292,7 +292,7 @@ WVSaus %>%
 ```
 
 
-We can combine information from our model regarding the mean and standard deviation to calculate a Z-Score. A single z score tells us how many standard deviations away this particular score of 6 is from the mean. It is calculated by taking any given residual and dividing it by the standard deviation in the sample. We can create Z-scores in our dataframe in two ways. First, we can calcuate it by hand:
+We can combine information from our model regarding the mean and standard deviation to calculate a Z-Score. A single z score tells us how many standard deviations away this particular score of 6 is from the mean. It is calculated by taking any given residual and dividing it by the standard deviation in the sample. We can create Z-scores in our dataframe in two ways. First, we can calculate it by hand:
 
 
 ```{r}
@@ -322,7 +322,7 @@ The Z Score has transformed the choice variable so that it now has a mean of zer
 -1.81/1.92 # Jericho scored 6 and the mean is 7.81 so 6 - 7.81 = -1.81. We take this residual and divide it by the SD of 1.92.
 ```
 
-Here we can see that Jericho's score is almost 1 standard deviation below the Australian mean. If we plot this in a histogram as we did before, but this time with Z scores plotting the error distribution, we can see a similar picture:
+Here we can see that Jericho's score is about 1 standard deviation below the Australian mean. If we plot this in a histogram as we did before, but this time with Z scores plotting the error distribution, we can see a similar picture:
 
 ```{r}
 WVSaus %>% 
