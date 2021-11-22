@@ -5,6 +5,8 @@ output:
     df_print: paged
 ---
 
+This week we will move on from the empty model to add categorical explanatory variables that might help to reduce the error or imprecision of statistical estimation. Let’s say we have an empty model that contained 100 student scores of narcissism. Without any other information, our best guess of what any given student might score on narcissism is the mean (i.e., the empty model). However, let’s say we speculate that we might be able to improve our best guess, or reduce our estimated variance, if we knew the gender of the student because males typically score higher on narcissism than females. This is, in essence, what we are doing by adding a categorical explanatory variable to our empty model – attempting to improve the accuracy of our best guess by adding variables that explain the error variation in the empty model.
+
 ## Learning outcomes 
 
 At the end of today’s workshop you should be able to do the following: 
