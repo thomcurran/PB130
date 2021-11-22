@@ -77,7 +77,7 @@ I looked in the codebook and the perceptions of choice variable is listed as V55
 ```{r}
 WVSchoice <- 
   WVS %>% 
-  select(??) # SELECT THE VARIABLES OF INTEREST HERE
+  select(V2A, V55) # SELECT THE VARIABLES OF INTEREST HERE
 head(WVSchoice)
 ```
 
@@ -86,7 +86,7 @@ Lets now run the favstats() function to see what we are playing with for the cho
 
 
 ```{r}
-favstats(??)
+favstats(~V55, data = WVSchoice)
 ```
 
 
@@ -233,7 +233,7 @@ sum(WVSaus$residuals_square)
 ```
 
 
-We can also check this using a function called  anova()  to look at the error from the Aus.model lm() object we created earlier. ANOVA stands for ANalysis Of VAriance. Analysis means “to break down”, and  in the comingweeks we will use this function to break down the variation of outcome variables into parts. However for now we will use  anova() just to test out how much error there is around the model, measured in sum of squares.
+We can also check this using a function called  anova()  to look at the error from the Aus.model lm() object we created earlier. ANOVA stands for ANalysis Of VAriance. Analysis means “to break down”, and  in the coming weeks we will use this function to break down the variation of outcome variables into parts. However for now we will use  anova() just to test out how much error there is around the model, measured in sum of squares.
 
 
 ```{r}

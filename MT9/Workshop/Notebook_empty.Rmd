@@ -27,6 +27,7 @@ install.packages("fastDummies")
 install.packages("mosaic")
 install.packages("rstatix")
 install.package("Hmisc")
+install.packages("ggpubr")
 ```
 
 
@@ -43,6 +44,7 @@ library("supernova")
 library("readr")
 library(rstatix)
 library(Hmisc)
+library(ggpubr)
 ```
 
 
@@ -76,7 +78,7 @@ Before we delve into this topic lets just clarify the research question and null
 ## Descriptives
 
 
-Lets first inspect this data and take a look at the means and standard devations for each time point. By now, you should know how to do this. As a reminder, we can use favstats() to inpect the descriptives.
+Lets first inspect this data and take a look at the means and standard devations for each time point. By now, you should know how to do this. As a reminder, we can use favstats() to inspect the descriptives.
 
 
 ```{r}
@@ -153,6 +155,36 @@ t.test(anorexia$Y1, anorexia$X1, paired = TRUE) # setting up the t-test requires
 
 See how the t ratio, p-value and mean difference is exactly the same as the linear model we tested? Thats because the analyses are exactly the same! Students are often taught paired t-test as a separate statistical test to independent t-test, ANOVA and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model. This equivalence helps us understand what is happening when we run stats in the psychological and behavioral sciences. Its all underpinned by the linear model.
 
+## Plotting the paired sample t-test
+
+We might plot this difference using side-by-side boxplots like we did in the visualization week (MT4). Here is the code to place the distributions of the two time points side-on using ggplot.
+
+```{r}
+# Transform into long data: 
+# gather the before and after values in the same column
+anorexia.long <- anorexia %>%
+  gather(key = "Time", value = "weight", X1, Y1)
+
+# create box-plots
+bxp <- ggpaired(anorexia.long, x = "Time", y = "weight", 
+         order = c("X1", "Y1"),
+         ylab = "Weight", xlab = "Time")
+
+# Add p-value and significance levels
+stat.test <- anorexia.long  %>% 
+  t_test(weight ~ Time, paired = TRUE) %>%
+  add_significance()
+stat.test <- stat.test %>% add_xy_position(x = "Time")
+bxp + stat_pvalue_manual(stat.test, tip.length = 0) +
+  labs(subtitle = get_test_label(stat.test, detailed= TRUE))
+
+```
+
+## How it's written
+
+We could report the result as follows:
+
+The mean pre-intervention weight was 9.95 lbs (SD = 3.13), whereas the mean post-intervention weight was 8.87 lbs(SD = 3.37). A paired-sample t-test showed that the difference was not statistically significant, mean diff = -1.08 lbs, t(14) = -2.12, p > 0.05.
 
 ## Two-parameter model or independent t-test
 
@@ -287,7 +319,7 @@ We might plot this difference using side-by-side boxplots like we did in the vis
 
 ```{r}
 perfectionism %>%
-ggplot(aes(x= Region, y = SOP)) + # remeber to use the chategory variable and not the dummy variable as x here
+ggplot(aes(x= Region, y = SOP)) + # remember to use the category variable and not the dummy variable as x here
   geom_boxplot(width = 0.3, fill = "white") +
   geom_jitter(aes(color = as.factor(Region), shape = as.factor(Region)), width = 0.1, size = 1) + 
   xlab(NULL) +
