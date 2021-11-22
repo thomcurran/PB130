@@ -7,7 +7,7 @@ output:
 
 ## Learning outcomes 
 
-At the end of today’s workshop you should be able to do the following:
+At the end of today’s workshop you should be able to do the following: 
 
 
 1. Conduct a one-parameter linear model (paired samples t-test) using the lm and t.test functions
@@ -26,7 +26,7 @@ install.packages("sjlabelled")
 install.packages("fastDummies")
 install.packages("mosaic")
 install.packages("rstatix")
-install.package("Hmisc")
+install.packages("Hmisc")
 install.packages("ggpubr")
 ```
 
@@ -37,11 +37,11 @@ The required packages are the same as the installed packages. Write the code nee
 
 
 ```{r loadlib, echo=T, results='hide', message=F, warning=F}
-library("mosaic")
-library("sjlabelled")
-library("fastDummies")
-library("supernova")
-library("readr")
+library(mosaic)
+library(sjlabelled)
+library(fastDummies)
+library(supernova)
+library(readr)
 library(rstatix)
 library(Hmisc)
 library(ggpubr)
@@ -78,7 +78,7 @@ Before we delve into this topic lets just clarify the research question and null
 ## Descriptives
 
 
-Lets first inspect this data and take a look at the means and standard devations for each time point. By now, you should know how to do this. As a reminder, we can use favstats() to inspect the descriptives.
+Lets first inspect this data and take a look at the means and standard deviations for each time point. By now, you should know how to do this. As a reminder, we can use favstats() to inspect the descriptives.
 
 
 ```{r}
@@ -118,7 +118,7 @@ summary(anorexia.model) # the summary command just calls the summary statistics 
 ```
 
 
-Notice that the model part of this formula - bo - is the same as the mean difference we just calcuated -1.08 lbs? This shows that we still have a one-parameter model here but instead of the mean of an outcome in the empty model, this time we have the mean of the differences in the outcome variable for our paired t-test.
+Notice that the model part of this formula - bo - is the same as the mean difference we just calculated -1.08 lbs? This shows that we still have a one-parameter model here but instead of the mean of an outcome in the empty model, this time we have the mean of the differences in the outcome variable for our paired t-test.
 
 Notice also we have some other statistics that we didn't see in the empty model. The standard error is the estimate of error in the estimate of the model due to sampling variance. It is calculated by taking the standard deviation of the mean difference and dividing it by the sqrt of the sample size. Larger sample sizes and smaller mean difference deviations result in a smaller standard error of the estimate. We calculate this by hand using the information we have already called.
 
@@ -138,7 +138,7 @@ We also have a t-ratio. This is the ratio of the model estimate - bo - to its st
 
 So we have a t-ratio for the mean difference between the pre and post-therapy weights of -2.12. But is this large enough to be statistically significant? Can we say that a zero mean difference is unlikely given the data? 
 
-Well take a look at the p value (pr) in the lm () output and remember we said that statisticians count .05 and lower probabilities as unlikely. Our p value is > .05 and therefore we cannot reject the null hypothesis. It seems that weight appears to fall across the time periods in our sample but that decrease is not statitically significant.
+Well take a look at the p value (pr) in the lm () output and remember we said that statisticians count .05 and lower probabilities as unlikely. Our p value is > .05 and therefore we cannot reject the null hypothesis. It seems that weight appears to fall across the time periods in our sample but that decrease is not statistically significant.
 
 We might write this up in a research paper as follows:
 
@@ -160,13 +160,15 @@ See how the t ratio, p-value and mean difference is exactly the same as the line
 We might plot this difference using side-by-side boxplots like we did in the visualization week (MT4). Here is the code to place the distributions of the two time points side-on using ggplot.
 
 ```{r}
+library(rstatix)
+library(ggpubr)
 # Transform into long data: 
 # gather the before and after values in the same column
 anorexia.long <- anorexia %>%
-  gather(key = "Time", value = "weight", X1, Y1)
+  tidyr::gather(key = "Time", value = "weight", X1, Y1)
 
 # create box-plots
-bxp <- ggpaired(anorexia.long, x = "Time", y = "weight", 
+bxp <- ggpubr::ggpaired(anorexia.long, x = "Time", y = "weight", 
          order = c("X1", "Y1"),
          ylab = "Weight", xlab = "Time")
 
@@ -199,6 +201,7 @@ First, lets load this data into our R environment. Go to the MT9 folder, and the
 
 
 ```{r}
+library(readr)
 perfectionism <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT9/Workshop/perfectionism.csv")
 perfectionism
 ```
@@ -264,6 +267,7 @@ Another, perhaps more informative, way to think about this analysis is that we a
 We've established that we cannot be certain that the mean difference in the population is not zero (i.e., p > .05), but how much variance in perfectionism is explained by region? We can answer this question using the supernova() function in R, which breaks down the variance in perfectionism due to the model (ie., Region) and error (i.e., variance left over once we've subtracted out the model)
 
 ```{r}
+library(supernova)
 supernova(perfectionism.model)
 ```
 
@@ -358,9 +362,9 @@ favstats(~SOP, Country, data=perfectionism) # the second line of fav stats is ou
 Okay, there appears to be small differences here and we can calculate these differences by hand. 
 
 ```{r}
-4.576998-4.495725 # CAN-UK diff
-4.576998-4.665186 # CAN-USA diff
-4.495725-4.665186 # UK-USA diff
+4.576998-4.513348 # CAN-UK diff
+4.576998-4.659151 # CAN-USA diff
+4.513348-4.659151 # UK-USA diff
 ```
 
 We can see that Canadians have higher levels of perfectionism than Brits but lower levels than Americans. Americans have higher levels of perfectionism than Brits. Again, the differences are small, but in the context of the small SD these may be significant. The question therefore is whether these mean differences are statistically meaningful.
@@ -390,9 +394,9 @@ summary(perfectionism.model2) # the summary command just calls the summary stati
 ```
 
 
-Notice that the intercept part of our model - bo - is the same as the mean perfectionism score for the UK - 4.49? Notice also that b1 is the mean difference or the increment needed to get to the USA mean (i.e.,  0.17 + 4.49 = 4.66) and b2 is the mean difference or increment needed to get to the Canada mean (i.e., 0.08 + 4.49 = 4.57)? The difference between b1 and b2 (.08) is the mean difference between USA and Canada. This shows that we now have three parameters, and mean differences that are exactly as we calcuated by hand.
+Notice that the intercept part of our model - bo - is the same as the mean perfectionism score for the UK - 4.51? Notice also that b1 is the mean difference or the increment needed to get to the USA mean (i.e.,  0.15 + 4.51 = 4.66) and b2 is the mean difference or increment needed to get to the Canada mean (i.e., 0.06 + 4.51 = 4.57)? The difference between b1 and b2 (.08) is the mean difference between USA and Canada. This shows that we now have three parameters, and mean differences that are exactly as we calculated by hand.
 
-Notice also we have the same other statistics as in our previous model. The standard error and the t-ratio. From what you now know about these statistics, you should be able to work out whether the difference of .17 between the UK and USA is statistically significant. We have a t of 3.00 and a p value of .003 - we can reject the null hypothesis. For the UK vs Canada difference of .08 we have a t ratio of 1.56 and a p value of 0.12 - we cannot reject the null hypothesis.
+Notice also we have the same other statistics as in our previous model. The standard error and the t-ratio. From what you now know about these statistics, you should be able to work out whether the difference of .15 between the UK and USA is statistically significant. We have a t of  and a p value of .01 - we can reject the null hypothesis. For the UK vs Canada difference of .06 we have a t ratio of 1.228 and a p value of 0.22 - we cannot reject he null hypothesis.
 
 ## Plotting the one-way ANOVA
 
@@ -414,21 +418,21 @@ ggplot(aes(x= Country, y = SOP)) + # remember to use the category variable and n
 
 As we saw with the two-parameter model, another way to think about this analysis is that we are adding two explainatory variables to the empty model. By doing this, we are attempting to reduce the empty model error. Or, in other words, to explain or reduce the empty model variance.  That is the key to statistics; entering information to models that helps us make better predictions. Our reasoning here is that we can better predict perfectionism scores if we know which country a person comes from.
 
-We've established that the mean difference in the popualtion is not zero for USA vs UK but not Canada vs UK, but how much variance in perfectionism is explained by country? And is this meaningful? Again, we can answer this question using the supernova() function in R, which breaks down the variance in perfectionism due to the model (ie., country) and error (i.e., variance left over once we've subtracted out the model).
+We've established that the mean difference in the population is not zero for USA vs UK but not Canada vs UK, but how much variance in perfectionism is explained by country? And is this meaningful? Again, we can answer this question using the supernova() function in R, which breaks down the variance in perfectionism due to the model (ie., country) and error (i.e., variance left over once we've subtracted out the model).
 
 ```{r}
 supernova(perfectionism.model2)
 ```
 
-Taking a look at the supernova table tells us that the total variance - or sum of squares - in perfectionism scores is 6.95. This is variance of perfectionism in the empty model (i.e., the mean as the model). Entering our two dummy predictors in the model reduced the sum of squares in the empty perfectionism model by 0.460. We have, then, a sum of squares 6.49 left after subtracting out the model that includes our predictor (i.e., 6.95-0.46). Compare this with the meager 0.17 sum of squares explained by Region - splitting region in two and looking at perfectionism scores across the USA, Canada, and UK has explained far more variance. Why? Well, because Americans have much higher perfectionism scores than Brits and Canadians! In other words, the USA explains error variance in the empty perfectionism model.
+Taking a look at the supernova table tells us that the total variance - or sum of squares - in perfectionism scores is 6.95. This is variance of perfectionism in the empty model (i.e., the mean as the model). Entering our two dummy predictors in the model reduced the sum of squares in the empty perfectionism model by 0.354. We have, then, a sum of squares 6.60 left after subtracting out the model that includes our predictor (i.e., 6.95-0.35). Compare this with the meager 0.17 sum of squares explained by Region - splitting region in two and looking at perfectionism scores across the USA, Canada, and UK has explained far more variance. Why? Well, because Americans have much higher perfectionism scores than Brits and Canadians! In other words, the USA explains error variance in the empty perfectionism model.
 
-When we look at the ratio of total variance (in the empty model) to error variance (in the one-parameter model) we are left with the proportion of empty model variance explained by the model, or PRE. We can see in this example that the PRE is .07. So about 7% of perfectionism variance is explained by Country. Again, compare this to the 3% explained by Region in the two-parameter model.
+When we look at the ratio of total variance (in the empty model) to error variance (in the one-parameter model) we are left with the proportion of empty model variance explained by the model, or PRE. We can see in this example that the PRE is .05. So about 5% of perfectionism variance is explained by Country. Again, compare this to the 3% explained by Region in the two-parameter model.
 
 Remember, though, that adding an additional parameter will always result in some variance explained by chance, so the question becomes - is this increase in explained variance enough given the additional model complexity? 
 
 Everytime we add a predictor to the model, we spend a degree of freedom and the RPE does not take this into consideration. However, the F ratio does because it is the ratio of model variance to error variance. Because variance is calculated using the degrees of freedom, the F-ratio tells us whether the degrees of freedom that we spent in order to make our model more complicated (i.e., adding a parameter) as “worth it”. 
 
-In this case, we see an F ratio associated with the model of 4.82 and a p value of .01. In line with what you understand about p values, this is a statistically significant result! Therefore, the interpretation is that adding our two Country dummy variables to the empty model was worth it. The variance explained is large enough to justify the additional parameter. Notice that this chimes with the interpretation of the t ratio - that there was a significant difference between the groups.
+In this case, we see an F ratio associated with the model of 3.65 and a p value of .03. In line with what you understand about p values, this is a statistically significant result! Therefore, the interpretation is that adding our two Country dummy variables to the empty model was worth it. The variance explained is large enough to justify the additional parameter. Notice that this chimes with the interpretation of the t ratio - that there was a significant difference between the groups.
 
 
 ## Equivalence to one-way ANOVA
@@ -437,11 +441,11 @@ Just to show you that the between groups one-way between-person (independent) AN
 
 
 ```{r}
-perfectionism.ANOVA <- aov(SOP ~ Country, data = perfectionism) # setting up the ANOVA requires the outcome variable and the explainatory variable seperated by tilda (~).
+perfectionism.ANOVA <- aov(SOP ~ Country, data = perfectionism) # setting up the ANOVA requires the outcome variable and the explanatory variable separated by tilde (~).
 summary(perfectionism.ANOVA) 
 ```
 
-See how the F ratio and mean differences are the same as the linear model we tested? Thats becuase the analyses are exactly the same! Students are often taught one-way ANOVA as a seperate statistical test to paired t-test, independent t-test, and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model! 
+See how the F ratio and mean differences are the same as the linear model we tested? Thats because the analyses are exactly the same! Students are often taught one-way ANOVA as a separate statistical test to paired t-test, independent t-test, and regression (these are tests we will come onto here and in subsequent weeks) but, in fact, they are all a family of tests belonging to the linear model! 
 
 As it turns out, its better to run one-way ANOVA analyses with aov() because the number of comparisons being made is more than 2 and therefore dummy variables are needed. As the number of comparisons increase from 3, to 4, to 5, and so on the number of dummy variables also increases. ANOVA solves this by running whats called the omnibus F test, which is one test to capture the variance explained in the outcome by all the comparisons. But under the hood, the math is exactly the same. To see this, lets just quickly call the coefficients for the perfectionism.ANOVA model.
 
@@ -534,7 +538,7 @@ According to Cohen (1988, 1992), the effect size is low if the value of d varies
 
 ## How its written
 
-A one-way between-subjects ANOVA was conducted to compare the effect of country on levels of perfectionism. There was a significant effect of country on perfectionism at the p<.05 level for the three conditions [F(2, 136) = 4.82, p = 0.01]. Post hoc comparisons using the Tukey HSD test indicated that the mean perfectionism score for the US (M = 4.67, SD = 0.16) was significantly larger than the mean perfectionism score for the UK (M = 4.50, SD = 0.35, d=.63). However, the mean perfectionism score for Canada  (M = 4.58, SD = 0.20) did not significantly differ from the mean perfectionism scores for the US (d=.49) and the UK (d = .29). 
+A one-way between-subjects ANOVA was conducted to compare the effect of country on levels of perfectionism. There was a significant effect of country on perfectionism at the p<.05 level for the three conditions [F(2, 136) = 3.65, p = 0.03]. Post hoc comparisons using the Tukey HSD test indicated that the mean perfectionism score for the US (M = 4.66, SD = 0.16) was significantly larger than the mean perfectionism score for the UK (M = 4.51, SD =	0.35, d=.54). However, the mean perfectionism score for Canada  (M = 4.58, SD = 0.20) did not significantly differ from the mean perfectionism scores for the US (d=.46) and the UK (d = .22). 
 
 ## Exercise
 
@@ -589,13 +593,13 @@ Use the favstats function to inspect the means and SD of the choice scores for A
 
 
 ```{r eval=FALSE}
-favstats(~??, V2A, data=WVSchoice) # Fill in the question mark
+favstats(~V55, ??, data=WVSchoice) # Fill in the question mark
 ```
 
 
-What is the mean score for Australia?
+What is the mean score for Australia? 
 
-What is the mean score for Japan?
+What is the mean score for Japan? 
 
 Calculate the mean difference
 
@@ -618,15 +622,15 @@ summary(choice.model)
 ```
 
 
-What is the mean score for Australia (hint: intercept)?
+What is the mean score for Australia (hint: intercept)? 
 
-What is the incremenent needed to find the Japan mean or - put differently - the mean difference?
+What is the incremenent needed to find the Japan mean or - put differently - the mean difference? 
+ 
+What is the t-ratio? 
 
-What is the t-ratio?
+What is the p value(remember that e-values mean zero)? 
 
-What is the p value(remember that e-values mean zero)?
-
-Do we accept or reject the null hypothesis?
+Do we accept or reject the null hypothesis? 
 
 Why?
 
@@ -638,16 +642,16 @@ We've established whether there is a statistically significant mean difference, 
 supernova(??) # add the choice model you want to examine the variance
 ```
 
-What is the total variance or sum of squares for perceptions of choice?
+What is the total variance or sum of squares for perceptions of choice? 
 
-How is that sum of squares partitioned between the model?
+How is that sum of squares partitioned between the model? 
 
-And the Error?
+And the Error? 
 
-What is the percentage of variance explained in by the model?
+What is the percentage of variance explained in by the model? 
 
-What is the F ratio?
+What is the F ratio? 
 
-What is the p value?
+What is the p value? 
 
 What do we conclude in relation to our research question?
