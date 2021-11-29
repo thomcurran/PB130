@@ -188,7 +188,7 @@ cor(WHR[,c("GDP","Happiness")], method="pearson")
 cor(WHR_cov)
 ```
 
-And just as we did by hand, Pearsons r is .78. According to Cohen (1988, 1992), the effect size is low if the value of r varies around 0.1, medium if r varies around 0.3, and large if r varies more than 0.5. An r of .78 is a very large correlation! 
+And just as we did by hand, Pearson's r is .78. According to Cohen (1988, 1992), the effect size is low if the value of r varies around 0.1, medium if r varies around 0.3, and large if r varies more than 0.5. An r of .78 is a very large correlation! 
 
 As a standardized metric, Pearson's r can be interpreted just like t or z and used for Null Hypothesis Significance Testing. Based on a normal distribution of values for r, there is a p value associated with it. You should know by now how this is interpreted. If p is < .05, a zero relationship is deemed to be unlikely in the popualtion.
 
@@ -277,7 +277,7 @@ Furthermore, when we plot the best fitting line through the joint means, the sum
 
 By now, hopefully you can begin to see the awesomeness of the General Linear Model. Estimating the parameters of the regression model for our research question is accomplished in the exact same way as estimating the parameters of the group comparisons model. It all comes down to fitting a line!
 
-Let's look at how we build a linear regression model in the case where we have a single continuous explanatory variable - in this case GDP. We write the model in notational form like this:
+Let's look at how we build a linear regression model in the case where we have a single continuous explanatory variable - in this case GDP. We write the model in notional form like this:
 
 Yi = b0 + b1Xi + ei
 
@@ -359,7 +359,7 @@ As I mentioned before, just like the mean, the regression line is the line that 
 sum(WHR$residuals)
 ```
 
-Hence, just like the residuals in any other linear model, we need to square them and sum them to ascertain the amount of error in our model. We can do this with the following calcualtion.
+Hence, just like the residuals in any other linear model, we need to square them and sum them to ascertain the amount of error in our model. We can do this with the following calculation.
 
 
 ```{r}
@@ -372,7 +372,7 @@ In our regression model, we have a sum of squares of 828.15. Is this a lot of er
 1.257866*1675 # remember variance (1.26) is SS/df so it follows that sum of squares is var*df
 ```
 
-When we run that calculation, we find that the sum of squares for the empty model is 2106.926. That means that adding GDP has minimized the error in the model by 1278.779 sum of squares (i.e., 2107 - 828.15 = 1278.779). Indeed, this is a lot of error explained by one explanatory variable!
+When we run that calculation, we find that the sum of squares for the empty model is 2106.926. That means that adding GDP has minimized the error in the model by 1278.779 sum of squares (i.e., 2106.926 - 828.15 = 1278.779). Indeed, this is a lot of error explained by one explanatory variable!
 
 As we did last week, lets partition this variance using supernova() and interpret how much variance in happiness is explained by GDP.
 
