@@ -33,7 +33,7 @@ install.packages("ggpubr")
 ```
 
 
-## Load required packages
+## Load required packages 
 
 The required packages are the same as the installed packages. Write the code needed to load the required packages in the below R chunk.
 
@@ -571,7 +571,7 @@ I looked in the codebook for WVS and the perceptions of choice variable is liste
 ```{r eval=FALSE}
 WVSchoice <- 
   WVS %>% 
-  select(??, ??) # SELECT THE VARIABLES OF INTEREST HERE
+  select(V2A, V55) # SELECT THE VARIABLES OF INTEREST HERE
 head(WVSchoice)
 ```
 
@@ -584,7 +584,7 @@ Just like other variables in the WVS dataset, we need to edit the dataframe sinc
 ```{r eval=FALSE}
 WVSchoice <- 
 WVSchoice %>% 
-filter(V55 >= "??" & V2A == c("??", "??")) # Fill in the question marks 
+filter(V55 >= "1" & V2A == c("Australia", "Japan")) # Fill in the question marks 
 WVSchoice
 ```
 
@@ -595,7 +595,7 @@ Use the favstats function to inspect the means and SD of the choice scores for A
 
 
 ```{r eval=FALSE}
-favstats(~V55, ??, data=WVSchoice) # Fill in the question mark
+favstats(~V55, V2A, data=WVSchoice) # Fill in the question mark
 ```
 
 
