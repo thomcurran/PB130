@@ -67,7 +67,7 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 
 
 ```{r}
-WVS <- readRDS("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT11/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/CURRANT/Dropbox/Work/LSE/PB130/MT11/Workshop/WV6_Data_R_v20180912.rds")
 
 WVS$V2A <- as_character(WVS$V2A) # this saves the country varaible as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
 ```
@@ -268,7 +268,7 @@ So, rather than assume a normal sampling distribution of estimated values, a bet
 
 Bootstrapping is one method that uses the characteristics of an original sample to produce many thousands of resamples with replacement – estimating coefficients of interest each time. Typically, it is recommended that little benefit is achieved over about 5000 bootstrap resamples, so I recommend you always request 5000 resamples. 
 
-In this way, bootsrapping permits us to generate a distribution of estimates that we can rank from low to high and use to cut off the 2.5 and 97.5 percentiles of the distribution (see lecture notes for more details on the mechanics of bootstrapping). Genius!
+In this way, bootstrapping permits us to generate a distribution of estimates that we can rank from low to high and use to cut off the 2.5 and 97.5 percentiles of the distribution (see lecture notes for more details on the mechanics of bootstrapping). Genius!
 
 So lets go ahead and generate a bootstrap sampling distribution of estimates using the Boot() function and save it as a new R object called immigrant.boot. Note that we are going to request 5000 resamples so that might take a little time to run!
 
@@ -305,7 +305,7 @@ An independent t-test was performed to test the difference in life satisfaction 
 
 ## Exercise
 
-Okay, lets now give you a chance to set up and test a linear regression model with 95% normal theory and bootsrap confidence intervals. In the WHR dataset there is another interesting potential predictor of life satisfaction - satisfaction with financial situation of household. This variable asks the question: “How satisfied are you with the current financial situation of your household?" and is measured on a 1-10 scale:
+Okay, lets now give you a chance to set up and test a linear regression model with 95% normal theory and bootstrap confidence intervals. In the WHR dataset there is another interesting potential predictor of life satisfaction - satisfaction with financial situation of household. This variable asks the question: “How satisfied are you with the current financial situation of your household?" and is measured on a 1-10 scale:
 
 1. Completely dissatisfied
 
