@@ -493,7 +493,13 @@ What is the p value?
 
 What do we conclude in relation to our research question?
 
-# Task 6 - Use this workshop for your quantitative writing practice due Wednesday but you have until next Monday to submit (01/02/2020)
+# Task 6 - Complete the lab questionnaire
+
+For the lab on Thursday, we are going to analyse some group data to demonstrate how to collect, retrieve and start a new R project. So, to do this, before you leave today I would like you to quickly complete this short PB130 online survey that I have set up using Gorilla. Please copy and paste the below link into your browser and follow the instructions:
+
+https://research.sc/participant/login/dynamic/183F1D85-9289-4685-A099-4E572069A0DA
+
+# Task 7 - Use this workshop for your quantitative writing practice.
 
 For the quantitative writing practice, I would like for you to practice writing a brief quantitative report on a simple regression, analyzing the relationship between GDP and Happiness with the WHR data. This report should include the following:
 
@@ -512,3 +518,5 @@ Results:
 Discussion:
 
 Brief 250 word discussion interpreting the results and addressing the research question and null hypothesis.
+
+
