@@ -256,18 +256,18 @@ Hopefully this plot brings our analyses to life. You can see that when the effec
 
 # Activity: Moderation with a categorical moderator
 
-Okay, lets now give you a chance to set up a linear model to test for moderation, but this time with a categorical rather than continuous moderator. For this, lets continue to use the employee dataset, but this time look at whether gender moderates the relationship between manager control and  employee exhaustion. Before we go on, I want to note that I have fabricated the gender variable for demonstration purposes. Relationships will not look like this in the real world. Our goal here is understand how the effect of manager control is conditioned across two levels of the moderator: males and females. In essence, with this analysis we are interested to know whether the effects of manager control on employee exhaustion depend on whether one is male or female.
+Okay, lets now give you a chance to set up a linear model to test for moderation, but this time with a categorical rather than continuous moderator. For this, lets continue to use the employee dataset, but this time look at whether age moderates the relationship between manager control and  employee exhaustion. Before we go on, I want to note that I have fabricated the age variable for demonstration purposes. Relationships will not look like this in the real world. Our goal here is understand how the effect of manager control is conditioned across two levels of the moderator: old (over 30) and young (under 30). In essence, with this analysis we are interested to know whether the effects of manager control on employee exhaustion depend on whether one is old or young.
 
 Before we delve into this topic, lets just clarify the research question and null hypothesis we are testing:
 
-*Research Question* - Is the relationship between manager control and employee exhaustion moderated by gender?
+*Research Question* - Is the relationship between manager control and employee exhaustion moderated by age?
 
-*Null Hypothesis* - The interaction of manager control and employee gender on employee exhaustion will be zero.
+*Null Hypothesis* - The interaction of manager control and employee age on employee exhaustion will be zero.
 
-As we are dealing with a categorical moderator, it is always a good idea to create our dummy variable for gender - just like we did for group comparisons in MT8. Here I will write the code for you as that session is a while back, but we use the ifelse() function to create a new variable "dummy" that codes 1 for when Gender=Male and 0 for all else (i.e., Females).
+As we are dealing with a categorical moderator, it is always a good idea to create our dummy variable for age - just like we did for group comparisons in MT8. Here I will write the code for you as that session is a while back, but we use the ifelse() function to create a new variable "dummy" that codes 1 for when Age=Old and 0 for all else (i.e., Young).
 
 ```{r eval = FALSE}
-employee$dummy <- ifelse(employee$Gender == c("Male"), 1, 0)
+employee$dummy <- ifelse(employee$Age == c("Old"), 1, 0)
 employee
 ```
 
@@ -292,24 +292,24 @@ Is the interaction term statistically significant?
 
 ## Probing the interaction
 
-We have a significant interaction term, but what is the nature of this moderation - to understand this we need to probe it. When we had a continuous predictor, we used pick a point and the JN technique to calculate conditional effects at various values of the moderator. However, with a categorical variable there are only two values of the moderator; 0 and 1 or Females and Males. Therefore, there are only 2 conditional effects to calculate. The first is when the moderator = zero and the second when the moderator = 1. We already know the conditional effect when the moderator = 0 because it is the b1 estimate in the multiple regression (i.e., -.41). So the female slope estimate for the relationship between manager control and exhaustion is -.41. Among females, manager control appears to lower exhaustion. But what about when the moderator = 1 (i.e., for males)? R is cleaver enough to detect a dummy categorical variable so when we run the pickapoint() function it will return the conditional effects at 0 and 1 (i.e., not +1SD, mean, and -1SD). 
+We have a significant interaction term, but what is the nature of this moderation - to understand this we need to probe it. When we had a continuous predictor, we used pick a point and the JN technique to calculate conditional effects at various values of the moderator. However, with a categorical variable there are only two values of the moderator; 0 and 1 or Young and Old. Therefore, there are only 2 conditional effects to calculate. The first is when the moderator = zero and the second when the moderator = 1. We already know the conditional effect when the moderator = 0 because it is the b1 estimate in the multiple regression (i.e., -.41). So the young slope estimate for the relationship between manager control and exhaustion is -.41. Among young people, manager control appears to lower exhaustion. But what about when the moderator = 1 (i.e., for old people)? R is cleaver enough to detect a dummy categorical variable so when we run the pickapoint() function it will return the conditional effects at 0 and 1 (i.e., not +1SD, mean, and -1SD). 
 
 ```{r eval = FALSE}
 pickapoint(??, dv='??', iv='??', mod='??') ## enter the iv, dv, and dummy variables here
 ```
 
-Here we have the conditional effects at 0 and 1. As we saw, we know the effect for females - it is -.41. 
+Here we have the conditional effects at 0 and 1. As we saw, we know the effect for young people - it is -.41. 
 
 What is the conditional effect for males? 
 
-For males, does manager control have a positive or negative relationship with exhaustion?
+For old people, does manager control have a positive or negative relationship with exhaustion?
 
 Are the conditional effects statistically significant?
 
-Like above, we can plot this interaction. Given the moderator is categorical and only has two levels, we don't need the JN technique - we can just examine the simple slopes for males and females. To do this, we can use the interact_plot() function
+Like above, we can plot this interaction. Given the moderator is categorical and only has two levels, we don't need the JN technique - we can just examine the simple slopes for old and young. To do this, we can use the interact_plot() function
 
 ```{r eval = FALSE}
 interact_plot(mod.model2, pred = Control, modx = dummy) + theme_classic(base_size = 8) ## This function takes a lm object and the predictor (pred=) and moderator (modx=) to plot the simple slopes of control on exhaustion for males and females.
 ```
 
-As you can see, males and females have very different relationships for control and exhaustion - one is positive and one is negative. This is classic moderation. Use simple slopes to plot categorical interaction always and use the JN technique to plot continuous interactions. Note the gender data is fabricated and these effects do not reflect effects in the real world - they are for demonstration purposes only.
+As you can see, old and young have very different relationships for control and exhaustion - one is positive and one is negative. This is classic moderation. Use simple slopes to plot categorical interaction always and use the JN technique to plot continuous interactions. Note the age data is fabricated and these effects do not reflect effects in the real world - they are for demonstration purposes only.
