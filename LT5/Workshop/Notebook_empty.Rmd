@@ -437,6 +437,27 @@ Is there a main effect of Posture?
 
 Is there two-way interaction between Congruency and Posture?
 
+# Plotting the interaction
+
+To get a better understanding of this moderation, we can plot it. For this, I'm going to create a new data object called dat that will contain the means and standard errors for each factor so that I can then plot them on an interaction plot. As such, I will use ggplot() this time rather than interation.plot() as we did in LT3 because with the standard errors, I can plot the confidence intervals around the means for each condition. Lets go ahead and create that plot.
+
+```{r}
+dat <- stroop %>% 
+  group_by(Congruency, Posture) %>% 
+  summarise(rt_mean = mean(RT), rt_se = psych::describe(RT)$se) ## this first chunk creates a new dataset called "dat" which summarises the means and standard errors for each condition at each time point. Find the "dat" object in your R environment and check it out!
+
+dat %>% 
+ ggplot(aes(x=as.factor(Congruency), y=rt_mean, colour=as.factor(Posture))) + # I am now plotting congruence against the reaction time means for each  each condition. I am forcing the congruency and posture variables to factors so that R does not interpret them as continuous variables
+  geom_line(aes(group=as.factor(Posture))) + 
+     geom_point() + 
+     geom_errorbar(aes(ymin=rt_mean-1.96*rt_se, ymax=rt_mean+1.96*rt_se), width=.1) + # I am adding the   error bars that depict the upper and lower confidence from +/- 1.96 SE of the means
+  labs(x = "Congruency",
+       color  = "Posture",
+       y = "Reaction Time") +
+theme_classic()
+```
+
+
 ## Post-hoc tests
 
 We can also request the means for the conditions and the paired contrasts. Remember that the F tests are omnibus tests, they don't tell us anything about the specific comparisons. Now there are a few comparisons we could test, but with a significant interaction term the only real comparisons of interest are those that concern the Congruency * Posture interaction. So we can ask:
@@ -454,13 +475,13 @@ emmeans(anova.model4, pairwise ~ Congruency|Posture, adjust='bonferroni')
 ```
 
 What is the mean difference in reaction time for the sitting condition?
--119
+
 
 What is the mean difference in reaction time for the standing condition?
--96
+
 
 Are these differences statistically significant using paired t-test?
-Yes
+
 
 We can see that the paired contrasts are significant for both conditions - reaction time was slower in incongruent condition for both standing and sitting. But this effect appears to be mitigated somewhat when the participants were standing.
 
