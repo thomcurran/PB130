@@ -26,7 +26,7 @@ library(psych)
 
 ## Loading the personality data
 
-Lets load the bigfive dataframe from the survey we just completed.You can do this by clicking the file in the LT8 Lab folder or by trying the code below:
+Lets load the bigfive dataframe from the survey we just completed. You can do this by clicking the file in the LT8 Lab folder or by trying the code below:
 
 ```{r}
 bigfive <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT8/Lab/bigfive.csv")

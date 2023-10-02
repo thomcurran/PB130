@@ -201,8 +201,6 @@ And so on..
 
 Once we calculate an expected value for each cell, we can then use the same x2 function using the observed and expected values to calculate our x2 statistic. 
 
-Try filling in a blank code with the expected values, and then calculate out x2!
-
 ```{r eval = FALSE}
 ## write the data out and list the number of columns
 expected <- matrix(c(27.39, 32.35, 42.26, 66.61, 78.65, 102.74), ncol=2)
@@ -226,7 +224,7 @@ X2 = sum(observed-expected)^2/expected
 So for each cell take the observed from the expected, square it, and then divide by the expected. Then, add them all up.
 
 ```{r eval = FALSE}
-chisq_in <- (26 - 27.39)^2/27.39 + (31-32.35)^2/32.35 + (45 - 42.26)^2/42.26 + (68 - 66.61)^2/66.61 + (80 - 78.65)^2/78.65 + (100 - 102.74)^2/102.74 # fill in the blanks here
+chisq_in <- (26 - 27.39)^2/27.39 + (31-32.35)^2/32.35 + (45 - 42.26)^2/42.26 + (68 - 66.61)^2/66.61 + (80 - 78.65)^2/78.65 + (100 - 102.74)^2/102.74 
 chisq_in
 ```
 
@@ -276,7 +274,7 @@ I have generated some hypothetical data on this topic in the college dataframe. 
 
 2. gpa - is our focal continuous predictor and is the mean GPA score for each student in our sample
 
-3. pres - is our second predictor, which we will add later. This is the prestigue of the school each student attended and goes from 1 = low prestige to 4 = high prestige.
+3. pres - is our second predictor, which we will add later. This is the prestige of the school each student attended and goes from 1 = low prestige to 4 = high prestige.
 
 Before we get into the analysis, lets remind ourselves of the research question and hypotheses.
 
