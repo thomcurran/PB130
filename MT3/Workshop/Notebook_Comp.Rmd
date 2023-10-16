@@ -249,10 +249,10 @@ From eyeballing the data we can see that there appears to be no minus values in 
 
 
 ```{r}
-
+favstats(~V10, data = WVS_short)
 ```
 ```{r}
-
+favstats(~V11, data = WVS_short)
 ```
 
 
@@ -319,25 +319,31 @@ Now its your turn to do some data manipulation with the WVS. I want you to creat
 1. Filter for only Iraq
 
 ```{r}
-
+Just_Iraq <- # into new dataframe
+WVS_short %>% # from WVS_short
+filter(V2 == "368") # Filter on the country code
+Just_Iraq # check the new dataframe
 ```
 
 2. Calculate the wellbeing score for Iraq
 
 ```{r}
-
+Just_Iraq <-
+  Just_Iraq %>% 
+  mutate(wellbeing = V10 + V11)  
+Just_Iraq
 ```
 
 3. Find the average wellbeing score for Iraq
 
 ```{r}
-
+favstats(~ wellbeing, data = Just_Iraq)
 ```
 
 4. Calculate the average wellbeing difference between the USA and Iraq
 
 ```{r}
-
+4.50-3.67
 ```
 
 ## Conclusion
