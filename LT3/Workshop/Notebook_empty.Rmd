@@ -18,7 +18,7 @@ By the end of this workshop, you should be able to:
 ## Install required packages
 
 ```{r eval = FALSE}
-install.packages("probemod")
+#install.packages("C:/Users/CURRANT/Dropbox/Work/LSE/PB130/Packages/probemod_0.2.tar.gz", repos = NULL, type = "source")
 install.packages("readr")
 install.packages("tidyverse")
 install.packages("ggplot2")
@@ -28,7 +28,7 @@ install.packages("modplot")
 install.packages("mediation")
 install.packages("fastDummies")
 install.packages("interactions")
-install.packages("https://github.com/thomcurran/PB130/blob/master/Packages/modplot_0.1.0.tar.gz?raw=true", repos = NULL, type = "source")
+#install.packages("https://github.com/thomcurran/PB130/blob/master/Packages/modplot_0.1.0.tar.gz?raw=true", repos = NULL, type = "source")
 install.packages("car")
 ```
 
@@ -186,7 +186,7 @@ Remember from the lecture that to test for moderation the first step is to run a
 Relative to mediation, building the linear model for a test of moderation is straightforward - it is just one multiple regression, albeit with a more complex interpretation. In this multiple regression model, we need to add the predictor, in this case manager structure, the moderator, in this case manager control, and the structure*control interaction. The outcome is employee exhaustion. When building this model, we will save it as a new R object called mod.model.
 
 ```{r}
-mod.model <- lm(Exhaustion ~ 1 + Structure + Control + Structure*Control, data=employee)
+mod.model <- glm(Exhaustion ~ 1 + Structure + Control + Structure*Control, data=employee)
 summary(mod.model)
 ```
 
@@ -273,10 +273,10 @@ employee
 
 ## Setting up the linear model
 
-Now we have dummy coded the gender variable, lets build the linear model with our predictor (control), our moderator (dummy), and the predictor*moderator interaction and create a new R object called mod.model2.
+Now we have dummy coded the age variable, lets build the linear model with our predictor (control), our moderator (dummy), and the predictor*moderator interaction and create a new R object called mod.model2.
 
 ```{r eval = FALSE}
-mod.model2 <- lm(?? ~ 1 + ?? + ?? + ??, data=employee) ## Build the linear model using the variables of interest for moderation analysis - don't forget the interaction term
+mod.model2 <- glm(?? ~ 1 + ?? + ?? + ??, data=employee) ## Build the linear model using the variables of interest for moderation analysis - don't forget the interaction term
 summary(mod.model2)
 ```
 
@@ -300,7 +300,7 @@ pickapoint(??, dv='??', iv='??', mod='??') ## enter the iv, dv, and dummy variab
 
 Here we have the conditional effects at 0 and 1. As we saw, we know the effect for young people - it is -.41. 
 
-What is the conditional effect for males? 
+What is the conditional effect for old? 
 
 For old people, does manager control have a positive or negative relationship with exhaustion?
 
@@ -309,7 +309,7 @@ Are the conditional effects statistically significant?
 Like above, we can plot this interaction. Given the moderator is categorical and only has two levels, we don't need the JN technique - we can just examine the simple slopes for old and young. To do this, we can use the interact_plot() function
 
 ```{r eval = FALSE}
-interact_plot(mod.model2, pred = Control, modx = dummy) + theme_classic(base_size = 8) ## This function takes a lm object and the predictor (pred=) and moderator (modx=) to plot the simple slopes of control on exhaustion for males and females.
+interact_plot(??, pred = ??, modx = ??) + theme_classic(base_size = 8) ## This function takes a lm object and the predictor (pred=) and moderator (modx=) to plot the simple slopes of control on exhaustion for males and females.
 ```
 
 As you can see, old and young have very different relationships for control and exhaustion - one is positive and one is negative. This is classic moderation. Use simple slopes to plot categorical interaction always and use the JN technique to plot continuous interactions. Note the age data is fabricated and these effects do not reflect effects in the real world - they are for demonstration purposes only.

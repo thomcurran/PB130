@@ -51,7 +51,7 @@ Now we are going to open the file in R using RStudio or RStudio Server. Use the 
 
 
 ```{r}
-WVS <- readRDS("C:/Users/currant/Dropbox/Work/LSE/PB130/MT8/Workshop/WV6_Data_R_v20180912.rds")
+WVS <- readRDS("C:/Users/CURRANT/Dropbox/Work/LSE/PB130/MT8/Workshop/WV6_Data_R_v20180912.rds")
 
 WVS$V2A <- as_character(WVS$V2A) # this saves the country variable as a "character" variable (i.e., the names o th countries) rather than its default "numeric" value.
 ```
@@ -175,7 +175,7 @@ Any time you see R return a slightly gibberish value containing "e-", it means t
 
 Thinking about the mean in this way also helps us think about DATA = MODEL + ERROR in a more specific way. If the mean is the model, each data point can now be thought of as the sum of the model (7.81 in our WVS data) plus its deviation from the model. So 9 can be decomposed into the model part (7.81) and the error from the model (+1.19).
 
-It’s easy to fit the empty model, which is why I am starting us here — it’s just the mean (7.81 in this case). But later in the course, we will will learn to fit more complex models. I am going to teach you a way of fitting models in R that you can use now for fitting the empty model, but that will also work in subsequent weeks for fitting more complex models.
+It’s easy to fit the empty model, which is why I am starting us here — it’s just the mean (7.81 in this case). But later in the course, we will learn to fit more complex models. I am going to teach you a way of fitting models in R that you can use now for fitting the empty model, but that will also work in subsequent weeks for fitting more complex models.
 
 The R function we are going to use is lm(), which stands for “linear model.” Here’s the code we use to fit the empty linear model.
 

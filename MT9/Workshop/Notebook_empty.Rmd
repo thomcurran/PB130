@@ -373,7 +373,7 @@ We can see that Canadians have higher levels of perfectionism than Brits but low
 
 ## Setting up the linear model
 
-Now lets set our up our linear model to examine the statitical significance of those mean differences. This time though we are using the lm() function to test a three-parameter model becuase we now have three means to estimate.
+Now lets set our up our linear model to examine the statistical significance of those mean differences. This time though we are using the lm() function to test a three-parameter model because we now have three means to estimate.
 
 Before we do so, like the two-parameter model, I want to show you how to dummy code the variables in a three-group model because the meaning of zero is very important. In this case, we need to create two dummy variables with UK as the reference group. I have chosen UK as the reference group because we know it has the lowest mean (but you can set it up whichever way you want). This necessitates the creation of a USA vs others contrast (USA = 1, others = 0), and a Canada vs others contrast (Canada = 1, others = 0). Setting it up this way makes in the interpretation of the intercept the UK mean (because UK is always coded 0), b1 the increment needed to find the USA mean from the UK mean, and b2 the increment needed to find the Canada mean from the UK mean. The difference between b1 and b2 gives the mean difference between the USA and Canada.
 
@@ -571,7 +571,7 @@ I looked in the codebook for WVS and the perceptions of choice variable is liste
 ```{r eval=FALSE}
 WVSchoice <- 
   WVS %>% 
-  select(V2A, V55) # SELECT THE VARIABLES OF INTEREST HERE
+  select(??, ??) # SELECT THE VARIABLES OF INTEREST HERE
 head(WVSchoice)
 ```
 
@@ -584,7 +584,7 @@ Just like other variables in the WVS dataset, we need to edit the dataframe sinc
 ```{r eval=FALSE}
 WVSchoice <- 
 WVSchoice %>% 
-filter(V55 >= "1" & V2A == c("Australia", "Japan")) # Fill in the question marks 
+filter(V55 >= "1" & V2A == c("??", "??")) # Fill in the question marks 
 WVSchoice
 ```
 
@@ -595,7 +595,7 @@ Use the favstats function to inspect the means and SD of the choice scores for A
 
 
 ```{r eval=FALSE}
-favstats(~V55, V2A, data=WVSchoice) # Fill in the question mark
+favstats(~??, ??, data=WVSchoice) # Fill in the question mark
 ```
 
 

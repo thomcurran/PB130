@@ -317,7 +317,7 @@ happiness.modelZ <- lm(zhappiness ~ 1 + zGDP, data = WHR)
 summary(happiness.modelZ)
 ```
 
-I have no idea why R uses scientific notation in the estimate for the standardised relationship, but it does. E-01 means move the decimal point 1 place to the right. Hence, the standardized estimate for the slope of GDP and happiness is 0.79. A couple of things to notice about this standardized estimate. First, it is different from the unstandardised estimate (0.74). This is because rather than raw units, the standardized estimate shows that for every 1 SD unit increase in GDP there is a .78 SD increase in happiness. Remember that z-sores have a mean of zero and SD of 1. Therefore, the standardised estimates can only range from -1 to +1. A standardized estimate of .74 is a very large effect!
+I have no idea why R uses scientific notation in the estimate for the standardised relationship, but it does. E-01 means move the decimal point 1 place to the left. Hence, the standardized estimate for the slope of GDP and happiness is 0.79. A couple of things to notice about this standardized estimate. First, it is different from the unstandardised estimate (0.74). This is because rather than raw units, the standardized estimate shows that for every 1 SD unit increase in GDP there is a .78 SD increase in happiness. Remember that z-sores have a mean of zero and SD of 1. Therefore, the standardised estimates can only range from -1 to +1. A standardized estimate of .74 is a very large effect!
 
 Second, in simple regression, where there is only one explanatory variable, the standardised estimate is exactly the same as Pearson's r. Take a look at the correlation matrix above to check this. This is not a coincidence - both are standardized estimates with equivalent calculations (see lecture notes). 
 
@@ -421,7 +421,7 @@ As with the GDP variable, there are some missing data points for the GINI coeffi
 ```{r eval=FALSE}
 WHR <- 
 WHR %>% 
-filter(??) # Fill in the gap here for values equal to and above 0
+filter(GINI >= "0") # Fill in the gap here for values equal to and above 0
 WHR
 ```
 
@@ -431,13 +431,13 @@ Write the code to draw a plot of the distribution of the GINI coefficient. Given
 
 ```{r eval=FALSE}
 WHR %>% 
-  ggplot(aes(x= ??)) + ## fill in the variable gap here for GINI
+  ggplot(aes(x= GINI)) + ## fill in the variable gap here for GINI
   geom_histogram(aes(y=..density..), binwidth=.05, colour="black", fill="white") + 
   geom_density(adjust = 4, alpha = .2, fill = "antiquewhite3") +
-  geom_vline(aes(xintercept=mean(??)), col="black", linetype="dashed", size=1) +
-  geom_vline(aes(xintercept=median(??)), col="black", size=1) +
-  ylab("??") + # add appropriate y lab 
-  xlab("??") + # add appropriate x lab
+  geom_vline(aes(xintercept=mean(GINI)), col="black", linetype="dashed", size=1) +
+  geom_vline(aes(xintercept=median(GINI)), col="black", size=1) +
+  ylab("Density") + # add appropriate y lab 
+  xlab("GINI") + # add appropriate x lab
   ggtitle("Distribution of GINI in the WHR") +
   theme_minimal(base_size = 8) 
 ```
@@ -449,7 +449,7 @@ Is the distribution of the GINI coefficient approximately normal?
 Now use the rcorr() function to call the correlation coefficient - or Pearson's r - for the relationship between GINI and happiness.
 
 ```{r eval=FALSE}
-rcorr(as.matrix(WHR[,c("??","??")], type="??")) # fill in the ?? gaps here for the explanatory variable and the correlation type (pearson)
+rcorr(as.matrix(WHR[,c("Happiness","GINI")], type="pearson")) # fill in the ?? gaps here for the explanatory variable and the correlation type (pearson)
 ```
 
 What is the correlation between GINI and happiness?
@@ -464,7 +464,7 @@ Use a scatter graph to plot the relationship between GINI and happiness and add 
 
 ```{r eval=FALSE}
 WHR %>%
-ggplot(aes(x = ??, y = ??)) + # fill in the ?? gaps here
+ggplot(aes(x = GINI, y = Happiness)) + # fill in the ?? gaps here
     geom_point() + 
     stat_smooth(method = "lm",
         col = "red",
@@ -481,8 +481,8 @@ How does this line compare to the regression line for the relationship between G
 Now lets set our up our linear regression model to examine the intercpet and slope of that best fitting line using the lm() function. Don't forget to save the linear model in a new R object. I suggest happiness.model2 
 
 ```{r eval=FALSE}
-happiness.model2 <- lm(??, data=WHR) # add ?? variables to the linear model code
-summary(??) # add the new R object to the summary function
+happiness.model2 <- lm(Happiness ~ 1 + GINI, data=WHR) # add ?? variables to the linear model code
+summary(happiness.model2) # add the new R object to the summary function
 ```
 
 What is the intercept?
@@ -504,7 +504,7 @@ Why?
 You will see above that the unstandardized estimate for GINI looks very different to the unstandardized estimate for GDP. Every 1 unit increase in GINI equates to a 2.65 decrease in happiness according to our model. On the surface, that looks like a much larger effect than GDP (.74) but we know from the correlation coefficient that the relationship is in fact much smaller (-.19 vs .78). So what is going on here? Well, the relationship appears bigger in the linear model because GINI has a very different scale of measurement than GDP (0-1 versus 0-12). So a 1 unit increase in GINI has a very different meaning to a 1 unit increase in GDP. This is why standardized estimate are so useful - they force the unit of measurement to the same scale so that effects can be directly compared. So lets go ahead and do that now. In the below chunk, use the lm.beta() function to calculate the standardized estimate for the slope of GINI and happiness.
 
 ```{r eval=FALSE}
-lm.beta(??) # add happiness GINI model to the lm.beta function
+lm.beta(happiness.model2) # add happiness GINI model to the lm.beta function
 ```
 
 What is the standardised slope?
@@ -516,7 +516,7 @@ How does this compare to the standardized slope for GDP?
 We've established whether there is a statistically significant relationship, but how much variance in happiness is explained by GINI? We can answer this question using the supernova() function in R, which breaks down the variance in happiness due to the model (ie., GINI) and error (i.e., variance left over once we've subtracted out the model).
 
 ```{r eval=FALSE}
-supernova(??) # add happiness GINI model to the supernova function
+supernova(happiness.model2) # add happiness GINI model to the supernova function
 ```
 
 

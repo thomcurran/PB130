@@ -74,11 +74,11 @@ As always, before we delve into this topic lets just clarify the research questi
 
 ## Setting up the linear model
 
-Now lets set our up our linear model to test our null hypotheses. For this, we just use the linear model, but rather than enter two continuous predictor variables, as we have been doing for multiple regression, we add two categorical predictor variables. The nauture of the variables (i.e., categorical) is what differentiates ANOVA from regression - but that is all! Otherwise, the underlying test is exactly the same.
+Now lets set our up our linear model to test our null hypotheses. For this, we just use the linear model, but rather than enter two continuous predictor variables, as we have been doing for multiple regression, we add two categorical predictor variables. The nature of the variables (i.e., categorical) is what differentiates ANOVA from regression - but that is all! Otherwise, the underlying test is exactly the same.
 
-Becuase of this difference, the lm() function only takes numerical input whereas the aov() only takes categorical input. There are other advantages of using the aov() function for ANOVA that I will come to, but what I want to show you right now is that ANOVA is just a linear model with categorical variables.
+Because of this difference, the lm() function only takes numerical input whereas the aov() only takes categorical input. There are other advantages of using the aov() function for ANOVA that I will come to, but what I want to show you right now is that ANOVA is just a linear model with categorical variables.
 
-To build our linear model, then, we are going to use the rtfm.1 dataset that codes the predictor variables numerically (i.e., 0 and 1). And we are going to write the lm() jsut as we have for multiple regression by adding each predictor to the model with a "+". Notationally, this model can be expresses in the GLM as:
+To build our linear model, then, we are going to use the rtfm.1 dataset that codes the predictor variables numerically (i.e., 0 and 1). And we are going to write the lm() just as we have for multiple regression by adding each predictor to the model with a "+". Notationally, this model can be expresses in the GLM as:
 
 Yi = b0 + b1Xi + b2Xi + ei
 
@@ -291,7 +291,7 @@ Now we know we can remove the interaction because it is not significant, so lets
 ```{r}
 anova.model3reduced <- aov(mood.gain ~ therapy + drug, data = clin.trial)
 summary(anova.model3reduced)
-eta_sq(anova.model3reduced, partial=TRUE)
+effectsize::eta_squared(anova.model3reduced, partial=TRUE)
 ```
 
 As with the full ANOVA model, we can see that the main effects of therapy and drug are both significant (p < .05) in this reduced model. The effect sizes are also quite large - especially for drug (pη2 = 0.79). As these are omnibus tests, a significant F value only tells us that there is a difference somewhere on the factor. What F does not tell us is where those differences are, so for this we need to run the post-hoc tests of pairwise comparisons.

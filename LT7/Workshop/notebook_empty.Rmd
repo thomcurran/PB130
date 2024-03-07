@@ -66,7 +66,7 @@ votes <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT7/Workshop/votes.csv"
 votes
 ```
 
-Incidently, given the simplicity of this data, we can also enter it directly in R pretty easily by creating a new R object and concanating the three cases:
+Incidentally, given the simplicity of this data, we can also enter it directly in R pretty easily by creating a new R object and concatenating the three cases:
 
 ```{r}
 votes <- c(dem = 587, rep = 552, ind = 480)
