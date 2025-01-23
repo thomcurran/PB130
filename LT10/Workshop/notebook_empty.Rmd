@@ -108,7 +108,7 @@ We can see that the linear model fits the data reasonably well. There is 47% var
 
 
 ```{r}
-fit1.boot <- Boot(fit1, f=coef, R = 5000) 
+fit1.boot <- Boot(fit1, f=coef, R = 500) 
 summary(fit1.boot)
 confint(fit1.boot, level = .95, type = "norm") 
 ```
@@ -134,7 +134,7 @@ We can also see that the addition of the 2nd degree polynomial has substantially
 Like always, lets just check this with bootstrapping.
 
 ```{r}
-fit2.boot <- Boot(fit2, f=coef, R = 5000) 
+fit2.boot <- Boot(fit2, f=coef, R = 500) 
 summary(fit2.boot)
 confint(fit2.boot, level = .95, type = "norm")
 ```
@@ -145,7 +145,7 @@ As we saw in LT2, it is not an especially good idea to compare models directly u
 
 There is another more direct test of whether adding our 2nd degree polynomial significantly improves the model. Rather than inspect the R2 the models, we can also calculate F for the comparison between the simple model (linear effect only) and the full model (linear and quadratic). The calculation for doing this F test is:
 
-F = ((R2full - R2imple)/(dffull-dfsimple))/((1-R2full)/dffull) - see lecture notes for formula
+F = ((R2full - R2simple)/(dffull-dfsimple))/((1-R2full)/dffull) - see lecture notes for formula
 
 But we can also request it directly in R using anova(). Lets do that now for models fit1 and fit2.
 
@@ -167,7 +167,7 @@ summary(fit3)
 In this model, the slopes for the linear and cubic effects are not significant, and it therefore appears that the best model is the polynomial of 2nd degree. We can confirm this using bootstrapping. 
 
 ```{r}
-fit3.boot <- Boot(fit3, f=coef, R = 5000) 
+fit3.boot <- Boot(fit3, f=coef, R = 500) 
 summary(fit3.boot)
 confint(fit3.boot, level = .95, type = "norm")
 ```
@@ -270,7 +270,7 @@ When we do so we get an unrestricted mean age of 31. Still a slight underestimat
 
 ## Correcting the correlation
 
-Now we have an estimated population SD of 2.36, lets now correct our correlation of -0.08 for range restriction. To do so, we can use the psych package, which implements Thorndike's case 2 using the rangeCorrection() function.
+Now we have an estimated population SD of 1.73, lets correct our correlation of -0.18 for range restriction. To do so, we can use the psych package, which implements Thorndike's case 2 using the rangeCorrection() function.
 
 ```{r}
 rangeCorrection(-0.18,1.733871,1.72,case=2) # this function takes the correlation, followed by the population SD, followed by the sample SD, and then stipualtes case 2 for Thorndike's case 2 correction
@@ -405,7 +405,7 @@ mean(perfectionism$year)
 And then subtract this mean from the observed year..
 
 ```{r eval = FALSE}
-perfectionism$year <- (perfectionism$year-??)
+perfectionism$year <- (perfectionism$year-2006.811)
 perfectionism
 ```
 
@@ -421,7 +421,7 @@ plot2
 First we need to test the linear model to ascertain if there is a linear trend. Lets build the linear model now and save it as a new R object called per1..
 
 ```{r eval = FALSE}
-per1 <- lm(spp ~ ??, data = perfectionism) 
+per1 <- lm(?? ~ ??, data = perfectionism) 
 summary(??)
 ```
 
@@ -437,7 +437,7 @@ Next we need to test the quadratic model, with year raised to the 2nd power. To 
 
 
 ```{r eval = FALSE}
-per2 <- lm(spp ~ ?? + ??, data = perfectionism)
+per2 <- lm(?? ~ ?? + ??, data = perfectionism)
 summary(??)
 ```
 
@@ -463,7 +463,7 @@ Finally we need to test the cubic model, with year raised to the 3rd power. To d
 
 
 ```{r eval = FALSE}
-per3 <- lm(spp ~ ?? + ?? + ??, data = perfectionism) 
+per3 <- lm(?? ~ ?? + ?? + ??, data = perfectionism) 
 summary(??)
 ```
 
