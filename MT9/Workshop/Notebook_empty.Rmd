@@ -1,6 +1,7 @@
 ---
 title: 'MT9: Comparing Groups'
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---
@@ -204,7 +205,7 @@ First, lets load this data into our R environment. Go to the MT9 folder, and the
 
 ```{r}
 library(readr)
-perfectionism <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/MT9/Workshop/perfectionism.csv")
+perfectionism <- read_csv("C:/Users/CURRANT/Dropbox/Work/LSE/PB130/MT9/Workshop/perfectionism.csv")
 perfectionism
 ```
 
@@ -571,7 +572,7 @@ I looked in the codebook for WVS and the perceptions of choice variable is liste
 ```{r eval=FALSE}
 WVSchoice <- 
   WVS %>% 
-  select(??, ??) # SELECT THE VARIABLES OF INTEREST HERE
+  select(V2A, V55) # SELECT THE VARIABLES OF INTEREST HERE
 head(WVSchoice)
 ```
 
@@ -584,7 +585,7 @@ Just like other variables in the WVS dataset, we need to edit the dataframe sinc
 ```{r eval=FALSE}
 WVSchoice <- 
 WVSchoice %>% 
-filter(V55 >= "1" & V2A == c("??", "??")) # Fill in the question marks 
+filter(V55 >= "1" & V2A == c("Australia", "Japan")) # Fill in the question marks 
 WVSchoice
 ```
 
@@ -595,7 +596,7 @@ Use the favstats function to inspect the means and SD of the choice scores for A
 
 
 ```{r eval=FALSE}
-favstats(~??, ??, data=WVSchoice) # Fill in the question mark
+favstats(~V55, V2A, data=WVSchoice) # Fill in the question mark
 ```
 
 
@@ -607,7 +608,7 @@ Calculate the mean difference
 
 
 ```{r eval=FALSE}
-
+7.742779	- 5.811899	
 ```
 
 What is the mean difference?
@@ -619,7 +620,7 @@ Now lets set our up our linear model to examine the statistical significance of 
 
 
 ```{r eval=FALSE}
-choice.model <- lm(V55 ~ 1 + ??, data=WVSchoice) # fill in the variable needed for question mark
+choice.model <- lm(V55 ~ 1 + V2A, data=WVSchoice) # fill in the variable needed for question mark
 summary(choice.model)
 ```
 
@@ -641,7 +642,7 @@ Why?
 We've established whether there is a statistically significant mean difference, but how much variance in choice is explained by country? We can answer this question using the supernova() function in R, which breaks down the variance in choice due to the model (ie., country) and error (i.e., variance left over once we've subtracted out the model)
 
 ```{r eval=FALSE}
-supernova(??) # add the choice model you want to examine the variance
+supernova(choice.model) # add the choice model you want to examine the variance
 ```
 
 What is the total variance or sum of squares for perceptions of choice? 
