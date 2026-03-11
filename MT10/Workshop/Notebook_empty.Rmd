@@ -377,7 +377,7 @@ When we run that calculation, we find that the sum of squares for the empty mode
 As we did last week, lets partition this variance using supernova() and interpret how much variance in happiness is explained by GDP.
 
 ```{r}
-superanova(happiness.model1)
+supernova(happiness.model1)
 ```
 
 
@@ -449,7 +449,7 @@ Is the distribution of the GINI coefficient approximately normal?
 Now use the rcorr() function to call the correlation coefficient - or Pearson's r - for the relationship between GINI and happiness.
 
 ```{r eval=FALSE}
-rcorr(as.matrix(WHR[,c("??","??")], type="pearson")) # fill in the ?? gaps here for the explanatory variable and the correlation type (pearson)
+rcorr(as.matrix(WHR[,c("??","??")], type="??")) # fill in the ?? gaps here for the explanatory variable and the correlation type (pearson)
 ```
 
 What is the correlation between GINI and happiness?

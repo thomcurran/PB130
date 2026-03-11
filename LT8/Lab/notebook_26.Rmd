@@ -1,0 +1,138 @@
+---
+title: "LT8 Lab"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Introduction
+
+So far in this course we have used many explanatory and outcome variables in our workshops and labs. Overwhelmingly, the most common form of variable in psychology is self-report. As an example, the World Attitudes Survey is full of self-reported information. Many experiments and field studies use self-report to measure constructs such as emotions, personality, and psychopathology. It is therefore important that we develop an appreciation of how self-report measures are constructed and understand the key considerations required to ensure they are reliable (i.e., consistent). This week we will cover this topic.
+
+## Packages
+
+```{r eval = FALSE}
+install.packages("tidyverse")
+install.packages("car")
+install.packages("psych")
+```
+
+
+```{r loadlib, echo=T, results='hide', message=F, warning=F}
+library(tidyverse)
+library(car)
+library(psych)
+```
+
+## Loading the personality data
+
+Let's load the Big Five data frame from the survey we completed in autumn term. You can do this by clicking the file in the LT8 Lab folder or by running the code below:
+
+```{r}
+bigfive <- read_csv("C:/Users/tc560/Dropbox/Work/LSE/PB130/LT8/Lab/bigfive.csv")
+bigfive
+```
+
+## Cleaning: Recoding items
+
+The first step when working with psychological test data is to identify and then recode any reverse-scored items. Recall from the lecture that some instruments include reverse-scored items to mitigate the impact of acquiescence bias. This is true of the Big Five questionnaire — there are several reverse-scored items for each subscale, so we need to recode them so that 5 becomes 1, 4 becomes 2, and so on. We can do this using the `recode` function from the `car` package:
+
+```{r}
+# First, filter out rows with missing data
+bigfive <- 
+bigfive %>% 
+filter(e1 >= "1")
+
+# Note: we specify car:: here because both car and tidyverse contain a recode
+# function, and we want R to use the version from car
+bigfive$a1 <- car::recode(bigfive$a1r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$c2 <- car::recode(bigfive$c2r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$e2 <- car::recode(bigfive$e2r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$n2 <- car::recode(bigfive$n2r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$a3 <- car::recode(bigfive$a3r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$c4 <- car::recode(bigfive$c4r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$e5 <- car::recode(bigfive$e5r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$c5 <- car::recode(bigfive$c5r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$n5 <- car::recode(bigfive$n5r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$a6 <- car::recode(bigfive$a6r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$e7 <- car::recode(bigfive$e7r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$n7 <- car::recode(bigfive$n7r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$o7 <- car::recode(bigfive$o7r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$a8 <- car::recode(bigfive$a8r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$o9 <- car::recode(bigfive$o9r, "1=5; 2=4; 3=3; 4=2; 5=1")
+bigfive$c9 <- car::recode(bigfive$c9r, "1=5; 2=4; 3=3; 4=2; 5=1")
+
+# Select only the recoded items we need going forward
+bigfive <- select(bigfive, e1, e2, e3, e4, e5, e6, e7, e8, c1, c2, c3, c4, c5, c6, c7, c8, c9, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10, a1, a2, a3, a4, a5, a6, a7, a8, a9, n1, n2, n3, n4, n5, n6, n7, n8)
+```
+
+## Cleaning: Reliability analysis
+
+Now that we have recoded the items, the next step is to check whether the scales are reliable. As we covered in the lecture, we can assess reliability using Cronbach's alpha, which captures the ratio of true score variance to total variance in the measure. It is calculated as:
+
+r = Vt / V
+
+Where Vt is the true score variance and V is the overall variance in the measure.
+
+We can compute Cronbach's alpha using the `alpha` function from the `psych` package. Let's do this for each of our five subscales: Openness, Extroversion, Neuroticism, Agreeableness, and Conscientiousness.
+
+```{r}
+extroversion <- select(bigfive, e1, e2, e3, e4, e5, e6, e7, e8)
+neuroticism <- select(bigfive, n1, n2, n3, n4, n5, n6, n7, n8)
+openness <- select(bigfive, o1, o2, o3, o4, o5, o6, o7, o8, o9, o10)
+conscientiousness <- select(bigfive, c1, c2, c3, c4, c5, c6, c7, c8, c9)
+agreeableness <- select(bigfive, a1, a2, a3, a4, a5, a6, a7, a8, a9)
+
+# Extract just the raw alpha for each subscale
+alpha_values <- data.frame(
+  subscale = c("Neuroticism", "Extroversion", "Openness", "Conscientiousness", "Agreeableness"),
+  alpha = c(
+    alpha(neuroticism)$total$raw_alpha,
+    alpha(extroversion)$total$raw_alpha,
+    alpha(openness)$total$raw_alpha,
+    alpha(conscientiousness)$total$raw_alpha,
+    alpha(agreeableness)$total$raw_alpha
+  )
+)
+
+alpha_values
+```
+
+Are the scales reliable? Use Nunnally's criterion of 0.70 to evaluate each subscale.  
+
+## Cleaning: Calculating variables
+
+Once we have established that the Big Five scales are reliable, we can aggregate the individual items to create a single score for each subscale. We do this by taking the mean of the items within each subscale using the `mutate` function, which we first encountered at the beginning of autumn term.
+
+```{r}
+bigfive <- bigfive %>%
+  mutate(neuroticism = (n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8) / 8)
+bigfive <- bigfive %>%
+  mutate(openness = (o1 + o2 + o3 + o4 + o5 + o6 + o7 + o8 + o9 + o10) / 10)
+bigfive <- bigfive %>%
+  mutate(extroversion = (e1 + e2 + e3 + e4 + e5 + e6 + e7 + e8) / 8)
+bigfive <- bigfive %>%
+  mutate(conscientiousness = (c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9) / 9)
+bigfive <- bigfive %>%
+  mutate(agreeableness = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9) / 9)
+```
+
+## Activity 1: Plot a bar graph showing the mean scores for the personality dimensions
+
+
+```{r}
+# First, create a summary data frame with the mean of each subscale
+mean_score <- c(mean(bigfive$neuroticism), mean(bigfive$openness), mean(bigfive$extroversion), mean(bigfive$conscientiousness), mean(bigfive$agreeableness))
+personality <- c("neuroticism", "openness", "extroversion", "conscientiousness", "agreeableness")
+data <- data_frame(mean_score, personality)
+
+## Now create the bar chart
+
+```
+
+## Activity 2: Think of a creative way to visualise these results that is not a bar chart (use AI to help)
+
+```{r}
+
+```
+
