@@ -96,7 +96,7 @@ Just like other variables in this dataset, we need to edit the dataframe since t
 ```{r}
 WVSaus <- 
 WVSchoice %>% 
-filter(V55 >= "1" & V2A == c("Australia")) 
+filter(V55 >= 1 & V2A == "Australia") 
 WVSaus
 ```
 
@@ -131,10 +131,10 @@ Lets visualize this distribution using a histogram to see this better.
 ```{r}
 WVSaus %>% 
   ggplot(aes(x= V55)) +
-  geom_histogram(aes(y=..density..), binwidth=1, colour="black", fill="white") + 
+  geom_histogram(aes(y=after_stat(density)), binwidth=1, colour="black", fill="white") + 
   geom_density(adjust = 4, alpha = .2, fill = "antiquewhite3") +
-  geom_vline(aes(xintercept=mean(V55)), col="black", linetype="dashed", size=1) + 
-  ylab("Number of Responses") +
+  geom_vline(aes(xintercept=mean(V55)), col="black", linetype="dashed", linewidth=1) + 
+  ylab("Density") +
   xlab("Perceptions of Choice")+
   ggtitle("Distribution of Perceptions of Choice for Australia in the WVS") +
   theme_minimal(base_size = 8)
@@ -145,7 +145,7 @@ Most people do not score 7.81. Some score higher, some score lower. There is als
 
 The beauty of the mean as a model is that this slight skew is accounted for by adding all the responses together and dividing them by the sample. In other words, using the mean as the model ensures the higher and lower scores are perfectly balanced. To see this, lets calculate the second important part of our model - the error (or residual). The error, remember, is the difference of the model (mean) from the observed score. 
 
-We can calculate the error by taking the observed score for choice and subtracting it from the mean score. Lets use the mutate function to do that for the participants in this sample.
+We can calculate the error by subtracting the mean score from the observed score for choice. Lets use the mutate function to do that for the participants in this sample.
 
 
 ```{r}
@@ -171,7 +171,7 @@ Let's check this by using the sum() function to sum the residuals.
 sum(WVSaus$residual_choice)
 ```
 
-Any time you see R return a slightly gibberish value containing "e-", it means that this is an incredibly small value that, for all intents and purposes, we can interpret as zero. So here we see the value of the mean as a model. It minimizes the error. 
+Any time you see R return a slightly gibberish value containing "e-", it means that this is an incredibly small value that, for all intents and purposes, we can interpret as zero. So here we see the value of the mean as a model: it balances the errors above and below it. (It is the sum of the squared errors that the mean minimizes, as we will see below.) 
 
 Thinking about the mean in this way also helps us think about DATA = MODEL + ERROR in a more specific way. If the mean is the model, each data point can now be thought of as the sum of the model (7.81 in our WVS data) plus its deviation from the model. So 9 can be decomposed into the model part (7.81) and the error from the model (+1.19).
 
@@ -273,7 +273,7 @@ These are the same values (1.92) within errors of rounding.
 
 We have looked at the mean as a model and we have learned some ways to quantify total error around the mean, as well as some good reasons for doing so. But there is another reason to look at both mean and error together. Sometimes by putting the two ideas together it can give us a better way of understanding where a particular score falls in a distribution.
 
-Let's say an Australian participant - Jericho - in the WVS has a perception of choice score at one unit below the mid-point; 6. What does this mean? Does this participant have a particularly high or particularly low score? How can we know? By now you may be getting the idea that just knowing the score of one person doesn’t tell you very much.
+Let's say an Australian participant - Jericho - in the WVS has a perception of choice score of 6, just above the mid-point of the 1-10 scale (5.5). What does this mean? Does this participant have a particularly high or particularly low score? How can we know? By now you may be getting the idea that just knowing the score of one person doesn’t tell you very much.
 
 To interpret the meaning of Jericho's single score, it helps to know something about the distribution the score came from. 
 
@@ -282,10 +282,10 @@ Standard deviation is really useful here. We know that Jericho’s score is abou
 ```{r}
 WVSaus %>% 
   ggplot(aes(x= V55)) +
-  geom_histogram(aes(y=..density..), binwidth=1, colour="black", fill="white") + 
-  geom_vline(aes(xintercept=mean(V55)), col="blue", size=1) + 
-  geom_vline(aes(xintercept=6), col = "red", size=1) +
-  ylab("Number of Responses") + # this adds a vertical line for the score of "6"
+  geom_histogram(aes(y=after_stat(density)), binwidth=1, colour="black", fill="white") + 
+  geom_vline(aes(xintercept=mean(V55)), col="blue", linewidth=1) + 
+  geom_vline(aes(xintercept=6), col = "red", linewidth=1) + # this adds a vertical line for the score of "6"
+  ylab("Density") +
   xlab("Perceptions of Choice") +
   ggtitle("Distribution of Perceptions of Choice for Australia in the WVS with Blue Line Showing the Mean and Red Line Showing Jericho") +
   theme_minimal(base_size = 8)
@@ -327,10 +327,10 @@ Here we can see that Jericho's score is about 1 standard deviation below the Aus
 ```{r}
 WVSaus %>% 
   ggplot(aes(x= Z2)) +
-  geom_histogram(aes(y=..density..), binwidth=.6, colour="black", fill="white") + 
-  geom_vline(aes(xintercept=mean(Z2)), col="blue", size=1) + 
-  geom_vline(aes(xintercept=-.94), col = "red", size=1) +
-  ylab("Number of Responses") +
+  geom_histogram(aes(y=after_stat(density)), binwidth=.6, colour="black", fill="white") + 
+  geom_vline(aes(xintercept=mean(Z2)), col="blue", linewidth=1) + 
+  geom_vline(aes(xintercept=-.94), col = "red", linewidth=1) +
+  ylab("Density") +
   xlab("Perceptions of Choice") +
   ggtitle("Distribution of Perceptions of Choice Z Scores for Australia in the WVS with Blue Line Showing the Mean and Red Line Showing Jericho") +
   theme_minimal(base_size = 8)
@@ -386,7 +386,7 @@ Now create a new variable for residuals squared:
 
 
 ```{r}
-WVS$residuals_squared <-
+WVSjapan$residuals_squared <-
 ```
 
 Calcualate the sum of squares for the Japan model:
@@ -428,7 +428,6 @@ Now lets check our calculations for the mean and variance using the anova() func
 
 ```{r}
 anova() # enter the name of the model you have built using lm()
-anova
 ```
 
 
